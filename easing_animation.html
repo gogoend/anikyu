@@ -23,20 +23,60 @@
 <body>
     <div id="wow" style="width:0;height: 0px;background-color: orangered;"></div>
     <script type="module">
-        import {animation} from './animation.js';
-        import {getStyle} from './util.js';
+        import { animation } from './animation.js';
+        import { getStyle } from './util.js';
 
         let theEl = document.getElementById('wow');
 
-            animation(theEl,
+        let animationQueue = [
             {
-                width: parseFloat(getStyle(theEl, 'width')),
-                height: parseFloat(getStyle(theEl, 'height'))
+                duration:400,
+                easeType:'bounceInOut',
+                props: {
+                    width: parseFloat(getStyle(theEl, 'width')),
+                    height: parseFloat(getStyle(theEl, 'height'))
+                },
+            },
+            {
+                duration:3000,
+                easeType:'bounceInOut',
+                props: {
+                    width: 100,
+                    height: 200
+                },
+            },
+            {
+                duration:800,
+                easeType:'sinusoidalInOut',
+                props: {
+                    width: 200,
+                    height: 200
+                },
+            },{
+                duration:2000,
+                easeType:'elasticOut',
+                props: {
+                    width: 10,
+                    height: 500
+                },
+            },{
+                duration:1600,
+                easeType:'',
+                props: {
+                    width: 400,
+                    height: 10
+                },
+            },{
+                duration:3200,
+                easeType:'bounceInOut',
+                props: {
+                    width: 400,
+                    height: 500
+                },
             }
-            , {
-                width: 600,
-                height: 500
-            }, 2000, 'backInOut')
+        ]
+
+        setTimeout(()=>animation(theEl, animationQueue).next(),1000)
     </script>
 </body>
 
