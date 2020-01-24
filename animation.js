@@ -5,10 +5,11 @@ function* animation(el, queue, duration = 2000, easeType = 'quadraticInOut') {
     console.log(queue);
 
     let i = 0;
+    let animationExecutorBind=animationExecutor.bind(this)
 
     while (i <= queue.length) {
         yield queue[i + 1] ? (
-            animationExecutor(
+            animationExecutorBind(
                 el, 
                 queue[i].props, 
                 queue[++i].props, 
@@ -43,7 +44,8 @@ function animationExecutor(el, perviousStatus, finalStatus, duration, easeType) 
             // clearInterval(timer)
             cancelAnimationFrame(loop);
             //如何执行下一步？
-            debugger
+            zzz.next()
+            // debugger
             return
         }
         requestAnimationFrame(loop)

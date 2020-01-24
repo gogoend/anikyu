@@ -63,7 +63,7 @@
                 duration:1600,
                 easeType:'',
                 props: {
-                    width: 400,
+                    width: 500,
                     height: 10
                 },
             },{
@@ -76,7 +76,8 @@
             }
         ]
 
-        setTimeout(()=>animation(theEl, animationQueue).next(),1000)
+        window.zzz=animation(theEl, animationQueue);
+        setTimeout(()=>zzz.next(),1000)
     </script>
 </body>
 
