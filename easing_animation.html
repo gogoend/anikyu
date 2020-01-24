@@ -23,7 +23,7 @@
 <body>
     <div id="wow" style="width:0;height: 0px;background-color: orangered;"></div>
     <script type="module">
-        import { animation } from './animation.js';
+        import { Animation } from './animation.js';
         import { getStyle } from './util.js';
 
         let theEl = document.getElementById('wow');
@@ -76,7 +76,8 @@
             }
         ]
 
-        setTimeout(()=>animation(theEl, animationQueue).next(),1000)
+        let zzz=new Animation(theEl,animationQueue)
+        // setTimeout(()=>animation(theEl, animationQueue).next(),1000)
     </script>
 </body>
 
