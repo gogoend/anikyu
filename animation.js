@@ -66,6 +66,9 @@ class Animation{
             if (currentProgress == 1) {
                 // clearInterval(timer)
                 cancelAnimationFrame(loop);
+                if(queue[i+1].callback instanceof Function){
+                    queue[i+1].callback()
+                }
                 //如何执行下一步？
                 context.i++;
                 animationQueueHandler.next();

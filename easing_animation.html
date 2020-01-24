@@ -53,6 +53,8 @@
                     width: 200,
                     height: 200
                 },
+                callback() {
+                }
             }, {
                 duration: 2000,
                 easeType: 'elasticOut',
@@ -77,24 +79,27 @@
             }
         ]
 
-        new Animation(theEl, animationQueue);
 
 
-        let el2=document.getElementById('lol')
-        new Animation(el2,[
-        {
+        let el2 = document.getElementById('lol')
+        new Animation(el2, [
+            {
                 duration: 400,
                 easeType: 'bounceInOut',
                 props: {
-                    fontSize:parseFloat(getStyle(el2, 'fontSize'))
+                    fontSize: parseFloat(getStyle(el2, 'fontSize'))
                 },
             },
             {
-                duration: 3000,
-                easeType: 'bounceInOut',
+                duration: 1000,
+                easeType: 'bounceOut',
                 props: {
-fontSize:100
+                    fontSize: 400
                 },
+                callback() {
+                    new Animation(theEl, animationQueue);
+                    console.log('zzz')
+                }
             },
         ])
         // setTimeout(()=>animation(theEl, animationQueue).next(),1000)
