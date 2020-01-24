@@ -47,9 +47,10 @@ class Animation{
 
         let startTime = new Date().getTime();
 
-        let totalDelta = {
-            width: finalStatus.width - parseInt(el.style.width),
-            height: finalStatus.height - parseInt(el.style.height),
+        let totalDelta={};
+
+        for(let key in finalStatus){
+            totalDelta[key]=finalStatus[key]-parseInt(el.style[key])
         }
     
         let loop = () => {
@@ -57,8 +58,10 @@ class Animation{
             let currentTime = new Date().getTime();
             let currentProgress = clamp((currentTime - startTime) / duration, 0, 1);
             // console.log(el.style.width)
-            el.style.width = perviousStatus.width + totalDelta.width * ease[easeType](currentProgress) + 'px';
-            el.style.height = perviousStatus.height + totalDelta.height * ease[easeType](currentProgress) + 'px';
+
+            for(let key in perviousStatus){
+                el.style[key] = perviousStatus[key] + totalDelta[key] * ease[easeType](currentProgress) + 'px';
+            }
     
             if (currentProgress == 1) {
                 // clearInterval(timer)
