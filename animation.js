@@ -9,7 +9,6 @@ class Animation{
         this.easeType=easeType;
 
         this.i=0;
-        let i=this.i;
         this.animationQueueHandler=this.go();
         this.animationQueueHandler.next()
         // debugger
@@ -42,6 +41,9 @@ class Animation{
         if(!finalStatus){
             return
         }
+
+        easeType=queue[i+1].easeType?queue[i+1].easeType:easeType;
+        duration=queue[i+1].duration?queue[i+1].duration:duration;
 
         let startTime = new Date().getTime();
 
