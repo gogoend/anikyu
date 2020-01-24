@@ -15,8 +15,7 @@ class Animation{
 
     }
     *go(){
-        let {i,queue,executor}=this;        
-
+        let {i,queue,executor}=this;
         while (i <= queue.length) {
             yield queue[i + 1] ? (
                 executor(
