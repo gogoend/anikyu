@@ -1,7 +1,7 @@
 import { easingFuncs as ease } from './easing_funcs.js';
-import { clamp } from './util.js';
+import { clamp,getStyle } from './util.js';
 
-export default class Animation{
+class Animation{
     constructor(el,queue,duration = 2000, easeType = 'quadraticInOut'){
         this.el=el;
         this.queue=queue;
@@ -14,6 +14,7 @@ export default class Animation{
         // debugger
 
     }
+    static getStyle=getStyle;
     *go(){
         let {i,queue,executor}=this;
         while (i <= queue.length) {
@@ -79,3 +80,5 @@ export default class Animation{
         loop()
     }
 }
+
+export default Animation

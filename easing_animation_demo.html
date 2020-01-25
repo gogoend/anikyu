@@ -24,8 +24,8 @@
     <div id="wow" style="width:0;height: 0px;background-color: orangered;"></div>
     <span id="lol" style="font-size:16px">111</span>
     <script type="module">
-        import { Anikyu } from './src/anikyu.js';
-        import { getStyle } from './src/util.js';
+        import Anikyu from './src/anikyu.js';
+        window.Anikyu=Anikyu;
 
         let theEl = document.getElementById('wow');
 
@@ -34,8 +34,8 @@
                 duration: 400,
                 easeType: 'bounceInOut',
                 props: {
-                    width: parseFloat(getStyle(theEl, 'width')),
-                    height: parseFloat(getStyle(theEl, 'height'))
+                    width: parseFloat(Anikyu.getStyle(theEl, 'width')),
+                    height: parseFloat(Anikyu.getStyle(theEl, 'height'))
                 },
             },
             {
@@ -85,7 +85,7 @@
                 duration: 400,
                 easeType: 'bounceInOut',
                 props: {
-                    fontSize: parseFloat(getStyle(el2, 'fontSize'))
+                    fontSize: parseFloat(Anikyu.getStyle(el2, 'fontSize'))
                 },
             },
             {

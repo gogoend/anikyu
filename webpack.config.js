@@ -6,7 +6,7 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'),
         filename: 'anikyu.js',
     },
-    // mode: 'development',
+    mode: 'development',
     module: {
         rules: [
             {

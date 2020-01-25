@@ -1,3 +1,3 @@
 import Anikyu from './animation.js';
 
-export {Anikyu}
+export default Anikyu
