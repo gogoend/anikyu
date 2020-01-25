@@ -1600,7 +1600,9 @@ try {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _animation_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./animation.js */ "./src/animation.js");
+ //判断文件是如何引入的，如果是通过模块引入则不在全局暴露Anikyu
 
+window.Anikyu = _animation_js__WEBPACK_IMPORTED_MODULE_0__["default"];
 /* harmony default export */ __webpack_exports__["default"] = (_animation_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
 /***/ }),

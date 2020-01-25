@@ -1,6 +1,6 @@
 {
   "name": "anikyu",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A simple animation library for creating queued motion tweens for CSS attributes which are using 'px' as its unit.",
   "main": "src/anikyu.js",
   "scripts": {
