@@ -26,9 +26,9 @@
     <span id="lol" style="font-size:16px">111</span>
     <script>
 
-        let theEl = document.getElementById('wow');
+        var theEl = document.getElementById('wow');
 
-        let animationQueue = [
+        var animationQueue = [
             {
                 duration: 400,
                 easeType: 'bounceInOut',
@@ -52,7 +52,7 @@
                     width: 200,
                     height: 200
                 },
-                callback() {
+                callback:function() {
                 }
             }, {
                 duration: 2000,
@@ -78,7 +78,7 @@
             }
         ]
 
-        let el2 = document.getElementById('lol')
+        var el2 = document.getElementById('lol')
         new Anikyu(el2, [
             {
                 duration: 400,
@@ -93,7 +93,7 @@
                 props: {
                     fontSize: 400
                 },
-                callback() {
+                callback:function() {
                     new Anikyu(theEl, animationQueue);
                     console.log('zzz')
                 }
