@@ -14,7 +14,6 @@ class Animation{
         // debugger
 
     }
-    static getStyle=getStyle;
     *go(){
         let {i,queue,executor}=this;
         while (i <= queue.length) {
@@ -80,5 +79,9 @@ class Animation{
         loop()
     }
 }
+
+Object.assign(Animation,{
+    getStyle
+})
 
 export default Animation
