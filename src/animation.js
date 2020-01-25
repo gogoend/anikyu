@@ -1,7 +1,7 @@
 import { easingFuncs as ease } from './easing_funcs.js';
 import { clamp } from './util.js';
 
-class Animation{
+export default class Animation{
     constructor(el,queue,duration = 2000, easeType = 'quadraticInOut'){
         this.el=el;
         this.queue=queue;
@@ -79,6 +79,3 @@ class Animation{
         loop()
     }
 }
-
-
-export { Animation }
