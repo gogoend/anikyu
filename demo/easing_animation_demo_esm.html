@@ -25,17 +25,18 @@
     <span id="lol" style="font-size:16px">111</span>
     <script type="module">
         import Anikyu from '../src/anikyu.js';
-        window.Anikyu=Anikyu;
 
-        let theEl = document.getElementById('wow');
+        let el1 = document.getElementById('wow');
 
-        let animationQueue = [
+        let el2 = document.getElementById('lol');
+        let el1AnimationQueue=[
             {
+                delay:2500,
                 duration: 400,
                 easeType: 'bounceInOut',
                 props: {
-                    width: parseFloat(Anikyu.getStyle(theEl, 'width')),
-                    height: parseFloat(Anikyu.getStyle(theEl, 'height'))
+                    width: parseFloat(Anikyu.getStyle(el1, 'width')),
+                    height: parseFloat(Anikyu.getStyle(el1, 'height'))
                 },
             },
             {
@@ -45,6 +46,7 @@
                     width: 100,
                     height: 200
                 },
+                delay:2000
             },
             {
                 duration: 800,
@@ -78,10 +80,9 @@
                 },
             }
         ]
-
-        let el2 = document.getElementById('lol')
         new Anikyu(el2, [
             {
+                delay:1000,
                 duration: 400,
                 easeType: 'bounceInOut',
                 props: {
@@ -95,7 +96,7 @@
                     fontSize: 400
                 },
                 callback() {
-                    new Anikyu(theEl, animationQueue);
+                    new Anikyu(el1, el1AnimationQueue);
                     console.log('zzz')
                 }
             },
