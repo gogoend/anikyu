@@ -1638,6 +1638,8 @@ var Animation =
 /*#__PURE__*/
 function () {
   function Animation(el, queue) {
+    var _this = this;
+
     var duration = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 2000;
     var easeType = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'quadraticInOut';
 
@@ -1648,8 +1650,16 @@ function () {
     this.duration = duration;
     this.easeType = easeType;
     this.i = 0;
-    this.animationQueueHandler = this.go();
-    this.animationQueueHandler.next(); // debugger
+
+    if (!queue[0]) {
+      return;
+    } else {
+      this.animationQueueHandler = this.go();
+      setTimeout(function () {
+        return _this.animationQueueHandler.next();
+      }, queue[0].delay);
+    } // debugger
+
   }
 
   _createClass(Animation, [{
@@ -1701,6 +1711,7 @@ function () {
           animationQueueHandler = context.animationQueueHandler;
       var perviousStatus = queue[i].props,
           finalStatus = queue[i + 1] ? queue[i + 1].props : undefined;
+      var delay = queue[i + 1] && queue[i + 1].delay ? queue[i + 1].delay : undefined;
 
       if (!finalStatus) {
         return;
@@ -1726,15 +1737,16 @@ function () {
 
         if (currentProgress == 1) {
           // clearInterval(timer)
-          cancelAnimationFrame(loop);
+          cancelAnimationFrame(loop); //如何执行下一步？
 
-          if (queue[i + 1].callback instanceof Function) {
-            queue[i + 1].callback();
-          } //如何执行下一步？
+          setTimeout(function () {
+            if (queue[i + 1].callback instanceof Function) {
+              queue[i + 1].callback();
+            }
 
-
-          context.i++;
-          animationQueueHandler.next(); // debugger
+            context.i++;
+            animationQueueHandler.next();
+          }, delay); // debugger
 
           return;
         }

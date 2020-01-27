@@ -9,8 +9,14 @@ class Animation{
         this.easeType=easeType;
 
         this.i=0;
-        this.animationQueueHandler=this.go();
-        this.animationQueueHandler.next()
+
+        if(!queue[0]){
+            return
+        }else{
+            this.animationQueueHandler=this.go();
+            setTimeout(()=>this.animationQueueHandler.next(),queue[0].delay)
+        }
+
         // debugger
 
     }
@@ -37,6 +43,7 @@ class Animation{
         let {el,i,queue, duration, easeType,animationQueueHandler}=context;
         let perviousStatus=queue[i].props,
             finalStatus=queue[i+1]?queue[i+1].props:undefined;
+        let delay=(queue[i+1] && queue[i+1].delay)?queue[i+1].delay:undefined;
         if(!finalStatus){
             return
         }
@@ -65,12 +72,15 @@ class Animation{
             if (currentProgress == 1) {
                 // clearInterval(timer)
                 cancelAnimationFrame(loop);
-                if(queue[i+1].callback instanceof Function){
-                    queue[i+1].callback()
-                }
                 //如何执行下一步？
-                context.i++;
-                animationQueueHandler.next();
+
+                setTimeout(()=>{
+                    if(queue[i+1].callback instanceof Function){
+                        queue[i+1].callback()
+                    }
+                    context.i++;
+                    animationQueueHandler.next();
+                },delay)
                 // debugger
                 return
             }
