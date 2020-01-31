@@ -9,7 +9,7 @@ Current version temporarily only support the tween animation of CSS property who
 
 ## Browser Compatibility
 
-The Anikyu uses some features or functions, like ES Module, Generator and requestAnimationFrame, which are not support in Internet Explorer and some older browsers. As for this, you can use the Anikyu.js which is built with Webpack and Babel in dist folder, and import via script tag, then Anikyu will become a global variable.
+The Anikyu uses some features or functions, like ES Module, Generator and requestAnimationFrame, which are not support in Internet Explorer and some older browsers. As for this, you can use the Anikyu.js in dist folder, which is built with Webpack and Babel, and import via script tag, then Anikyu will become a global variable.
 
 
 ## Import to your project
