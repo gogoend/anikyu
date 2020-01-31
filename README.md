@@ -5,6 +5,12 @@
 
 Anikyu is a simple tween animation library, based on JavaScript, can create continuous tween animation for number values in one specified object.
 
+Current version temporarily only support the tween animation of CSS property whose unit is *px*.
+
+## Browser Compatibility
+
+The Anikyu uses some features or functions, like ES Module, Generator and requestAnimationFrame, which are not support in Internet Explorer and some older browsers. As for this, you can use the Anikyu.js which is built with Webpack and Babel in dist folder, and import via script tag, then Anikyu will become a global variable.
+
 
 ## Import to your project
 
@@ -19,7 +25,7 @@ npm install anikyu
 import Anikyu from 'anikyu';
 ```
 
-### Using Script Tag
+### Using script Tag
 ```HTML
 <script src="https://unpkg.com/anikyu/dist/anikyu.js"></script>
 ```
@@ -58,7 +64,7 @@ delay - Delay before the tween animation stage starts. Default is *0*, which mea
 
 duration - The duration of tween animation stage. Default is *2000*.
 
-easeType - The ease function which the tween animation stage use. Default is *'quadraticInOut'*. Other possible value you can visit <https://echarts.apache.org/examples/zh/editor.html?c=line-easing>
+easeType - The ease function which the tween animation stage use. Default is *'quadraticInOut'*. Other possible value you can visit <https://echarts.apache.org/examples/zh/editor.html?c=line-easing>.
 
 callback - The Function to be called after the tween animation stage finished.
 
