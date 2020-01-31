@@ -64,7 +64,7 @@ delay - Delay before the tween animation stage starts. Default is *0*, which mea
 
 duration - The duration of tween animation stage. Default is *2000*.
 
-easeType - The ease function which the tween animation stage use. Default is *'quadraticInOut'*. Other possible value you can visit <https://echarts.apache.org/examples/zh/editor.html?c=line-easing>.
+easeType - The ease function which the tween animation stage use. Default is *'quadraticInOut'*. For other possible values, you can visit <https://echarts.apache.org/examples/zh/editor.html?c=line-easing>.
 
 callback - The Function to be called after the tween animation stage finished.
 
