@@ -1,4 +1,14 @@
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["Anikyu"] = factory();
+	else
+		root["Anikyu"] = factory();
+})(window, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -1600,9 +1610,12 @@ try {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _animation_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./animation.js */ "./src/animation.js");
- //判断文件是如何引入的，如果是通过模块引入则不在全局暴露Anikyu
+/* harmony import */ var _polyfill_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./polyfill.js */ "./src/polyfill.js");
+/* harmony import */ var _polyfill_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_polyfill_js__WEBPACK_IMPORTED_MODULE_1__);
 
-window.Anikyu = _animation_js__WEBPACK_IMPORTED_MODULE_0__["default"];
+ //判断文件是如何引入的，如果是通过模块引入则不在全局暴露Anikyu
+//直接在Webpack配置中改为UMD
+
 /* harmony default export */ __webpack_exports__["default"] = (_animation_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
 /***/ }),
@@ -1991,6 +2004,43 @@ var easingFuncs = {
 
 /***/ }),
 
+/***/ "./src/polyfill.js":
+/*!*************************!*\
+  !*** ./src/polyfill.js ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// requestAnimationFrame
+// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+// http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
+// requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
+// MIT license
+(function () {
+  var lastTime = 0;
+  var vendors = ['ms', 'moz', 'webkit', 'o'];
+
+  for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+    window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+    window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
+  }
+
+  if (!window.requestAnimationFrame) window.requestAnimationFrame = function (callback, element) {
+    var currTime = new Date().getTime();
+    var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+    var id = window.setTimeout(function () {
+      callback(currTime + timeToCall);
+    }, timeToCall);
+    lastTime = currTime + timeToCall;
+    return id;
+  };
+  if (!window.cancelAnimationFrame) window.cancelAnimationFrame = function (id) {
+    clearTimeout(id);
+  };
+})();
+
+/***/ }),
+
 /***/ "./src/util.js":
 /*!*********************!*\
   !*** ./src/util.js ***!
@@ -2018,5 +2068,6 @@ function getStyle(obj, attr) {
 
 /***/ })
 
-/******/ });
+/******/ })["default"];
+});
 //# sourceMappingURL=anikyu.js.map
