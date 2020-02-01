@@ -5,6 +5,9 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'anikyu.js',
+        library: 'Anikyu',
+        libraryTarget: 'umd',
+        libraryExport: 'default'
     },
     mode: 'development',
     module: {
