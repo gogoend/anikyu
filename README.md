@@ -1,5 +1,6 @@
 # Anikyu - Animation Queue
 
+[![NPM package][npm]][npm-url]
 
 ## Introduction
 
