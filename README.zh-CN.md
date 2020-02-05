@@ -7,6 +7,11 @@ anikyu 是一个简易的补间动画库，基于JavaScript，可以为一个指
 当前版本暂仅支持CSS属性补间，用于补间的属性单位应为px。
 
 
+## 浏览器兼容性
+如果你是用的是dist文件夹中的Anikyu.js，则至少应当使用IE 9或更高版本浏览器。
+Anikyu使用了一些在IE等其他较为老旧的浏览器中不兼容的特性或功能，例如ES Module、Generator以及requestAnimationFrame。如果你要在这些浏览器中使用Anikyu，可以通过script标签，引入由Webpack与Babel构建的、位于dist文件夹中的Anikyu.js，这将使得Anikyu成为一个全局变量。
+
+
 ## 引入到项目中
 
 ### 使用NPM
