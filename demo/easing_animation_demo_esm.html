@@ -24,8 +24,8 @@
     <div id="wow" style="width:0;height: 0px;background-color: orangered;"></div>
     <span id="lol" style="font-size:16px">111</span>
     <script type="module">
-        // import Anikyu from '../src/anikyu.js';
-        import Anikyu from '../dist/anikyu.esm.js';
+        import Anikyu from '../src/anikyu.js';
+        // import Anikyu from '../dist/anikyu.esm.js';
 
         let el1 = document.getElementById('wow');
 
@@ -97,7 +97,7 @@
                     fontSize: 400
                 },
                 callback: function() {
-                    new Anikyu(el1, el1AnimationQueue);
+                    window.anikyuInstance=new Anikyu(el1, el1AnimationQueue,undefined,undefined,true);
                     console.log('zzz')
                 }
             },

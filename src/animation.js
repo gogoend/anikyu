@@ -2,11 +2,12 @@ import { easingFuncs as ease } from './easing_funcs.js';
 import { clamp,getStyle } from './util.js';
 
 class Animation{
-    constructor(el,queue,duration = 2000, easeType = 'quadraticInOut'){
+    constructor(el,queue,duration = 2000, easeType = 'quadraticInOut', manualNext = false ){
         this.el=el;
         this.queue=queue;
         this.duration=duration;
         this.easeType=easeType;
+        this.manualNext=manualNext
 
         this.i=0;
 
@@ -40,7 +41,7 @@ class Animation{
     }
     executor(context){
         // super();
-        let {el,i,queue, duration, easeType,animationQueueHandler}=context;
+        let {el,i,queue, duration, easeType,animationQueueHandler,next,manualNext}=context;
         let perviousStatus=queue[i].props,
             finalStatus=queue[i+1]?queue[i+1].props:undefined;
         let delay=(queue[i+1] && queue[i+1].delay)?queue[i+1].delay:undefined;
@@ -78,8 +79,10 @@ class Animation{
                     if(queue[i+1].callback instanceof Function){
                         queue[i+1].callback()
                     }
-                    context.i++;
-                    animationQueueHandler.next();
+                    if(!manualNext){
+                        debugger
+                        next.call(context);
+                    }
                 },delay)
                 // debugger
                 return
@@ -87,6 +90,11 @@ class Animation{
             requestAnimationFrame(loop)
         }
         loop()
+    }
+
+    next(){
+        this.i++;
+        this.animationQueueHandler.next();
     }
 }
 
