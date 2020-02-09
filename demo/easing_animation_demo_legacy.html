@@ -95,11 +95,16 @@
                 props: {
                     fontSize: 400
                 },
-                callback: function() {
-                    new Anikyu(el1, el1AnimationQueue);
+                onAnimating: function(status) {
+                    console.log(status)
+                },
+                onFinished: function() {
+                    window.anikyuInstance=new Anikyu(el1, el1AnimationQueue,{
+                        // manualNext: true
+                    });
                     console.log('zzz')
                 }
-            },
+            }
         ])
 
 
