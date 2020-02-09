@@ -6,6 +6,7 @@
   "module": "dist/anikyu.esm.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0",
+    "lint": "eslint src --ext js",
     "build": "webpack-cli"
   },
   "repository": {
