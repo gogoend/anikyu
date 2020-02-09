@@ -1421,7 +1421,7 @@ try {
     window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
   }
 
-  if (!window.requestAnimationFrame) window.requestAnimationFrame = function (callback, element) {
+  if (!window.requestAnimationFrame) window.requestAnimationFrame = function (callback) {
     var currTime = new Date().getTime();
     var timeToCall = Math.max(0, 16 - (currTime - lastTime));
     var id = window.setTimeout(function () {
@@ -1694,6 +1694,7 @@ function () {
 
     var duration = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 2000;
     var easeType = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'quadraticInOut';
+    var manualNext = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
 
     _classCallCheck(this, Animation);
 
@@ -1701,20 +1702,42 @@ function () {
     this.queue = queue;
     this.duration = duration;
     this.easeType = easeType;
+    this.manualNext = manualNext;
     this.i = 0;
+    this.status = {
+      paused: false
+    };
+    this.status.paused = false;
 
     if (!queue[0]) {
       return;
-    } else {
+    }
+
+    if (!this.manualNext) {
       this.animationQueueHandler = this.go();
       setTimeout(function () {
         return _this.animationQueueHandler.next();
-      }, queue[0].delay);
+      }, this.queue[0].delay);
     } // debugger
 
   }
 
   _createClass(Animation, [{
+    key: "pause",
+    value: function pause() {
+      var startTime = this.status.startTime;
+      this.status.paused = true;
+      var pausedTime = new Date().getTime();
+      this.status.passedTime = pausedTime - startTime;
+    }
+  }, {
+    key: "resume",
+    value: function resume() {
+      var status = this.status;
+      status.startTime = new Date().getTime() - status.passedTime;
+      this.status.paused = false;
+    }
+  }, {
     key: "go",
     value:
     /*#__PURE__*/
@@ -1733,12 +1756,7 @@ function () {
               }
 
               _context.next = 4;
-              return queue[i + 1] ? (executor( // el, 
-              // queue[i].props, 
-              // queue[++i].props, 
-              // queue[i].duration?queue[i].duration:duration, 
-              // ease[queue[i].easeType]?queue[i].easeType:easeType,
-              this), true) : undefined;
+              return queue[i + 1] ? (executor(this), true) : undefined;
 
             case 4:
               _context.next = 1;
@@ -1760,7 +1778,14 @@ function () {
           queue = context.queue,
           duration = context.duration,
           easeType = context.easeType,
-          animationQueueHandler = context.animationQueueHandler;
+          next = context.next,
+          manualNext = context.manualNext,
+          status = context.status;
+
+      if (!queue[i]) {
+        return;
+      }
+
       var perviousStatus = queue[i].props,
           finalStatus = queue[i + 1] ? queue[i + 1].props : undefined;
       var delay = queue[i + 1] && queue[i + 1].delay ? queue[i + 1].delay : undefined;
@@ -1771,7 +1796,7 @@ function () {
 
       easeType = queue[i + 1].easeType ? queue[i + 1].easeType : easeType;
       duration = queue[i + 1].duration ? queue[i + 1].duration : duration;
-      var startTime = new Date().getTime();
+      status.startTime = new Date().getTime();
       var totalDelta = {};
 
       for (var key in finalStatus) {
@@ -1779,34 +1804,52 @@ function () {
       }
 
       var loop = function loop() {
-        var endTime = startTime + duration;
-        var currentTime = new Date().getTime();
-        var currentProgress = clamp((currentTime - startTime) / duration, 0, 1); // console.log(el.style.width)
+        if (!context.status.paused) {
+          // let endTime = status.startTime + duration;
+          var currentTime = new Date().getTime();
+          var currentProgress = clamp((currentTime - status.startTime) / duration, 0, 1); // console.log(el.style.width)
 
-        for (var _key in perviousStatus) {
-          el.style[_key] = perviousStatus[_key] + totalDelta[_key] * easingFuncs[easeType](currentProgress) + 'px';
-        }
+          for (var _key in perviousStatus) {
+            el.style[_key] = perviousStatus[_key] + totalDelta[_key] * easingFuncs[easeType](currentProgress) + 'px';
+          }
 
-        if (currentProgress == 1) {
-          // clearInterval(timer)
-          cancelAnimationFrame(loop); //如何执行下一步？
+          if (currentProgress == 1) {
+            // clearInterval(timer)
+            cancelAnimationFrame(loop); //如何执行下一步？
 
-          setTimeout(function () {
-            if (queue[i + 1].callback instanceof Function) {
-              queue[i + 1].callback();
-            }
+            setTimeout(function () {
+              if (queue[i + 1].callback instanceof Function) {
+                queue[i + 1].callback();
+              }
 
-            context.i++;
-            animationQueueHandler.next();
-          }, delay); // debugger
+              if (!manualNext) {
+                next.call(context);
+              }
+            }, delay); // debugger
 
-          return;
+            return;
+          }
         }
 
         requestAnimationFrame(loop);
       };
 
       loop();
+    }
+  }, {
+    key: "next",
+    value: function next() {
+      var _this2 = this;
+
+      if (!this.animationQueueHandler) {
+        this.animationQueueHandler = this.go();
+        setTimeout(function () {
+          return _this2.animationQueueHandler.next();
+        }, this.queue[0].delay);
+      } else {
+        this.i++;
+        this.animationQueueHandler.next();
+      }
     }
   }]);
 

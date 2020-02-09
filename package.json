@@ -1,6 +1,6 @@
 {
   "name": "anikyu",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "A simple animation library for creating queued tween animation.",
   "main": "dist/anikyu.js",
   "module": "dist/anikyu.esm.js",
