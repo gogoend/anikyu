@@ -31,7 +31,6 @@ class Animation {
 	}
 	pause() {
 		let { startTime } = this.status;
-		let duration = this.queue[this.i + 1].duration;
 		this.status.paused = true;
 		let pausedTime = new Date().getTime();
 		this.status.passedTime = pausedTime - startTime;
@@ -58,7 +57,7 @@ class Animation {
 	}
 	executor(context) {
 		// super();
-		let { el, i, queue, duration, easeType, animationQueueHandler, next, manualNext, status } = context;
+		let { el, i, queue, duration, easeType, next, manualNext, status } = context;
 		if (!queue[i]) {
 			return;
 		}
@@ -83,7 +82,7 @@ class Animation {
 		let loop = () => {
 
 			if (!context.status.paused) {
-				let endTime = status.startTime + duration;
+				// let endTime = status.startTime + duration;
 				let currentTime = new Date().getTime();
 				let currentProgress = clamp((currentTime - status.startTime) / duration, 0, 1);
 
