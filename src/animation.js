@@ -128,7 +128,7 @@ class Animation {
 		if (!this.animationQueueHandler) {
 			this.animationQueueHandler = this.go();
 			setTimeout(() => this.animationQueueHandler.next(), this.queue[0].delay);
-		} else if(this.config.manualNext){
+		} else {
 			this.i++;
 			this.animationQueueHandler.next();
 		}

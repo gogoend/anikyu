@@ -1847,6 +1847,7 @@ function () {
     value: function next() {
       var _this3 = this;
 
+      // TODO: when call next, skip everyting in last queue item.
       if (this.status.paused) this.resume();
 
       if (!this.animationQueueHandler) {
@@ -1854,7 +1855,7 @@ function () {
         setTimeout(function () {
           return _this3.animationQueueHandler.next();
         }, this.queue[0].delay);
-      } else if (this.config.manualNext) {
+      } else {
         this.i++;
         this.animationQueueHandler.next();
       }
