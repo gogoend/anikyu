@@ -289,12 +289,17 @@ function getStyle(obj, attr) {
 
 class animation_Animation {
 
-	constructor(el, queue, duration = 2000, easeType = 'quadraticInOut', manualNext = false) {
+	constructor(el, queue, config) {
+
 		this.el = el;
 		this.queue = queue;
-		this.duration = duration;
-		this.easeType = easeType;
-		this.manualNext = manualNext;
+
+		let defaultConfig={
+			duration: 2000,
+			easeType: 'quadraticInOut',
+			manualNext: false
+		};
+		this.config=Object.assign(JSON.parse(JSON.stringify(defaultConfig)),config);
 
 		this.i = 0;
 
@@ -302,12 +307,10 @@ class animation_Animation {
 			paused: false
 		};
 
-		this.status.paused = false;
-
-		if (!queue[0]) {
+		if (!this.queue[0]) {
 			return;
 		}
-		if (!this.manualNext) {
+		if (!this.config.manualNext) {
 			this.animationQueueHandler = this.go();
 			setTimeout(() => this.animationQueueHandler.next(), this.queue[0].delay);
 		}
@@ -316,34 +319,32 @@ class animation_Animation {
 
 	}
 	pause() {
+		if(this.status.paused) return;
 		let { startTime } = this.status;
 		this.status.paused = true;
 		let pausedTime = new Date().getTime();
 		this.status.passedTime = pausedTime - startTime;
 	}
 	resume() {
+		if(!this.status.paused) return;
 		let { status } = this;
-
 		status.startTime = new Date().getTime() - status.passedTime;
 		this.status.paused = false;
-
 	}
 	*go() {
 		let { i, queue, executor } = this;
 		while (i <= queue.length) {
 			yield queue[i + 1] ? (
-				executor(
-					this
-				),
+				executor.call(this),
 				true
 			)
 				:
 				undefined;
 		}
 	}
-	executor(context) {
+	executor() {
 		// super();
-		let { el, i, queue, duration, easeType, next, manualNext, status } = context;
+		let { el, i, queue, next, status, config } = this;
 		if (!queue[i]) {
 			return;
 		}
@@ -354,8 +355,8 @@ class animation_Animation {
 			return;
 		}
 
-		easeType = queue[i + 1].easeType ? queue[i + 1].easeType : easeType;
-		duration = queue[i + 1].duration ? queue[i + 1].duration : duration;
+		let easeType = queue[i + 1].easeType ? queue[i + 1].easeType : config.easeType;
+		let duration = queue[i + 1].duration ? queue[i + 1].duration : config.duration;
 
 		status.startTime = new Date().getTime();
 
@@ -367,7 +368,7 @@ class animation_Animation {
 
 		let loop = () => {
 
-			if (!context.status.paused) {
+			if (!status.paused) {
 				// let endTime = status.startTime + duration;
 				let currentTime = new Date().getTime();
 				let currentProgress = clamp((currentTime - status.startTime) / duration, 0, 1);
@@ -384,29 +385,35 @@ class animation_Animation {
 					//如何执行下一步？
 
 					setTimeout(() => {
-						if (queue[i + 1].callback instanceof Function) {
-							queue[i + 1].callback();
+						if (queue[i + 1].onFinished instanceof Function) {
+							queue[i + 1].onFinished();
 						}
-						if (!manualNext) {
-							next.call(context);
+						if (!config.manualNext) {
+							next.call(this);
 						}
 					}, delay);
 					// debugger
 					return;
 				}
+				if (queue[i + 1].onAnimating instanceof Function) {
+					queue[i + 1].onAnimating({
+						percent: currentProgress
+					});
+				}
 			}
-
 			requestAnimationFrame(loop);
-
 		};
 		loop();
 	}
 
 	next() {
+
+		if(this.status.paused) this.resume();
+
 		if (!this.animationQueueHandler) {
 			this.animationQueueHandler = this.go();
 			setTimeout(() => this.animationQueueHandler.next(), this.queue[0].delay);
-		} else {
+		} else if(this.config.manualNext){
 			this.i++;
 			this.animationQueueHandler.next();
 		}
