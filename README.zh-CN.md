@@ -32,7 +32,7 @@ import Anikyu from 'anikyu';
 ```
 
 
-## 使用方法
+## 调用方式
 
 ```JavaScript
 new Anikyu(
@@ -72,13 +72,14 @@ easeType - 当前补间动画阶段缓动函数，若不设置则从实例的全
 callback - 当前补间动画阶段结束后执行的回调函数
 
 
+
 config（配置）是一个对象，包含了对当前Anikyu实例的全局配置，表示为如下对象：
 
 ```JavaScript
 {
     manualNext: Boolean,
     duration: Number,
-	easeType: String
+    easeType: String
 }
 ```
 
@@ -87,6 +88,21 @@ manualNext - 每一个补间动画阶段结束后是否手动播放下一个动�
 duration - 每一个补间动画阶段持续时间，默认为2000
 
 easeType - 每一个补间动画阶段缓动函数，默认为'quadraticInOut'，其他可选值参见 <https://echarts.apache.org/examples/zh/editor.html?c=line-easing>
+
+
+## 实例方法
+
+- .pause()
+
+暂停当前补间动画阶段播放
+
+- .resume()
+
+继续当前补间动画阶段播放
+
+- .next()
+
+在当前补间动画阶段播放结束后手动跳转到下一补间动画阶段
 
 
 ## License
