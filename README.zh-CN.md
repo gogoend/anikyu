@@ -1,9 +1,13 @@
 # Anikyu - Animation Queue
 
+  <a href="https://npmcharts.com/compare/anikyu?minimal=true"><img src="https://img.shields.io/npm/dm/anikyu.svg" alt="Downloads"></a>
+  <a href="https://www.npmjs.com/package/anikyu"><img src="https://img.shields.io/npm/v/anikyu.svg" alt="Version"></a>
+  <a href="https://www.npmjs.com/package/anikyu"><img src="https://img.shields.io/npm/l/anikyu.svg" alt="License"></a>
 
 ## 介绍
 
 anikyu 是一个简易的补间动画库，基于JavaScript，可以为一个指定对象中的数值创建连续补间动画。
+
 当前版本暂仅支持CSS属性补间，用于补间的属性单位应为px。
 
 
@@ -71,7 +75,7 @@ easeType - 当前补间动画阶段缓动函数，若不设置则从实例的全
 
 callback - 当前补间动画阶段结束后执行的回调函数
 
-
+<br />
 
 config（配置）是一个对象，包含了对当前Anikyu实例的全局配置，表示为如下对象：
 
