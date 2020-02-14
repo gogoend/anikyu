@@ -406,6 +406,14 @@ class animation_Animation {
 		loop();
 	}
 
+	replay() {
+		if(!this.queue[this.i+1]){
+			return;
+		}
+
+		this.status.startTime = this.status.startTime+this.queue[this.i+1].duration;
+	}
+
 	next() {
 		// TODO: when call next, skip everyting in last queue item.
 

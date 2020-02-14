@@ -1843,6 +1843,15 @@ function () {
       loop();
     }
   }, {
+    key: "replay",
+    value: function replay() {
+      if (!this.queue[this.i + 1]) {
+        return;
+      }
+
+      this.status.startTime = this.status.startTime + this.queue[this.i + 1].duration;
+    }
+  }, {
     key: "next",
     value: function next() {
       var _this3 = this;
