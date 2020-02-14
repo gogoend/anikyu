@@ -12,6 +12,7 @@ anikyu 是一个简易的补间动画库，基于JavaScript，可以为一个指
 
 
 ## 浏览器兼容性
+
 如果你是用的是dist文件夹中的Anikyu.js，则至少应当使用IE 9或更高版本浏览器。
 
 Anikyu使用了一些在IE等其他较为老旧的浏览器中不兼容的特性或功能，例如ES Module、Generator以及requestAnimationFrame。如果你要在这些浏览器中使用Anikyu，可以通过script标签，引入由Webpack与Babel构建的、位于dist文件夹中的Anikyu.js，这将使得Anikyu成为一个全局变量。
@@ -53,6 +54,7 @@ config - 配置
 你需要在构造函数中传入当前产生动画效果的对象以及作用到该对象的动画队列，若不传入配置，则使用Anikyu内部的默认设置。
 
 animationQueue（动画队列）是一个数组，其中包含产生动画效果的对象在整个动画发生期间每个阶段的状态，补间将通过使用来自相邻两个状态的数据来创建。
+
 动画队列中每个阶段的配置表示为如下对象：
 
 ```JavaScript
@@ -67,7 +69,7 @@ animationQueue（动画队列）是一个数组，其中包含产生动画效果
 
 props - （必须）产生动画效果的对象在当前补间动画阶段结束后的属性
 
-delay - 当前补间动画阶段开始前的延迟时间，默认为0
+delay - 当前补间动画阶段开始前的延迟时间，默认为0，即当前补间动画阶段将上一补间动画阶段结束后立即执行
 
 duration - 当前补间动画阶段持续时间，若不设置则从实例的全局配置中继承
 
@@ -77,7 +79,7 @@ callback - 当前补间动画阶段结束后执行的回调函数
 
 <br />
 
-config（配置）是一个对象，包含了对当前Anikyu实例的全局配置，表示为如下对象：
+config（配置）是一个对象，包含对当前Anikyu实例的全局配置，表示为如下对象：
 
 ```JavaScript
 {
@@ -87,26 +89,32 @@ config（配置）是一个对象，包含了对当前Anikyu实例的全局配�
 }
 ```
 
-manualNext - 每一个补间动画阶段结束后是否手动播放下一个动画，默认为false
+manualNext - 每一个补间动画阶段结束后是否手动播放下一个动画阶段。当前一个动画阶段结束后，你需要手动调用 .next() 以继续播放下一个动画阶段。默认为false
 
-duration - 每一个补间动画阶段持续时间，默认为2000
+duration - 每一个补间动画阶段默认的持续时间，默认为2000
 
-easeType - 每一个补间动画阶段缓动函数，默认为'quadraticInOut'，其他可选值参见 <https://echarts.apache.org/examples/zh/editor.html?c=line-easing>
+easeType - 每一个补间动画阶段默认的缓动函数，默认为'quadraticInOut'，其他可选值参见 <https://echarts.apache.org/examples/zh/editor.html?c=line-easing>
 
 
 ## 实例方法
 
+你可以在由Anikyu类产生的实例上调用下列方法。
+
 - .pause()
 
-暂停当前补间动画阶段播放
+暂停当前补间动画阶段
 
 - .resume()
 
-继续当前补间动画阶段播放
+继续当前补间动画阶段
+
+- .replay()
+
+重播当前补间动画阶段
 
 - .next()
 
-在当前补间动画阶段播放结束后手动跳转到下一补间动画阶段
+在当前补间动画阶段播放结束后手动继续播放到下一补间动画阶段
 
 
 ## License
