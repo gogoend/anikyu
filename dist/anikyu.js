@@ -1819,7 +1819,7 @@ function () {
 
             setTimeout(function () {
               if (queue[i + 1].onFinished instanceof Function) {
-                queue[i + 1].onFinished();
+                queue[i + 1].onFinished(_this2);
               }
 
               if (!config.manualNext) {
@@ -1831,9 +1831,7 @@ function () {
           }
 
           if (queue[i + 1].onAnimating instanceof Function) {
-            queue[i + 1].onAnimating({
-              percent: currentProgress
-            });
+            queue[i + 1].onAnimating(_this2);
           }
         }
 

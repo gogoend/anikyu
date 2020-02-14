@@ -386,7 +386,7 @@ class animation_Animation {
 
 					setTimeout(() => {
 						if (queue[i + 1].onFinished instanceof Function) {
-							queue[i + 1].onFinished();
+							queue[i + 1].onFinished(this);
 						}
 						if (!config.manualNext) {
 							next.call(this);
@@ -396,9 +396,7 @@ class animation_Animation {
 					return;
 				}
 				if (queue[i + 1].onAnimating instanceof Function) {
-					queue[i + 1].onAnimating({
-						percent: currentProgress
-					});
+					queue[i + 1].onAnimating(this);
 				}
 			}
 			requestAnimationFrame(loop);
