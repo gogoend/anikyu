@@ -63,7 +63,8 @@ animationQueue（动画队列）是一个数组，其中包含产生动画效果
     delay: Number,
     duration: Number,
     easeType: String,
-    callback: Function
+    onAnimating: Function,
+    onFinished: Function
 }
 ```
 
@@ -75,7 +76,9 @@ duration - 当前补间动画阶段持续时间，若不设置则从实例的全
 
 easeType - 当前补间动画阶段缓动函数，若不设置则从实例的全局配置中继承
 
-callback - 当前补间动画阶段结束后执行的回调函数
+onAnimating - 在当前补间动画阶段发生过程中，每一次发生动画时将会被调用的函数，函数接收当前Anikyu实例作为参数
+
+onFinished - 当前补间动画阶段结束后执行的回调函数，函数接收当前Anikyu实例作为参数
 
 <br />
 
@@ -89,7 +92,7 @@ config（配置）是一个对象，包含对当前Anikyu实例的全局配置�
 }
 ```
 
-manualNext - 每一个补间动画阶段结束后是否手动播放下一个动画阶段。当前一个动画阶段结束后，你需要手动调用 .next() 以继续播放下一个动画阶段。默认为false
+manualNext - 每一个补间动画阶段结束后是否手动播放下一个动画阶段。在当前动画阶段结束后，你需要手动调用 .next() 以继续播放下一个动画阶段，默认为false
 
 duration - 每一个补间动画阶段默认的持续时间，默认为2000
 

@@ -61,7 +61,8 @@ Every status in animationQueue is described as the following Object:
     delay: Number,
     duration: Number,
     easeType: String,
-    callback: Function
+    onAnimating: Function,
+    onFinished: Function
 }
 ```
 
@@ -73,7 +74,9 @@ duration - The duration of tween animation stage. It will be replaced with the v
 
 easeType - The ease function which the tween animation stage use. It will be replaced with the value in the instance global setting if it's not given.
 
-callback - The Function to be called after the tween animation stage finished.
+onAnimating - The function to be call when every time the animation happens. It receives the current Anikyu instance as an argument.
+
+onFinished - The function to be called after the tween animation stage finished. It receives the current Anikyu instance as an argument.
 
 <br />
 
