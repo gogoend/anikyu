@@ -10,4 +10,12 @@ function getStyle(obj, attr) {
 	}
 }
 
-export {clamp,getStyle};
+function trigger(obj, eName ,eDetail) {
+	
+	let theEvent = new CustomEvent(eName, {
+		detail: Object.assign({},eDetail)
+	});
+	obj.dispatchEvent(theEvent);
+}
+
+export {clamp,getStyle,trigger};

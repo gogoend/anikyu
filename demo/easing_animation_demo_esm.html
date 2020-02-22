@@ -56,7 +56,7 @@
                     width: 200,
                     height: 200
                 },
-                callback: function() {
+                callback: function () {
                 }
             }, {
                 duration: 2000,
@@ -81,7 +81,7 @@
                 },
             }
         ]
-        new Anikyu(el2, [
+        let zzz = new Anikyu(el2, [
             {
                 delay: 1000,
                 duration: 400,
@@ -96,17 +96,24 @@
                 props: {
                     fontSize: 400
                 },
-                onAnimating: function(instance) {
-                    console.log(instance)
-                },
-                onFinished: function() {
-                    window.anikyuInstance=new Anikyu(el1, el1AnimationQueue,{
-                        // manualNext: true
-                    });
-                    console.log('zzz')
-                }
+                // onAnimating: function(instance) {
+                //     console.log(instance)
+                // },
+                // onFinished: function() {
+                //     window.anikyuInstance=new Anikyu(el1, el1AnimationQueue,{
+                //         // manualNext: true
+                //     });
+                //     console.log('zzz')
+                // }
             }
         ])
+
+        zzz.addEventListener('animating', function (e) {
+            console.log(e)
+        })
+        zzz.addEventListener('finished', function (e) {
+            console.log(e)
+        })
 
     </script>
 </body>

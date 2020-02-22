@@ -1,10 +1,10 @@
 import { easingFuncs as ease } from './easing_funcs.js';
-import { clamp, getStyle } from './util.js';
+import { clamp, getStyle ,trigger } from './util.js';
 
-class Animation {
+class Animation extends EventTarget {
 
 	constructor(el, queue, config) {
-
+		super();
 		this.el = el;
 		this.queue = queue;
 
@@ -25,40 +25,18 @@ class Animation {
 			return;
 		}
 		if (!this.config.manualNext) {
-			this.animationQueueHandler = this.go();
-			setTimeout(() => this.animationQueueHandler.next(), this.queue[0].delay);
+			setTimeout(() => this.executor(), this.queue[0].delay);
 		}
 
-		// debugger
+	}
 
-	}
-	pause() {
-		if(this.status.paused) return;
-		let { startTime } = this.status;
-		this.status.paused = true;
-		let pausedTime = new Date().getTime();
-		this.status.passedTime = pausedTime - startTime;
-	}
-	resume() {
-		if(!this.status.paused) return;
-		let { status } = this;
-		status.startTime = new Date().getTime() - status.passedTime;
-		this.status.paused = false;
-	}
-	*go() {
-		let { i, queue, executor } = this;
-		while (i <= queue.length) {
-			yield queue[i + 1] ? (
-				executor.call(this),
-				true
-			)
-				:
-				undefined;
-		}
-	}
-	executor() {
-		// super();
+	// 动画执行器，用于在前后一对补间动画阶段之间进行补间
+	executor(index) {
+
+		if(!isNaN(parseInt(index))) this.i=index;
+
 		let { el, i, queue, next, status, config } = this;
+
 		if (!queue[i]) {
 			return;
 		}
@@ -99,9 +77,12 @@ class Animation {
 					//如何执行下一步？
 
 					setTimeout(() => {
-						if (queue[i + 1].onFinished instanceof Function) {
-							queue[i + 1].onFinished(this);
-						}
+						// if (queue[i + 1].onFinished instanceof Function) {
+						// 	queue[i + 1].onFinished(this);
+						// }
+						trigger(this,'finished',{
+							stageIndex:this.i
+						});
 						if (!config.manualNext) {
 							next.call(this);
 						}
@@ -109,15 +90,35 @@ class Animation {
 					// debugger
 					return;
 				}
-				if (queue[i + 1].onAnimating instanceof Function) {
-					queue[i + 1].onAnimating(this);
-				}
+				trigger(this,'animating',{
+					stageIndex:this.i,
+					progress:currentProgress
+				});
+				// if (queue[i + 1].onAnimating instanceof Function) {
+				// 	queue[i + 1].onAnimating(this);
+				// }
 			}
 			requestAnimationFrame(loop);
 		};
 		loop();
 	}
 
+	// 动画流程控制
+	// 预期实现的功能：暂停、继续、重播当前、跳转到、上一个、下一个
+	pause() {
+		if(this.status.paused) return;
+		let { startTime } = this.status;
+		this.status.paused = true;
+		let pausedTime = new Date().getTime();
+		this.status.passedTime = pausedTime - startTime;
+	}
+	resume() {
+		let { status } = this;
+
+		if(!this.status.paused) return;
+		status.startTime = new Date().getTime() - status.passedTime;
+		this.status.paused = false;
+	}
 	replay() {
 		if(!this.queue[this.i+1]){
 			return;
@@ -125,19 +126,26 @@ class Animation {
 
 		this.status.startTime = this.status.startTime+this.queue[this.i+1].duration;
 	}
-
+	jump() {
+		trigger(this,'next');
+	}
+	prev() {
+		trigger(this,'prev');
+	}
 	next() {
 		// TODO: when call next, skip everyting in last queue item.
 
 		if(this.status.paused) this.resume();
 
-		if (!this.animationQueueHandler) {
-			this.animationQueueHandler = this.go();
-			setTimeout(() => this.animationQueueHandler.next(), this.queue[0].delay);
-		} else {
+		if(!this.queue[this.i+1]) return;
+
+		setTimeout(() => {
 			this.i++;
-			this.animationQueueHandler.next();
-		}
+			this.executor(this.i);
+		}, this.queue[this.i+1].delay);
+
+		// trigger(this,'next');
+
 	}
 }
 
