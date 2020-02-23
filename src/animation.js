@@ -25,13 +25,18 @@ class Animation extends EventTarget {
 			return;
 		}
 		if (!this.config.manualNext) {
-			setTimeout(() => this.executor(), this.queue[0].delay);
+			this.executor();
+			// setTimeout(() => this.executor(), this.queue[0].delay);
 		}
+
+		this.reqAniHandler = null;
 
 	}
 
 	// 动画执行器，用于在前后一对补间动画阶段之间进行补间
 	executor(index) {
+
+		cancelAnimationFrame(this.reqAniHandler);
 
 		if(!isNaN(parseInt(index))) this.i=index;
 
@@ -42,7 +47,7 @@ class Animation extends EventTarget {
 		}
 		let perviousStatus = queue[i].props,
 			finalStatus = queue[i + 1] ? queue[i + 1].props : undefined;
-		let delay = (queue[i + 1] && queue[i + 1].delay) ? queue[i + 1].delay : undefined;
+		let delay = (queue[i + 1] && queue[i + 1].delay) ? queue[i + 1].delay : 0;
 		if (!finalStatus) {
 			return;
 		}
@@ -50,7 +55,7 @@ class Animation extends EventTarget {
 		let easeType = queue[i + 1].easeType ? queue[i + 1].easeType : config.easeType;
 		let duration = queue[i + 1].duration ? queue[i + 1].duration : config.duration;
 
-		status.startTime = new Date().getTime();
+		status.startTime = new Date().getTime()+delay;
 
 		let totalDelta = {};
 
@@ -73,7 +78,7 @@ class Animation extends EventTarget {
 
 				if (currentProgress == 1) {
 					// clearInterval(timer)
-					cancelAnimationFrame(loop);
+					// cancelAnimationFrame(this.reqAniHandler);
 					//如何执行下一步？
 
 					setTimeout(() => {
@@ -98,9 +103,10 @@ class Animation extends EventTarget {
 				// 	queue[i + 1].onAnimating(this);
 				// }
 			}
-			requestAnimationFrame(loop);
+			this.reqAniHandler = requestAnimationFrame(loop);
 		};
-		loop();
+		setTimeout(loop,delay);
+		// loop();
 	}
 
 	// 动画流程控制
@@ -124,13 +130,22 @@ class Animation extends EventTarget {
 			return;
 		}
 
-		this.status.startTime = this.status.startTime+this.queue[this.i+1].duration;
+		this.executor(this.i);
 	}
-	jump() {
-		trigger(this,'next');
+	jump(index) {
+		if(this.status.paused) this.resume();
+
+		if(!this.queue[index]) return;
+
+		this.executor(index);
 	}
 	prev() {
-		trigger(this,'prev');
+		if(this.status.paused) this.resume();
+
+		if(!this.queue[this.i-1]) return;
+
+		this.i--;
+		this.executor();
 	}
 	next() {
 		// TODO: when call next, skip everyting in last queue item.
@@ -139,10 +154,16 @@ class Animation extends EventTarget {
 
 		if(!this.queue[this.i+1]) return;
 
-		setTimeout(() => {
-			this.i++;
-			this.executor(this.i);
-		}, this.queue[this.i+1].delay);
+		let delay=this.queue[this.i].delay?this.queue[this.i].delay:0;
+		this.status.startTime = this.status.startTime+this.queue[this.i].duration + delay;
+
+		this.i++;
+		this.executor();
+
+		// setTimeout(() => {
+		// 	this.i++;
+		// 	this.executor(this.i);
+		// }, this.queue[this.i+1].delay);
 
 		// trigger(this,'next');
 

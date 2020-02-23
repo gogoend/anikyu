@@ -59,6 +59,7 @@
                 callback: function () {
                 }
             }, {
+                delay: 500,
                 duration: 2000,
                 easeType: 'elasticOut',
                 props: {
@@ -66,7 +67,7 @@
                     height: 500
                 },
             }, {
-                duration: 1600,
+                duration: 4000,
                 easeType: '',
                 props: {
                     width: 500,
@@ -113,6 +114,9 @@
         })
         zzz.addEventListener('finished', function (e) {
             console.log(e)
+            window.anikyuInstance = new Anikyu(el1, el1AnimationQueue, {
+                // manualNext: true
+            });
         })
 
     </script>
