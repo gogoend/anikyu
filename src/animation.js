@@ -52,6 +52,12 @@ class Animation extends EventTarget {
 			return;
 		}
 
+		// 确保每一次的初始状态都和前一对象中的属性相等
+		// 修复重播当前、跳转到、上一个、下一个函数不正常工作的问题
+		for (let key in perviousStatus) {
+			el.style[key] = perviousStatus[key];
+		}
+
 		let easeType = queue[i + 1].easeType ? queue[i + 1].easeType : config.easeType;
 		let duration = queue[i + 1].duration ? queue[i + 1].duration : config.duration;
 
@@ -126,23 +132,20 @@ class Animation extends EventTarget {
 		this.status.paused = false;
 	}
 	replay() {
-		if(!this.queue[this.i+1]){
-			return;
-		}
+		if(!this.queue[this.i]) return;
+		if(this.status.paused) this.resume();
 
 		this.executor(this.i);
 	}
 	jump(index) {
-		if(this.status.paused) this.resume();
-
 		if(!this.queue[index]) return;
+		if(this.status.paused) this.resume();
 
 		this.executor(index);
 	}
 	prev() {
-		if(this.status.paused) this.resume();
-
 		if(!this.queue[this.i-1]) return;
+		if(this.status.paused) this.resume();
 
 		this.i--;
 		this.executor();
@@ -154,19 +157,12 @@ class Animation extends EventTarget {
 
 		if(!this.queue[this.i+1]) return;
 
-		let delay=this.queue[this.i].delay?this.queue[this.i].delay:0;
-		this.status.startTime = this.status.startTime+this.queue[this.i].duration + delay;
-
 		this.i++;
 		this.executor();
 
-		// setTimeout(() => {
-		// 	this.i++;
-		// 	this.executor(this.i);
-		// }, this.queue[this.i+1].delay);
-
-		// trigger(this,'next');
-
+	}
+	dispose() {
+		cancelAnimationFrame(this.reqAniHandler);
 	}
 }
 
