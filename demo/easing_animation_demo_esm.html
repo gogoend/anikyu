@@ -27,6 +27,8 @@
         import Anikyu from '../src/anikyu.js';
         // import Anikyu from '../dist/anikyu.esm.js';
 
+        let someEl = {}
+
         let el1 = document.getElementById('wow');
 
         let el2 = document.getElementById('lol');
@@ -82,7 +84,7 @@
                 },
             }
         ]
-        let zzz = new Anikyu(el2, [
+        let zzz = new Anikyu(someEl, [
             {
                 delay: 1000,
                 duration: 400,
@@ -96,28 +98,22 @@
                 easeType: 'bounceOut',
                 props: {
                     fontSize: 400
-                },
-                // onAnimating: function(instance) {
-                //     console.log(instance)
-                // },
-                // onFinished: function() {
-                //     window.anikyuInstance=new Anikyu(el1, el1AnimationQueue,{
-                //         // manualNext: true
-                //     });
-                //     console.log('zzz')
-                // }
+                }
             }
         ])
 
-        zzz.addEventListener('animating', function (e) {
+        zzz.addEventListener('finish', function (e) {
             console.log(e)
-        })
-        zzz.addEventListener('finished', function (e) {
-            console.log(e)
-            window.anikyuInstance = new Anikyu(el1, el1AnimationQueue, {
+            window.anikyuInstance = new Anikyu(el1.style, el1AnimationQueue, {
                 // manualNext: true
             });
+            window.anikyuInstance.addEventListener('animate', function (e) {
+                console.log(e)
+            })
+            window.anikyuInstance.addEventListener('finish',()=>{debugger})
         })
+
+
 
     </script>
 </body>
