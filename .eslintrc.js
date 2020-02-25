@@ -28,6 +28,9 @@ module.exports = {
 		'semi': [
 			'error',
 			'always'
-		]
+		],
+		"space-before-function-paren": 1,
+		"space-infix-ops": 1,
+		"spaced-comment": 1
 	}
 };
