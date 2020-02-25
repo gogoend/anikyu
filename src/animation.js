@@ -3,17 +3,17 @@ import { clamp, getStyle ,trigger } from './util.js';
 
 class Animation extends EventTarget {
 
-	constructor(el, queue, config) {
+	constructor (el, queue, config) {
 		super();
 		this.el = el;
 		this.queue = queue;
 
-		let defaultConfig={
+		let defaultConfig = {
 			duration: 2000,
 			easeType: 'quadraticInOut',
 			manualNext: false
 		};
-		this.config=Object.assign(JSON.parse(JSON.stringify(defaultConfig)),config);
+		this.config = Object.assign(JSON.parse(JSON.stringify(defaultConfig)),config);
 
 		this.i = 0;
 
@@ -28,28 +28,28 @@ class Animation extends EventTarget {
 			this.executor();
 		}
 
-		this.executor=this.executor.bind(this);
+		this.executor = this.executor.bind(this);
 
 		this.reqAniHandler = null;
 
 	}
 
 	// 动画执行器，用于在前后一对补间动画阶段之间进行补间
-	executor(index) {
+	executor (index) {
 
 		let { el, i, queue, next, status, config,reqAniHandler } = this;
 
 		cancelAnimationFrame(reqAniHandler);
 
-		if(!isNaN(parseInt(index))) this.i=index;
+		if(!isNaN(parseInt(index))) this.i = index;
 
-		if (!queue[i] || !queue[i+1]) {
+		if (!queue[i] || !queue[i + 1]) {
 			return;
 		}
 		let perviousStatus = queue[i].props,
 			finalStatus = queue[i + 1].props;
 
-		let delay = queue[i + 1].delay!==undefined ? queue[i + 1].delay : 0;
+		let delay = queue[i + 1].delay !== undefined ? queue[i + 1].delay : 0;
 
 		// 确保每一次的初始状态都和前一对象中的属性相等
 		// 修复重播当前、跳转到、上一个、下一个函数不正常工作的问题
@@ -60,7 +60,7 @@ class Animation extends EventTarget {
 		let easeType = queue[i + 1].easeType ? queue[i + 1].easeType : config.easeType;
 		let duration = queue[i + 1].duration ? queue[i + 1].duration : config.duration;
 
-		status.startTime = new Date().getTime()+delay;
+		status.startTime = new Date().getTime() + delay;
 
 		let totalDelta = {};
 
@@ -75,13 +75,13 @@ class Animation extends EventTarget {
 				let currentTime = new Date().getTime();
 				let currentProgress = clamp((currentTime - status.startTime) / duration, 0, 1);
 
-				let newValue={},stageDeltas={},frameDeltas={};
+				let newValue = {},stageDeltas = {},frameDeltas = {};
 				for (let key in perviousStatus) {
 					newValue[key] = perviousStatus[key] + totalDelta[key] * ease[easeType](currentProgress);
 
-					stageDeltas[key]=(newValue[key]===undefined?0:newValue[key])-(perviousStatus[key]===undefined? 0 : perviousStatus[key]);
+					stageDeltas[key] = (newValue[key] === undefined ? 0 : newValue[key]) - (perviousStatus[key] === undefined ? 0 : perviousStatus[key]);
 
-					frameDeltas[key]=(newValue[key]===undefined?0:newValue[key])-(el[key]===undefined? 0 : parseFloat(el[key]));
+					frameDeltas[key] = (newValue[key] === undefined ? 0 : newValue[key]) - (el[key] === undefined ? 0 : parseFloat(el[key]));
 				}
 
 				Object.assign(el,newValue);
@@ -89,7 +89,7 @@ class Animation extends EventTarget {
 				if (currentProgress == 1) {
 					// clearInterval(timer)
 					// cancelAnimationFrame(this.reqAniHandler);
-					//如何执行下一步？
+					// 如何执行下一步？
 
 					setTimeout(() => {
 						// if (queue[i + 1].onFinished instanceof Function) {
@@ -124,7 +124,7 @@ class Animation extends EventTarget {
 
 	// 动画流程控制
 	// 暂停、继续、重播当前
-	pause() {
+	pause () {
 		let { status } = this;
 
 		if(status.paused) return;
@@ -133,7 +133,7 @@ class Animation extends EventTarget {
 		status.passedTime = pausedTime - status.startTime;
 		status.paused = true;
 	}
-	resume() {
+	resume () {
 		let { status } = this;
 
 		if(!status.paused) return;
@@ -143,8 +143,8 @@ class Animation extends EventTarget {
 		status.paused = false;
 	}
 
-	replay() {
-		let {status,queue,i,executor,resume}=this;
+	replay () {
+		let {status,queue,i,executor,resume} = this;
 
 		if(!queue[i]) return;
 		if(status.paused) resume();
@@ -153,26 +153,26 @@ class Animation extends EventTarget {
 	}
 
 	// 跳转到、上一个、下一个
-	jump(index) {
-		let {status,queue,executor,resume}=this;
+	jump (index) {
+		let {status,queue,executor,resume} = this;
 
 		if(!queue[index]) return;
 		if(status.paused) resume();
 
 		executor(index);
 	}
-	prev() {
-		let {status,queue,i,executor,resume}=this;
-		if(!queue[i-1]) return;
+	prev () {
+		let {status,queue,i,executor,resume} = this;
+		if(!queue[i - 1]) return;
 
 		if(status.paused) resume();
 
 		this.i--;
 		executor();
 	}
-	next() {
-		let {status,queue,i,executor,resume}=this;
-		if(!queue[i+1]) return;
+	next () {
+		let {status,queue,i,executor,resume} = this;
+		if(!queue[i + 1]) return;
 
 		if(status.paused) resume();
 
@@ -181,11 +181,11 @@ class Animation extends EventTarget {
 	}
 
 	// 废弃
-	dispose() {
+	dispose () {
 		cancelAnimationFrame(this.reqAniHandler);
 		trigger(this,'dispose');
 		for(let key in this){
-			this[key]=undefined;
+			this[key] = undefined;
 			delete this[key];
 		}
 	}

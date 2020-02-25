@@ -1,7 +1,7 @@
-function clamp(value, min, max) {
+function clamp (value, min, max) {
 	return Math.max(min, Math.min(max, value));
 }
-function getStyle(obj, attr) {
+function getStyle (obj, attr) {
 	if (obj.currentStyle) {
 		return obj.currentStyle[attr];
 	}
@@ -10,7 +10,7 @@ function getStyle(obj, attr) {
 	}
 }
 
-function trigger(obj, eName ,eDetail) {
+function trigger (obj, eName ,eDetail) {
 	
 	let theEvent = new CustomEvent(eName, {
 		detail: Object.assign({},eDetail)

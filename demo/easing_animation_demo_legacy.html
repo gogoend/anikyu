@@ -55,7 +55,7 @@
                     width: 200,
                     height: 200
                 },
-                callback: function() {
+                callback: function () {
                 }
             }, {
                 duration: 2000,
@@ -95,11 +95,11 @@
                 props: {
                     fontSize: 400
                 },
-                onAnimating: function(instance) {
+                onAnimating: function (instance) {
                     console.log(instance)
                 },
-                onFinished: function() {
-                    window.anikyuInstance=new Anikyu(el1, el1AnimationQueue,{
+                onFinished: function () {
+                    window.anikyuInstance = new Anikyu(el1, el1AnimationQueue, {
                         // manualNext: true
                     });
                     console.log('zzz')
