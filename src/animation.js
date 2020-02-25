@@ -49,7 +49,8 @@ class Animation extends EventTarget {
 		let perviousStatus = queue[i].props,
 			finalStatus = queue[i + 1].props;
 
-		let delay = queue[i + 1].delay !== undefined ? queue[i + 1].delay : 0;
+		let delay = queue[i].delay !== undefined ? queue[i].delay : 0;
+		let currentStageIndex = this.i;
 
 		// 确保每一次的初始状态都和前一对象中的属性相等
 		// 修复重播当前、跳转到、上一个、下一个函数不正常工作的问题
@@ -91,12 +92,13 @@ class Animation extends EventTarget {
 					// cancelAnimationFrame(this.reqAniHandler);
 					// 如何执行下一步？
 
-					setTimeout(() => {
+					setTimeout(()=>{
 						// if (queue[i + 1].onFinished instanceof Function) {
 						// 	queue[i + 1].onFinished(this);
 						// }
 						trigger(this,'finish',{
-							stageIndex:this.i
+							stageIndex:currentStageIndex,
+							name:queue[currentStageIndex].name
 						});
 						if (!config.manualNext) {
 							next.call(this);
@@ -107,6 +109,7 @@ class Animation extends EventTarget {
 				}
 				trigger(this,'animate',{
 					stageIndex:this.i,
+					name:queue[currentStageIndex].name ? queue[currentStageIndex].name : '',
 					progress:currentProgress,
 					values:el,
 					stageDeltas,
