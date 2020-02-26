@@ -6,16 +6,24 @@
 
 ## 介绍
 
-anikyu 是一个简易的补间动画库，基于JavaScript，可以为一个指定对象中的数值创建连续补间动画。
-
-当前版本暂仅支持CSS属性补间，用于补间的属性单位应为px。
+anikyu 是一个补间动画库，基于JavaScript，可以为一个指定对象中的数值创建连续补间动画。
 
 
 ## 浏览器兼容性
 
-如果你是用的是dist文件夹中的Anikyu.js，则至少应当使用IE 9或更高版本浏览器。
+如果你希望通过以ES Module的方式引入Anikyu，浏览器的最低版本需求是：
 
-Anikyu使用了一些在IE等其他较为老旧的浏览器中不兼容的特性或功能，例如ES Module、Generator以及requestAnimationFrame。如果你要在这些浏览器中使用Anikyu，可以通过script标签，引入由Webpack与Babel构建的、位于dist文件夹中的Anikyu.js，这将使得Anikyu成为一个全局变量。
+浏览器名称 | 版本
+- | -
+Chrome | 61
+FireFox | 60
+IE | 不支持
+
+（数据来自 [caniuse](https://caniuse.com/#feat=es6-module) ）
+
+如果你当前浏览器不支持ES Module，或希望通过script标签直接引入Anikyu，则可以使用dist文件夹中的Anikyu.js。
+
+该文件兼容IE 9或更高版本浏览器。引入该文件以后，Anikyu将会成为一个全局变量。
 
 
 ## 引入到项目中
@@ -48,7 +56,9 @@ new Anikyu(
 ```
 
 el - 产生动画效果的对象
+
 animationQueue - 动画队列，包含补间动画中每一个阶段配置的数组
+
 config - 配置
 
 你需要在构造函数中传入当前产生动画效果的对象以及作用到该对象的动画队列，若不传入配置，则使用Anikyu内部的默认设置。
@@ -63,22 +73,19 @@ animationQueue（动画队列）是一个数组，其中包含产生动画效果
     delay: Number,
     duration: Number,
     easeType: String,
-    onAnimating: Function,
-    onFinished: Function
+    name: String
 }
 ```
 
-props - （必须）产生动画效果的对象在当前补间动画阶段结束后的属性
+props - （必须）产生动画效果的对象在当前动画阶段结束后的属性
 
-delay - 当前补间动画阶段开始前的延迟时间，默认为0，即当前补间动画阶段将上一补间动画阶段结束后立即执行
+delay - 当前动画阶段开始前的延迟时间，默认为0，即当前动画阶段将上一动画阶段结束后立即执行
 
-duration - 当前补间动画阶段持续时间，若不设置则从实例的全局配置中继承
+duration - 当前动画阶段持续时间，若不设置则从实例的全局配置中继承
 
-easeType - 当前补间动画阶段缓动函数，若不设置则从实例的全局配置中继承
+easeType - 当前动画阶段缓动函数，若不设置则从实例的全局配置中继承
 
-onAnimating - 在当前补间动画阶段发生过程中，每一次发生动画时将会被调用的函数，函数接收当前Anikyu实例作为参数
-
-onFinished - 当前补间动画阶段结束后执行的回调函数，函数接收当前Anikyu实例作为参数
+name - 当前动画阶段的名称，由用户指定
 
 <br />
 
@@ -92,11 +99,11 @@ config（配置）是一个对象，包含对当前Anikyu实例的全局配置�
 }
 ```
 
-manualNext - 每一个补间动画阶段结束后是否手动播放下一个动画阶段。在当前动画阶段结束后，你需要手动调用 .next() 以继续播放下一个动画阶段，默认为false
+manualNext - 每一个动画阶段结束后是否手动播放下一个动画阶段。在当前动画阶段结束后，你需要手动调用 .next() 以继续播放下一个动画阶段，默认为false
 
-duration - 每一个补间动画阶段默认的持续时间，默认为2000
+duration - 每一个动画阶段默认的持续时间，默认为2000
 
-easeType - 每一个补间动画阶段默认的缓动函数，默认为'quadraticInOut'，其他可选值参见 <https://echarts.apache.org/examples/zh/editor.html?c=line-easing>
+easeType - 每一个动画阶段默认的缓动函数，默认为'quadraticInOut'，其他可选值参见 <https://echarts.apache.org/examples/zh/editor.html?c=line-easing>
 
 
 ## 实例方法
@@ -105,19 +112,92 @@ easeType - 每一个补间动画阶段默认的缓动函数，默认为'quadrati
 
 - .pause()
 
-暂停当前补间动画阶段
+暂停当前动画阶段
 
 - .resume()
 
-继续当前补间动画阶段
+继续当前动画阶段
 
 - .replay()
 
-重播当前补间动画阶段
+重播当前动画阶段
+
+- .jump( index: Number )
+
+index - 要跳转的动画阶段的索引。
+
+跳转到第index个动画阶段进行播放
+
+- .prev()
+
+跳转到上一动画阶段
 
 - .next()
 
-在当前补间动画阶段播放结束后手动继续播放到下一补间动画阶段
+跳转到下一动画阶段
+
+- .dispose()
+
+废弃该实例，之后该实例将不再可用
+
+
+## 事件
+
+该版本Anikyu是基于EventTarget来实现的，你可以在由Anikyu类产生的实例上添加事件监听器。
+
+例如，下列代码为Anikyu实例的animate事件增加了监听：
+
+```JavaScript
+    anikyuInstance.addEventListener('animate',function(event){
+        console.log(event)
+    })
+```
+
+此外，你也可以通过在Anikyu实例上调用 .removeEventListener() 来移除事件监听器。
+
+Anikyu支持以下事件：
+
+- animate
+
+每当请求一次动画帧时会触发一次animate事件。事件的回调函数接收下列对象作为参数：
+
+```JavaScript
+{
+    stageIndex: Number,
+    name: String,
+    progress: Number,
+    values: Object,
+    stageDeltas: Object,
+    frameDeltas: Object
+}
+```
+
+stageIndex - 当前动画阶段的索引
+
+name - 当前动画阶段的名称，可以由用户指定
+
+progress - 当前动画阶段进度
+
+values - 当前帧该对象的值
+
+stageDeltas - 当前动画阶段与前一动画阶段的差值
+
+frameDeltas - 当前这一帧与前一帧的差值
+
+- finish
+
+当前动画阶段结束时会触发一次finish事件。事件的回调函数接收下列对象作为参数：
+
+```JavaScript
+{
+    stageIndex: Number,
+    name: String
+}
+```
+
+stageIndex - 当前动画阶段的索引
+
+name - 当前动画阶段的名称，可以由用户指定
 
 
 ## License
