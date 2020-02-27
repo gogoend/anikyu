@@ -13,15 +13,15 @@ anikyu 是一个补间动画库，基于JavaScript，可以为一个指定对象
 
 如果你希望通过以ES Module的方式引入Anikyu，浏览器的最低版本需求是：
 
-浏览器名称 | 版本
-- | -
-Chrome | 61
-FireFox | 60
-IE | 不支持
+| 浏览器名称 | 版本 |
+| - | - |
+| Chrome | 61 |
+| FireFox | 60 |
+| IE | 不支持 |
 
 （数据来自 [caniuse](https://caniuse.com/#feat=es6-module) ）
 
-如果你当前浏览器不支持ES Module，或希望通过script标签直接引入Anikyu，则可以使用dist文件夹中的Anikyu.js。
+如果你当前浏览器不支持ES Module，或你希望通过script标签直接引入Anikyu，则可以使用dist文件夹中的Anikyu.js。
 
 该文件兼容IE 9或更高版本浏览器。引入该文件以后，Anikyu将会成为一个全局变量。
 

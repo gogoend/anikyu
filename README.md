@@ -8,18 +8,17 @@
 
 Anikyu is a tween animation library, based on JavaScript, can create continuous tween animation for number values in one specified object.
 
-Current version temporarily only support the tween animation of CSS property whose unit is *px*.
-
 
 ## Browser Compatibility
 
 If you prefer to import Anikyu by using ES Module, your browser needs using the following version at least.
 
-Browser | Version
-- | -
-Chrome | 61
-FireFox | 60
-IE | Not Support
+
+| Browser | Version |
+| - | - |
+| Chrome | 61 |
+| FireFox | 60 |
+| IE | Not Support |
 
 ( The data is from [caniuse](https://caniuse.com/#feat=es6-module). )
 
