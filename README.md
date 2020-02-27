@@ -60,7 +60,7 @@ el - The object to be animated.
 
 animationQueue - An array of the configurations for every animation stage.
 
-config - The gloabl configuration for every animation stage.
+config - The global configuration for every animation stage.
 
 You need to pass the object to be animated and the animation queue which will take effect on the passed object.
 
