@@ -22,7 +22,7 @@ If you prefer to import Anikyu by using ES Module, your browser needs using the 
 
 ( The data is from [caniuse](https://caniuse.com/#feat=es6-module). )
 
-However, if your current don't support ES Module, or you want to import Anikyu by script tag, you can use Anikyu.js in dist folder. 
+However, if your current browser doesn't support ES Module, or you want to import Anikyu by script tag, you can use Anikyu.js in dist folder. 
 
 This file supports IE 9 and later browsers. After importing this file, Anikyu will become a global variable.
 
