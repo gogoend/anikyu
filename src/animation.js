@@ -78,16 +78,16 @@ class Animation extends EventTarget {
 				let currentTime = new Date().getTime();
 				let currentProgress = clamp((currentTime - status.startTime) / duration, 0, 1);
 
-				let newValues = {},stageDeltas = {},frameDeltas = {};
+				let newValue = {},stageDelta = {},frameDelta = {};
 				for (let key in perviousStatus) {
-					newValues[key] = perviousStatus[key] + totalDelta[key] * ease[easeType].call(this, currentProgress, step);
+					newValue[key] = perviousStatus[key] + totalDelta[key] * ease[easeType].call(this, currentProgress, step);
 
-					stageDeltas[key] = (newValues[key] === undefined ? 0 : newValues[key]) - (perviousStatus[key] === undefined ? 0 : perviousStatus[key]);
+					stageDelta[key] = (newValue[key] === undefined ? 0 : newValue[key]) - (perviousStatus[key] === undefined ? 0 : perviousStatus[key]);
 
-					frameDeltas[key] = (newValues[key] === undefined ? 0 : newValues[key]) - (el[key] === undefined ? 0 : parseFloat(el[key]));
+					frameDelta[key] = (newValue[key] === undefined ? 0 : newValue[key]) - (el[key] === undefined ? 0 : parseFloat(el[key]));
 				}
 
-				Object.assign(el,newValues);
+				Object.assign(el,newValue);
 
 				if (currentProgress == 1) {
 					// clearInterval(timer)
@@ -114,9 +114,9 @@ class Animation extends EventTarget {
 					name:queue[currentStageIndex].name ? queue[currentStageIndex].name : '',
 					progress:currentProgress,
 					target:el,
-					values:newValues,
-					stageDeltas,
-					frameDeltas
+					value:newValue,
+					stageDelta,
+					frameDelta
 				});
 				// if (queue[i + 1].onAnimating instanceof Function) {
 				// 	queue[i + 1].onAnimating(this);
