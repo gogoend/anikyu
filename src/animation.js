@@ -61,6 +61,8 @@ class Animation extends EventTarget {
 		let easeType = queue[i + 1].easeType ? queue[i + 1].easeType : config.easeType;
 		let duration = queue[i + 1].duration ? queue[i + 1].duration : config.duration;
 
+		let step = queue[i].step ? queue[i].step : undefined;
+
 		status.startTime = new Date().getTime() + delay;
 
 		let totalDelta = {};
@@ -78,7 +80,7 @@ class Animation extends EventTarget {
 
 				let newValues = {},stageDeltas = {},frameDeltas = {};
 				for (let key in perviousStatus) {
-					newValues[key] = perviousStatus[key] + totalDelta[key] * ease[easeType](currentProgress);
+					newValues[key] = perviousStatus[key] + totalDelta[key] * ease[easeType].call(this, currentProgress, step);
 
 					stageDeltas[key] = (newValues[key] === undefined ? 0 : newValues[key]) - (perviousStatus[key] === undefined ? 0 : perviousStatus[key]);
 
