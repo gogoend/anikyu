@@ -85,16 +85,16 @@
         ]
         let zzz = new Anikyu(el2.style, [
             {
-                delay: 2000,
                 duration: 400,
-                easeType: 'bounceInOut',
                 props: {
                     fontSize: parseFloat(Anikyu.getStyle(el2, 'fontSize'))
                 },
             },
             {
+                delay: 2000,
                 duration: 2000,
-                easeType: 'bounceOut',
+                step: 20,
+                easeType: 'step',
                 props: {
                     fontSize: 400
                 }
@@ -108,7 +108,7 @@
             });
             window.anikyuInstance.addEventListener('animate', (e) => {
                 if (e.detail.name) {
-                    console.log(e.detail, e.detail.name, '正在进行')
+                    console.log(e.detail.values.width, e.detail.target.width, e.detail.name, '正在进行')
                 }
             })
             window.anikyuInstance.addEventListener('finish', (e) => {
