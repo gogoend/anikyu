@@ -8,8 +8,8 @@
     <style>
         body,
         html {
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
             margin: 0;
             box-sizing: border-box;
         }
@@ -22,7 +22,7 @@
 
 <body>
     <div id="wow" style="width:0;height: 0px;background-color: orangered;"></div>
-    <span id="lol" style="font-size:16px">111</span>
+    <div id="lol" style="font-size:16px;text-align: center;">111</div>
     <script type="module">
         import Anikyu from '../src/anikyu.js';
         // import Anikyu from '../dist/anikyu.esm.js';
@@ -32,7 +32,7 @@
         let el2 = document.getElementById('lol');
         let el1AnimationQueue = [
             {
-                delay: 2500,
+                delay: 500,
                 duration: 400,
                 easeType: 'bounceInOut',
                 props: {
@@ -47,18 +47,18 @@
                     width: 100,
                     height: 200
                 },
-                delay: 2000
+                name: '测试阶段'
             },
             {
+                delay: 300,
                 duration: 800,
                 easeType: 'sinusoidalInOut',
                 props: {
                     width: 200,
                     height: 200
-                },
-                callback: function() {
                 }
             }, {
+                delay: 400,
                 duration: 2000,
                 easeType: 'elasticOut',
                 props: {
@@ -66,13 +66,15 @@
                     height: 500
                 },
             }, {
-                duration: 1600,
+                delay: 2000,
+                duration: 4000,
                 easeType: '',
                 props: {
                     width: 500,
                     height: 10
                 },
             }, {
+                delay: 1,
                 duration: 3200,
                 easeType: 'bounceInOut',
                 props: {
@@ -81,32 +83,40 @@
                 },
             }
         ]
-        new Anikyu(el2, [
+        let zzz = new Anikyu(el2.style, [
             {
-                delay: 1000,
                 duration: 400,
-                easeType: 'bounceInOut',
                 props: {
                     fontSize: parseFloat(Anikyu.getStyle(el2, 'fontSize'))
                 },
             },
             {
-                duration: 1000,
-                easeType: 'bounceOut',
+                delay: 2000,
+                duration: 2000,
+                step: 20,
+                easeType: 'step',
                 props: {
                     fontSize: 400
-                },
-                onAnimating: function(instance) {
-                    console.log(instance)
-                },
-                onFinished: function() {
-                    window.anikyuInstance=new Anikyu(el1, el1AnimationQueue,{
-                        // manualNext: true
-                    });
-                    console.log('zzz')
                 }
             }
         ])
+
+        zzz.addEventListener('finish', function (e) {
+            console.log(e)
+            window.anikyuInstance = new Anikyu(el1.style, el1AnimationQueue, {
+                // manualNext: true
+            });
+            window.anikyuInstance.addEventListener('animate', (e) => {
+                if (e.detail.name) {
+                    console.log(e.detail.values.width, e.detail.target.width, e.detail.name, '正在进行')
+                }
+            })
+            window.anikyuInstance.addEventListener('finish', (e) => {
+                if (e.detail.name === '测试阶段') {
+                    document.title = e.detail.name + ' 已完成'
+                }
+            })
+        })
 
     </script>
 </body>

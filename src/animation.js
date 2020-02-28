@@ -1,19 +1,19 @@
 import { easingFuncs as ease } from './easing_funcs.js';
-import { clamp, getStyle } from './util.js';
+import { clamp, getStyle ,trigger } from './util.js';
 
-class Animation {
+class Animation extends EventTarget {
 
-	constructor(el, queue, config) {
-
+	constructor (el, queue, config) {
+		super();
 		this.el = el;
 		this.queue = queue;
 
-		let defaultConfig={
+		let defaultConfig = {
 			duration: 2000,
 			easeType: 'quadraticInOut',
 			manualNext: false
 		};
-		this.config=Object.assign(JSON.parse(JSON.stringify(defaultConfig)),config);
+		this.config = Object.assign(JSON.parse(JSON.stringify(defaultConfig)),config);
 
 		this.i = 0;
 
@@ -25,59 +25,50 @@ class Animation {
 			return;
 		}
 		if (!this.config.manualNext) {
-			this.animationQueueHandler = this.go();
-			setTimeout(() => this.animationQueueHandler.next(), this.queue[0].delay);
+			this.executor();
 		}
 
-		// debugger
+		this.executor = this.executor.bind(this);
+
+		this.reqAniHandler = null;
 
 	}
-	pause() {
-		if(this.status.paused) return;
-		let { startTime } = this.status;
-		this.status.paused = true;
-		let pausedTime = new Date().getTime();
-		this.status.passedTime = pausedTime - startTime;
-	}
-	resume() {
-		if(!this.status.paused) return;
-		let { status } = this;
-		status.startTime = new Date().getTime() - status.passedTime;
-		this.status.paused = false;
-	}
-	*go() {
-		let { i, queue, executor } = this;
-		while (i <= queue.length) {
-			yield queue[i + 1] ? (
-				executor.call(this),
-				true
-			)
-				:
-				undefined;
-		}
-	}
-	executor() {
-		// super();
-		let { el, i, queue, next, status, config } = this;
-		if (!queue[i]) {
+
+	// 动画执行器，用于在前后一对补间动画阶段之间进行补间
+	executor (index) {
+
+		let { el, i, queue, next, status, config,reqAniHandler } = this;
+
+		cancelAnimationFrame(reqAniHandler);
+
+		if(!isNaN(parseInt(index))) this.i = index;
+
+		if (!queue[i] || !queue[i + 1]) {
 			return;
 		}
 		let perviousStatus = queue[i].props,
-			finalStatus = queue[i + 1] ? queue[i + 1].props : undefined;
-		let delay = (queue[i + 1] && queue[i + 1].delay) ? queue[i + 1].delay : undefined;
-		if (!finalStatus) {
-			return;
+			finalStatus = queue[i + 1].props;
+
+		let delay = queue[i + 1].delay !== undefined ? queue[i + 1].delay : 0;
+		let currentStageIndex = this.i;
+
+		// 确保每一次的初始状态都和前一对象中的属性相等
+		// 修复重播当前、跳转到、上一个、下一个函数不正常工作的问题
+		for (let key in perviousStatus) {
+			el[key] = perviousStatus[key];
 		}
 
 		let easeType = queue[i + 1].easeType ? queue[i + 1].easeType : config.easeType;
 		let duration = queue[i + 1].duration ? queue[i + 1].duration : config.duration;
 
-		status.startTime = new Date().getTime();
+		let step = queue[i + 1].step ? queue[i + 1].step : undefined;
+
+		status.startTime = new Date().getTime() + delay;
 
 		let totalDelta = {};
 
 		for (let key in finalStatus) {
-			totalDelta[key] = finalStatus[key] - parseInt(el.style[key]);
+			totalDelta[key] = finalStatus[key] - parseInt(perviousStatus[key]);
 		}
 
 		let loop = () => {
@@ -87,21 +78,30 @@ class Animation {
 				let currentTime = new Date().getTime();
 				let currentProgress = clamp((currentTime - status.startTime) / duration, 0, 1);
 
-				// console.log(el.style.width)
-
+				let newValues = {},stageDeltas = {},frameDeltas = {};
 				for (let key in perviousStatus) {
-					el.style[key] = perviousStatus[key] + totalDelta[key] * ease[easeType](currentProgress) + 'px';
+					newValues[key] = perviousStatus[key] + totalDelta[key] * ease[easeType].call(this, currentProgress, step);
+
+					stageDeltas[key] = (newValues[key] === undefined ? 0 : newValues[key]) - (perviousStatus[key] === undefined ? 0 : perviousStatus[key]);
+
+					frameDeltas[key] = (newValues[key] === undefined ? 0 : newValues[key]) - (el[key] === undefined ? 0 : parseFloat(el[key]));
 				}
+
+				Object.assign(el,newValues);
 
 				if (currentProgress == 1) {
 					// clearInterval(timer)
-					cancelAnimationFrame(loop);
-					//如何执行下一步？
+					// cancelAnimationFrame(this.reqAniHandler);
+					// 如何执行下一步？
 
-					setTimeout(() => {
-						if (queue[i + 1].onFinished instanceof Function) {
-							queue[i + 1].onFinished(this);
-						}
+					setTimeout(()=>{
+						// if (queue[i + 1].onFinished instanceof Function) {
+						// 	queue[i + 1].onFinished(this);
+						// }
+						trigger(this,'finish',{
+							stageIndex:currentStageIndex,
+							name:queue[currentStageIndex].name
+						});
 						if (!config.manualNext) {
 							next.call(this);
 						}
@@ -109,34 +109,90 @@ class Animation {
 					// debugger
 					return;
 				}
-				if (queue[i + 1].onAnimating instanceof Function) {
-					queue[i + 1].onAnimating(this);
-				}
+				trigger(this,'animate',{
+					stageIndex:this.i,
+					name:queue[currentStageIndex].name ? queue[currentStageIndex].name : '',
+					progress:currentProgress,
+					target:el,
+					values:newValues,
+					stageDeltas,
+					frameDeltas
+				});
+				// if (queue[i + 1].onAnimating instanceof Function) {
+				// 	queue[i + 1].onAnimating(this);
+				// }
 			}
-			requestAnimationFrame(loop);
+			this.reqAniHandler = requestAnimationFrame(loop);
 		};
-		loop();
+		setTimeout(loop,delay);
+		// loop();
 	}
 
-	replay() {
-		if(!this.queue[this.i+1]){
-			return;
-		}
+	// 动画流程控制
+	// 暂停、继续、重播当前
+	pause () {
+		let { status } = this;
 
-		this.status.startTime = this.status.startTime+this.queue[this.i+1].duration;
+		if(status.paused) return;
+
+		let pausedTime = new Date().getTime();
+		status.passedTime = pausedTime - status.startTime;
+		status.paused = true;
+	}
+	resume () {
+		let { status } = this;
+
+		if(!status.paused) return;
+
+		let startTime =  new Date().getTime();
+		status.startTime = startTime - status.passedTime;
+		status.paused = false;
 	}
 
-	next() {
-		// TODO: when call next, skip everyting in last queue item.
+	replay () {
+		let {status,queue,i,executor,resume} = this;
 
-		if(this.status.paused) this.resume();
+		if(!queue[i]) return;
+		if(status.paused) resume();
 
-		if (!this.animationQueueHandler) {
-			this.animationQueueHandler = this.go();
-			setTimeout(() => this.animationQueueHandler.next(), this.queue[0].delay);
-		} else {
-			this.i++;
-			this.animationQueueHandler.next();
+		executor(i);
+	}
+
+	// 跳转到、上一个、下一个
+	jump (index) {
+		let {status,queue,executor,resume} = this;
+
+		if(!queue[index]) return;
+		if(status.paused) resume();
+
+		executor(index);
+	}
+	prev () {
+		let {status,queue,i,executor,resume} = this;
+		if(!queue[i - 1]) return;
+
+		if(status.paused) resume();
+
+		this.i--;
+		executor();
+	}
+	next () {
+		let {status,queue,i,executor,resume} = this;
+		if(!queue[i + 1]) return;
+
+		if(status.paused) resume();
+
+		this.i++;
+		executor();
+	}
+
+	// 废弃
+	dispose () {
+		cancelAnimationFrame(this.reqAniHandler);
+		trigger(this,'dispose');
+		for(let key in this){
+			this[key] = undefined;
+			delete this[key];
 		}
 	}
 }

@@ -2,6 +2,16 @@ export const easingFuncs = {
 	linear: function (k) {
 		return k;
 	},
+	step: function (k, step){
+		step = !step ? 10 : step;
+		var s = 1;
+
+		while(k > s * (1 / step)){
+			s++;
+		}
+
+		return s * (1 / step);
+	},
 	quadraticIn: function (k) {
 		return k * k;
 	},
