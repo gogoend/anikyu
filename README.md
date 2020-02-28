@@ -164,6 +164,7 @@ Fire every time the frame being requested. The callback receives the following o
     stageIndex: Number,
     name: String,
     progress: Number,
+    target: Object,
     values: Object,
     stageDeltas: Object,
     frameDeltas: Object
@@ -175,6 +176,8 @@ stageIndex - The index of current animation stage.
 name - The name of current animation stage, specified by user.
 
 progress - The progress of current animation stage.
+
+target - The reference to the current Object, which contains all values at current frame of the Object.
 
 values - The values of the target object at current frame.
 
