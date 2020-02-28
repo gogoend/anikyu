@@ -165,9 +165,9 @@ Fire every time the frame being requested. The callback receives the following o
     name: String,
     progress: Number,
     target: Object,
-    values: Object,
-    stageDeltas: Object,
-    frameDeltas: Object
+    value: Object,
+    stageDelta: Object,
+    frameDelta: Object
 }
 ```
 
@@ -179,11 +179,11 @@ progress - The progress of current animation stage.
 
 target - The reference to the current Object, which contains all values at current frame of the Object.
 
-values - The values of the target object at current frame.
+value - The values of the target object at current frame.
 
-stageDeltas - The difference values between the current and the pervious animation stage.
+stageDelta - The difference values between the current and the pervious animation stage.
 
-frameDeltas - The difference values between the current and the pervious frame.
+frameDelta - The difference values between the current and the pervious frame.
 
 - finish
 
