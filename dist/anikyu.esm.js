@@ -127,6 +127,16 @@ const easingFuncs = {
 	linear: function (k) {
 		return k;
 	},
+	step: function (k, step){
+		step = !step ? 10 : step;
+		var s = 1;
+
+		while(k > s * (1 / step)){
+			s++;
+		}
+
+		return s * (1 / step);
+	},
 	quadraticIn: function (k) {
 		return k * k;
 	},
@@ -343,7 +353,7 @@ class animation_Animation extends EventTarget {
 		let perviousStatus = queue[i].props,
 			finalStatus = queue[i + 1].props;
 
-		let delay = queue[i].delay !== undefined ? queue[i].delay : 0;
+		let delay = queue[i + 1].delay !== undefined ? queue[i + 1].delay : 0;
 		let currentStageIndex = this.i;
 
 		// 确保每一次的初始状态都和前一对象中的属性相等
@@ -354,6 +364,8 @@ class animation_Animation extends EventTarget {
 
 		let easeType = queue[i + 1].easeType ? queue[i + 1].easeType : config.easeType;
 		let duration = queue[i + 1].duration ? queue[i + 1].duration : config.duration;
+
+		let step = queue[i + 1].step ? queue[i + 1].step : undefined;
 
 		status.startTime = new Date().getTime() + delay;
 
@@ -370,16 +382,16 @@ class animation_Animation extends EventTarget {
 				let currentTime = new Date().getTime();
 				let currentProgress = clamp((currentTime - status.startTime) / duration, 0, 1);
 
-				let newValue = {},stageDeltas = {},frameDeltas = {};
+				let newValues = {},stageDeltas = {},frameDeltas = {};
 				for (let key in perviousStatus) {
-					newValue[key] = perviousStatus[key] + totalDelta[key] * easingFuncs[easeType](currentProgress);
+					newValues[key] = perviousStatus[key] + totalDelta[key] * easingFuncs[easeType].call(this, currentProgress, step);
 
-					stageDeltas[key] = (newValue[key] === undefined ? 0 : newValue[key]) - (perviousStatus[key] === undefined ? 0 : perviousStatus[key]);
+					stageDeltas[key] = (newValues[key] === undefined ? 0 : newValues[key]) - (perviousStatus[key] === undefined ? 0 : perviousStatus[key]);
 
-					frameDeltas[key] = (newValue[key] === undefined ? 0 : newValue[key]) - (el[key] === undefined ? 0 : parseFloat(el[key]));
+					frameDeltas[key] = (newValues[key] === undefined ? 0 : newValues[key]) - (el[key] === undefined ? 0 : parseFloat(el[key]));
 				}
 
-				Object.assign(el,newValue);
+				Object.assign(el,newValues);
 
 				if (currentProgress == 1) {
 					// clearInterval(timer)
@@ -405,7 +417,8 @@ class animation_Animation extends EventTarget {
 					stageIndex:this.i,
 					name:queue[currentStageIndex].name ? queue[currentStageIndex].name : '',
 					progress:currentProgress,
-					values:el,
+					target:el,
+					values:newValues,
 					stageDeltas,
 					frameDeltas
 				});

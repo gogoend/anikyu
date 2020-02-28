@@ -2281,49 +2281,59 @@ module.exports = !$assign || __webpack_require__(7)(function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es7.symbol.async-iterator.js
+// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es7.symbol.async-iterator.js
 var es7_symbol_async_iterator = __webpack_require__(53);
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.symbol.js
+// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.symbol.js
 var es6_symbol = __webpack_require__(54);
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/web.dom.iterable.js
+// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/web.dom.iterable.js
 var web_dom_iterable = __webpack_require__(63);
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.array.iterator.js
+// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.array.iterator.js
 var es6_array_iterator = __webpack_require__(43);
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.string.iterator.js
+// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.string.iterator.js
 var es6_string_iterator = __webpack_require__(67);
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.map.js
+// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.map.js
 var es6_map = __webpack_require__(69);
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.reflect.construct.js
+// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.reflect.construct.js
 var es6_reflect_construct = __webpack_require__(78);
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.to-string.js
+// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.regexp.to-string.js
 var es6_regexp_to_string = __webpack_require__(81);
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.date.to-string.js
+// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.date.to-string.js
 var es6_date_to_string = __webpack_require__(83);
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.object.to-string.js
+// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.object.to-string.js
 var es6_object_to_string = __webpack_require__(84);
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.object.set-prototype-of.js
+// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.object.set-prototype-of.js
 var es6_object_set_prototype_of = __webpack_require__(85);
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.function.name.js
+// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.function.name.js
 var es6_function_name = __webpack_require__(86);
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.object.assign.js
+// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.object.assign.js
 var es6_object_assign = __webpack_require__(52);
 
 // CONCATENATED MODULE: ./src/easing_funcs.js
 var easingFuncs = {
   linear: function linear(k) {
     return k;
+  },
+  step: function step(k, _step) {
+    _step = !_step ? 10 : _step;
+    var s = 1;
+
+    while (k > s * (1 / _step)) {
+      s++;
+    }
+
+    return s * (1 / _step);
   },
   quadraticIn: function quadraticIn(k) {
     return k * k;
@@ -2657,7 +2667,7 @@ function (_EventTarget) {
 
       var perviousStatus = queue[i].props,
           finalStatus = queue[i + 1].props;
-      var delay = queue[i].delay !== undefined ? queue[i].delay : 0;
+      var delay = queue[i + 1].delay !== undefined ? queue[i + 1].delay : 0;
       var currentStageIndex = this.i; // 确保每一次的初始状态都和前一对象中的属性相等
       // 修复重播当前、跳转到、上一个、下一个函数不正常工作的问题
 
@@ -2667,6 +2677,7 @@ function (_EventTarget) {
 
       var easeType = queue[i + 1].easeType ? queue[i + 1].easeType : config.easeType;
       var duration = queue[i + 1].duration ? queue[i + 1].duration : config.duration;
+      var step = queue[i + 1].step ? queue[i + 1].step : undefined;
       status.startTime = new Date().getTime() + delay;
       var totalDelta = {};
 
@@ -2679,17 +2690,17 @@ function (_EventTarget) {
           // let endTime = status.startTime + duration;
           var currentTime = new Date().getTime();
           var currentProgress = clamp((currentTime - status.startTime) / duration, 0, 1);
-          var newValue = {},
+          var newValues = {},
               stageDeltas = {},
               frameDeltas = {};
 
           for (var _key2 in perviousStatus) {
-            newValue[_key2] = perviousStatus[_key2] + totalDelta[_key2] * easingFuncs[easeType](currentProgress);
-            stageDeltas[_key2] = (newValue[_key2] === undefined ? 0 : newValue[_key2]) - (perviousStatus[_key2] === undefined ? 0 : perviousStatus[_key2]);
-            frameDeltas[_key2] = (newValue[_key2] === undefined ? 0 : newValue[_key2]) - (el[_key2] === undefined ? 0 : parseFloat(el[_key2]));
+            newValues[_key2] = perviousStatus[_key2] + totalDelta[_key2] * easingFuncs[easeType].call(_this2, currentProgress, step);
+            stageDeltas[_key2] = (newValues[_key2] === undefined ? 0 : newValues[_key2]) - (perviousStatus[_key2] === undefined ? 0 : perviousStatus[_key2]);
+            frameDeltas[_key2] = (newValues[_key2] === undefined ? 0 : newValues[_key2]) - (el[_key2] === undefined ? 0 : parseFloat(el[_key2]));
           }
 
-          Object.assign(el, newValue);
+          Object.assign(el, newValues);
 
           if (currentProgress == 1) {
             // clearInterval(timer)
@@ -2716,7 +2727,8 @@ function (_EventTarget) {
             stageIndex: _this2.i,
             name: queue[currentStageIndex].name ? queue[currentStageIndex].name : '',
             progress: currentProgress,
-            values: el,
+            target: el,
+            values: newValues,
             stageDeltas: stageDeltas,
             frameDeltas: frameDeltas
           }); // if (queue[i + 1].onAnimating instanceof Function) {
