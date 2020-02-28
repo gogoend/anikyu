@@ -2690,17 +2690,17 @@ function (_EventTarget) {
           // let endTime = status.startTime + duration;
           var currentTime = new Date().getTime();
           var currentProgress = clamp((currentTime - status.startTime) / duration, 0, 1);
-          var newValues = {},
-              stageDeltas = {},
-              frameDeltas = {};
+          var newValue = {},
+              stageDelta = {},
+              frameDelta = {};
 
           for (var _key2 in perviousStatus) {
-            newValues[_key2] = perviousStatus[_key2] + totalDelta[_key2] * easingFuncs[easeType].call(_this2, currentProgress, step);
-            stageDeltas[_key2] = (newValues[_key2] === undefined ? 0 : newValues[_key2]) - (perviousStatus[_key2] === undefined ? 0 : perviousStatus[_key2]);
-            frameDeltas[_key2] = (newValues[_key2] === undefined ? 0 : newValues[_key2]) - (el[_key2] === undefined ? 0 : parseFloat(el[_key2]));
+            newValue[_key2] = perviousStatus[_key2] + totalDelta[_key2] * easingFuncs[easeType].call(_this2, currentProgress, step);
+            stageDelta[_key2] = (newValue[_key2] === undefined ? 0 : newValue[_key2]) - (perviousStatus[_key2] === undefined ? 0 : perviousStatus[_key2]);
+            frameDelta[_key2] = (newValue[_key2] === undefined ? 0 : newValue[_key2]) - (el[_key2] === undefined ? 0 : parseFloat(el[_key2]));
           }
 
-          Object.assign(el, newValues);
+          Object.assign(el, newValue);
 
           if (currentProgress == 1) {
             // clearInterval(timer)
@@ -2728,9 +2728,9 @@ function (_EventTarget) {
             name: queue[currentStageIndex].name ? queue[currentStageIndex].name : '',
             progress: currentProgress,
             target: el,
-            values: newValues,
-            stageDeltas: stageDeltas,
-            frameDeltas: frameDeltas
+            value: newValue,
+            stageDelta: stageDelta,
+            frameDelta: frameDelta
           }); // if (queue[i + 1].onAnimating instanceof Function) {
           // 	queue[i + 1].onAnimating(this);
           // }

@@ -167,9 +167,9 @@ Anikyu支持以下事件：
     name: String,
     progress: Number,
     target: Object,
-    values: Object,
-    stageDeltas: Object,
-    frameDeltas: Object
+    value: Object,
+    stageDelta: Object,
+    frameDelta: Object
 }
 ```
 
@@ -181,11 +181,11 @@ progress - 当前动画阶段进度
 
 target - 对当前对象的引用，包含了该对象在当前帧的所有值
 
-values - 当前帧该对象的值
+value - 当前帧该对象的值
 
-stageDeltas - 当前动画阶段与前一动画阶段的差值
+stageDelta - 当前动画阶段与前一动画阶段的差值
 
-frameDeltas - 当前这一帧与前一帧的差值
+frameDelta - 当前这一帧与前一帧的差值
 
 - finish
 
