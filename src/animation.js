@@ -49,7 +49,7 @@ class Animation extends EventTarget {
 		let perviousStatus = queue[i].props,
 			finalStatus = queue[i + 1].props;
 
-		let delay = queue[i].delay !== undefined ? queue[i].delay : 0;
+		let delay = queue[i + 1].delay !== undefined ? queue[i + 1].delay : 0;
 		let currentStageIndex = this.i;
 
 		// 确保每一次的初始状态都和前一对象中的属性相等
@@ -61,7 +61,7 @@ class Animation extends EventTarget {
 		let easeType = queue[i + 1].easeType ? queue[i + 1].easeType : config.easeType;
 		let duration = queue[i + 1].duration ? queue[i + 1].duration : config.duration;
 
-		let step = queue[i].step ? queue[i].step : undefined;
+		let step = queue[i + 1].step ? queue[i + 1].step : undefined;
 
 		status.startTime = new Date().getTime() + delay;
 
