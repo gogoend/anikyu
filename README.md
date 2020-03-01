@@ -80,13 +80,15 @@ Every status in animationQueue is described as the following Object:
 
 props - (Required) The properties of the status after the animation stage is finished.
 
-delay - Delay before the animation stage starts. Default is *0*, which means the current animation stage will start immediately after the previous one finished.
+delay - Delay before the animation stage starts. Default is *0*, which means the animation stage will start immediately after the previous one finished.
 
 duration - The duration of animation stage. It will be replaced with the value in the instance global setting if it's not given.
 
 easeType - The ease function which the animation stage use. It will be replaced with the value in the instance global setting if it's not given.
 
-name - The name of current animation stage, specified by user.
+name - The name of animation stage, specified by user.
+
+step - The step count of the animation stage. It only takes effect when the *easeType* value is 'step'. Default is *10*.
 
 <br />
 
@@ -105,7 +107,7 @@ manualNext - Whether play the next animation stage. It's very useful if you want
 
 duration - The default value of every animation stage. Default is *2000*.
 
-easeType - The default ease function of every animation stage. Default is *'quadraticInOut'*. For other possible values, you can visit <https://echarts.apache.org/examples/zh/editor.html?c=line-easing>.
+easeType - The default ease function of every animation stage. Default is *'quadraticInOut'*. For other possible values, please view the [*Easing Functions*](#Easing-Functions) section.
 
 
 ## Instance Methods
@@ -200,6 +202,40 @@ Fire when current animation stage finished. The callback receives the following 
 stageIndex - The index of current animation stage.
 
 name - The name of current animation stage, specified by user.
+
+
+## Easing Functions
+
+Note: Those functions are passed as String via the easeType in the argument of the conductor of Anikyu, and called by Anikyu internally.
+
+- Constant rate function
+
+linear
+
+- Variable rate function
+
+| In | Out | InOut |
+| - | - | - |
+| quadraticIn | quadraticOut | quadraticInOut |
+| cubicIn | cubicOut | cubicInOut |
+| quarticIn | quarticOut | quarticInOut |
+| quinticIn | quinticOut | quinticInOut |
+| sinusoidalIn | sinusoidalOut | sinusoidalInOut |
+| exponentialIn | exponentialOut | exponentialInOut |
+| circularIn | circularOut | circularInOut |
+| elasticIn | elasticOut | elasticInOut |
+| backIn | backOut | backInOut |
+| bounceIn | bounceOut | bounceInOut |
+
+The above easing functions are from ECharts. You can watch their effects by <a href="https://www.echartsjs.com/examples/en/editor.html?c=line-easing" target="">click here</a>.
+
+Those functions receive a Number between *0* and *1* which represents the progress of the current progress of the animation stage.
+
+- Step function
+
+step
+
+This function represents a ladder-like change trend. In addition to receiving a Number value represent the progress of the animation stage similar to the above functions, it can also receive the another integer Number that represent the number of step of the functions. The value is specified via *step* in the argument of Anikyu constructor. If the value is not an integer, it will be rounded up by Math.ceil().
 
 
 ## License

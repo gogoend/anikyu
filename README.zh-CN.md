@@ -73,7 +73,8 @@ animationQueue（动画队列）是一个数组，其中包含产生动画效果
     delay: Number,
     duration: Number,
     easeType: String,
-    name: String
+    name: String,
+    step: Number
 }
 ```
 
@@ -86,6 +87,8 @@ duration - 当前动画阶段持续时间，若不设置则从实例的全局配
 easeType - 当前动画阶段缓动函数，若不设置则从实例的全局配置中继承
 
 name - 当前动画阶段的名称，由用户指定
+
+step - 当前动画阶段分步播放的步骤数量，仅当 easeType 为 'step' 时有效，默认为 *10*
 
 <br />
 
@@ -103,7 +106,7 @@ manualNext - 每一个动画阶段结束后是否手动播放下一个动画阶�
 
 duration - 每一个动画阶段默认的持续时间，默认为2000
 
-easeType - 每一个动画阶段默认的缓动函数，默认为'quadraticInOut'，其他可选值参见 <https://echarts.apache.org/examples/zh/editor.html?c=line-easing>
+easeType - 每一个动画阶段默认的缓动函数，默认为'quadraticInOut'，其它可选值请参阅本页面下方“[缓动函数](#缓动函数)”章节
 
 
 ## 实例方法
@@ -201,6 +204,40 @@ frameDelta - 当前这一帧与前一帧的差值
 stageIndex - 当前动画阶段的索引
 
 name - 当前动画阶段的名称，可以由用户指定
+
+
+## 缓动函数
+
+请注意，下列函数是由用户在执行Anikyu构造函数时，以字符串的形式在 *easeType* 属性中传入的，由Anikyu在内部进行调用。
+
+- 匀速变化函数
+
+linear - 基本线性变化
+
+- 非匀速变化函数
+
+| 开始效果 | 结束效果 | 开始与结束效果 |
+| - | - | - |
+| quadraticIn | quadraticOut | quadraticInOut |
+| cubicIn | cubicOut | cubicInOut |
+| quarticIn | quarticOut | quarticInOut |
+| quinticIn | quinticOut | quinticInOut |
+| sinusoidalIn | sinusoidalOut | sinusoidalInOut |
+| exponentialIn | exponentialOut | exponentialInOut |
+| circularIn | circularOut | circularInOut |
+| elasticIn | elasticOut | elasticInOut |
+| backIn | backOut | backInOut |
+| bounceIn | bounceOut | bounceInOut |
+
+以上缓动函数来自ECharts，相关效果可以参见<a href="https://www.echartsjs.com/examples/en/editor.html?c=line-easing" target="">ECharts 缓动函数示例</a>。
+
+这些函数接收一个在 [0, 1] 区间的 Number 值，该值表示当前动画阶段的播放进度。
+
+- 阶梯变化函数
+
+step
+
+该函数表示阶梯形式的数值变化，除了可以类似以上函数接收一个 Number 值表示播放进度外，还可以再接收另一个 Number 值表示分段步数。该值值由用户在构造函数中的 *step* 属性里指定，若该值不是整数，则将通过 Math.ceil() 对其向上取整。
 
 
 ## License
