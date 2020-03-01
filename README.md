@@ -35,16 +35,6 @@ Besides, the current version is based on EventTarget class, its constructor are 
 
 At present, I don't find a proper polyfill to resolve the issue. If you have any solution, just send a Pull Request to the the repo.
 
-| Browser | Version |
-| - | - |
-| Chrome | 64 |
-| FireFox | 59 |
-| IE | Not Support |
-
-( The data is from [caniuse](https://caniuse.com/#feat=mdn-api_eventtarget_eventtarget). )
-
-At present, I don't find a proper polyfill. If you have any solution, just send a Pull Request to the the repo.
-
 
 ## Import to your project
 
