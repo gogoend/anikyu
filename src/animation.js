@@ -77,8 +77,8 @@ class Animation extends EventTarget {
 					}
 					// 若到第0个仍然找不到则直接访问原始对象中相关属性
 					if(j === 0 && queue[j].props[key] === undefined){
-						if(el[key] !== undefined && !isNaN(parseInt(el[key]))){
-							perviousStatus[key] = parseInt(el[key]);
+						if(el[key] !== undefined && !isNaN(parseFloat(el[key]))){
+							perviousStatus[key] = parseFloat(el[key]);
 						}else{
 							// 若依然访问不到，则直接设置该值为0
 							perviousStatus[key] = 0;
@@ -87,7 +87,14 @@ class Animation extends EventTarget {
 				}
 
 			}
-			totalDelta[key] = finalStatus[key] - parseInt(perviousStatus[key]);
+			totalDelta[key] = finalStatus[key] - parseFloat(perviousStatus[key]);
+
+			console.table ? 
+				console.table({'final':finalStatus[key],'pervious':perviousStatus[key],'delta':totalDelta[key]})
+				:
+				console.log({'final':finalStatus[key],'pervious':perviousStatus[key],'delta':totalDelta[key]})
+			;
+			
 		}
 
 		let loop = () => {
