@@ -22,7 +22,7 @@
 
 <body>
     <div id="wow" style="width:0;height: 0px;background-color: orangered;"></div>
-    <div id="lol" style="font-size:16px;text-align: center;">111</div>
+    <div id="lol" style="font-size:16px;text-align: center;line-height: 1;">111</div>
     <script type="module">
         import Anikyu from '../src/anikyu.js';
         // import Anikyu from '../dist/anikyu.esm.js';
@@ -87,7 +87,7 @@
             {
                 duration: 400,
                 props: {
-                    fontSize: parseFloat(Anikyu.getStyle(el2, 'fontSize'))
+                    fontSize: parseFloat(Anikyu.getStyle(el2, 'fontSize')),
                 },
             },
             {
@@ -96,13 +96,32 @@
                 step: 20,
                 easeType: 'step',
                 props: {
-                    fontSize: 400
+                    fontSize: 40
+                }
+            },
+            {
+                duration: 3000,
+                easeType: 'bounceInOut',
+                props: {
+                    paddingTop: 80
+                }
+            },
+            {
+                name: 'final',
+                delay: 2000,
+                duration: 2000,
+                step: 20,
+                easeType: 'step',
+                props: {
+                    fontSize: 400,
+                    lineHeight: 2
                 }
             }
         ])
 
         zzz.addEventListener('finish', function (e) {
             console.log(e)
+            if (e.detail.name !== 'final') return
             window.anikyuInstance = new Anikyu(el1.style, el1AnimationQueue, {
                 // manualNext: true
             });
