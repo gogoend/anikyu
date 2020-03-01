@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>多个动画一起启动</title>
-    <script src="../dist/anikyu.min.js"></script>
+    <!-- <script src="../dist/anikyu.js"></script> -->
     <style>
         html,
         body {
             width: 100%;
             height: 100%;
             margin: 0;
+            background-color: #fff;
         }
 
         .wrap {
@@ -71,32 +72,27 @@
         <div></div>
         <div></div>
     </div>
-    <script>
+    <script type="module">
+        import Anikyu from '../src/anikyu.js';
+
         var els = document.querySelector('.wrap').children
 
         var obj = {
         }
-
+        window.anis=[]
         for (var i = 0; i < els.length; i++) {
             (function (i) {
                 setTimeout(function () {
                     var ani = new Anikyu(obj, [
                         {
                             props: {
-                                s: 0
+                                s: 0.5
                             }
                         },
                         {
                             duration: 1500,
                             props: {
-                                s: 0.8
-                            }
-                        },
-                        {
-                            delay: 200,
-                            duration: 1500,
-                            props: {
-                                s: 1.6
+                                s: 1
                             }
                         },
                         {
@@ -107,54 +103,79 @@
                             }
                         },
                         {
-                            easeType: 'step',
                             delay: 200,
-                            duration: 200,
+                            duration: 1500,
+                            props: {
+                                s: Math.random()
+                            }
+                        },
+                        {
+                            easeType: 'bounceInOut',
+                            duration: 2500,
                             props: {
                                 s: 1.5
                             }
                         },
                         {
-                            duration: 400,
+                            duration: 2000,
+                            easeType: 'bounceInOut',
                             props: {
-                                s: 1
+                                s: Math.random(),
+                                t: Anikyu.rand(20, 100) * (Anikyu.rand(-1, 1) > 0 ? 1 : -1)
+                            }
+                        },
+                        {
+                            duration: 2000,
+                            props: {
+                                s: 0.4,
+                                t: 0
+                            }
+                        },
+                        {
+                            delay: 200,
+                            name: 'final',
+                            duration: 800,
+                            props: {
+                                s: 0.5
                             }
                         }
+
                     ])
                     ani.addEventListener('animate', function (e) {
                         // if (e.detail.name) {
                         //     console.log(e.detail.newValue)
                         // }
-                        els[i].style.transform = 'scale(' + e.detail.value.s + ')';
+                        let scaleS = `scale(${e.detail.value.s}) `;
+                        let translateS = ''
 
-                        let corner = i % 4, cornerStr = ''
+                        if (e.detail.value.t !== undefined) {
+
+
+                            translateS = `translate(${e.detail.value.t}px,${e.detail.value.t}px)`
+
+                            // console.log(e.detail.value.t)
+                        }
+
+                        els[i].style.transform = scaleS + (isNaN(e.detail.value.t) ? '' : translateS)
+
+                        let corner = i % 4, cornerstr = ''
 
                         let radiusObj = {
-                            borderBottomLeftRadius: 100 + 'px',
-                            borderBottomRightRadius: 100 + 'px',
-                            borderTopLeftRadius: 100 + 'px',
-                            borderTopRightRadius: 100 + 'px',
-                        }
-
-                        switch (corner) {
-                            case 0: cornerStr = 'borderBottomLeftRadius'; break;
-                            case 1: cornerStr = 'borderBottomRightRadius'; break;
-                            case 2: cornerStr = 'borderTopLeftRadiuss'; break;
-                            case 3: cornerStr = 'borderTopRightRadius'; break;
-                        }
-
-                        for (let key in radiusObj) {
-                            if (key !== cornerStr) radiusObj[key] = 100 * (1 - e.detail.progress) + '%'
-                            else radiusObj[key] = 100 * e.detail.progress + '%'
+                            borderRadius: 50 + '%'
                         }
 
                         Object.assign(els[i].style, radiusObj)
-                        
                         // console.log(e.detail.value, e.detail.target)
                     })
                     ani.addEventListener('finish', function (e) {
+                        console.log(e.detail.stageIndex)
+                        if (e.detail.name === 'final') {
+                            // 若在结束时调用则需要传入 true
+                            ani.jump(1,true)
+                        }
                     })
-                }, i * 30)
+                    anis.push(ani)
+                }, i * 20)
             })(i)
         }
     </script>
