@@ -3,7 +3,7 @@ export const easingFuncs = {
 		return k;
 	},
 	step: function (k, step){
-		step = !step ? 10 : step;
+		step = !step ? 10 : Math.ceil(step);
 		var s = 1;
 
 		while(k > s * (1 / step)){
