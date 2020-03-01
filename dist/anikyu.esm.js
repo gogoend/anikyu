@@ -128,7 +128,7 @@ const easingFuncs = {
 		return k;
 	},
 	step: function (k, step){
-		step = !step ? 10 : step;
+		step = !step ? 10 : Math.ceil(step);
 		var s = 1;
 
 		while(k > s * (1 / step)){
@@ -301,6 +301,11 @@ function trigger (obj, eName ,eDetail) {
 }
 
 
+function rand (min,max){
+	return Math.random() * (max - min) + min;
+}
+
+
 // CONCATENATED MODULE: ./src/animation.js
 
 
@@ -354,7 +359,7 @@ class animation_Animation extends EventTarget {
 			finalStatus = queue[i + 1].props;
 
 		let delay = queue[i + 1].delay !== undefined ? queue[i + 1].delay : 0;
-		let currentStageIndex = this.i;
+		let currentStageIndex = this.i + 1;
 
 		// 确保每一次的初始状态都和前一对象中的属性相等
 		// 修复重播当前、跳转到、上一个、下一个函数不正常工作的问题
@@ -372,7 +377,33 @@ class animation_Animation extends EventTarget {
 		let totalDelta = {};
 
 		for (let key in finalStatus) {
-			totalDelta[key] = finalStatus[key] - parseInt(perviousStatus[key]);
+			if(perviousStatus[key] === undefined){
+				// 当前一个状态不存在时首先尝试向前搜索，直到第0个
+				for(var j = i;j >= 0;j--){
+					if(queue[j].props[key] !== undefined) {
+						perviousStatus[key] = queue[j].props[key];
+						continue;
+					}
+					// 若到第0个仍然找不到则直接访问原始对象中相关属性
+					if(j === 0 && queue[j].props[key] === undefined){
+						if(el[key] !== undefined && !isNaN(parseFloat(el[key]))){
+							perviousStatus[key] = parseFloat(el[key]);
+						}else{
+							// 若依然访问不到，则直接设置该值为0
+							perviousStatus[key] = 0;
+						}
+					}
+				}
+
+			}
+			totalDelta[key] = finalStatus[key] - parseFloat(perviousStatus[key]);
+
+			// console.table ? 
+			// 	console.table({'final':finalStatus[key],'pervious':perviousStatus[key],'delta':totalDelta[key]})
+			// 	:
+			// 	console.log({'final':finalStatus[key],'pervious':perviousStatus[key],'delta':totalDelta[key]})
+			// ;
+			
 		}
 
 		let loop = () => {
@@ -502,7 +533,7 @@ class animation_Animation extends EventTarget {
 }
 
 Object.assign(animation_Animation, {
-	getStyle: getStyle
+	getStyle: getStyle,rand: rand,clamp: clamp
 });
 
 /* harmony default export */ var animation = (animation_Animation);

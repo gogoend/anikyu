@@ -2281,43 +2281,43 @@ module.exports = !$assign || __webpack_require__(7)(function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 
-// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es7.symbol.async-iterator.js
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es7.symbol.async-iterator.js
 var es7_symbol_async_iterator = __webpack_require__(53);
 
-// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.symbol.js
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.symbol.js
 var es6_symbol = __webpack_require__(54);
 
-// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/web.dom.iterable.js
+// EXTERNAL MODULE: ./node_modules/core-js/modules/web.dom.iterable.js
 var web_dom_iterable = __webpack_require__(63);
 
-// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.array.iterator.js
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.array.iterator.js
 var es6_array_iterator = __webpack_require__(43);
 
-// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.string.iterator.js
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.string.iterator.js
 var es6_string_iterator = __webpack_require__(67);
 
-// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.map.js
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.map.js
 var es6_map = __webpack_require__(69);
 
-// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.reflect.construct.js
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.reflect.construct.js
 var es6_reflect_construct = __webpack_require__(78);
 
-// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.regexp.to-string.js
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.to-string.js
 var es6_regexp_to_string = __webpack_require__(81);
 
-// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.date.to-string.js
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.date.to-string.js
 var es6_date_to_string = __webpack_require__(83);
 
-// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.object.to-string.js
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.object.to-string.js
 var es6_object_to_string = __webpack_require__(84);
 
-// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.object.set-prototype-of.js
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.object.set-prototype-of.js
 var es6_object_set_prototype_of = __webpack_require__(85);
 
-// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.function.name.js
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.function.name.js
 var es6_function_name = __webpack_require__(86);
 
-// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.object.assign.js
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.object.assign.js
 var es6_object_assign = __webpack_require__(52);
 
 // CONCATENATED MODULE: ./src/easing_funcs.js
@@ -2326,7 +2326,7 @@ var easingFuncs = {
     return k;
   },
   step: function step(k, _step) {
-    _step = !_step ? 10 : _step;
+    _step = !_step ? 10 : Math.ceil(_step);
     var s = 1;
 
     while (k > s * (1 / _step)) {
@@ -2563,6 +2563,10 @@ function trigger(obj, eName, eDetail) {
   obj.dispatchEvent(theEvent);
 }
 
+function rand(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
 
 // CONCATENATED MODULE: ./src/animation.js
 
@@ -2668,7 +2672,7 @@ function (_EventTarget) {
       var perviousStatus = queue[i].props,
           finalStatus = queue[i + 1].props;
       var delay = queue[i + 1].delay !== undefined ? queue[i + 1].delay : 0;
-      var currentStageIndex = this.i; // 确保每一次的初始状态都和前一对象中的属性相等
+      var currentStageIndex = this.i + 1; // 确保每一次的初始状态都和前一对象中的属性相等
       // 修复重播当前、跳转到、上一个、下一个函数不正常工作的问题
 
       for (var key in perviousStatus) {
@@ -2682,7 +2686,31 @@ function (_EventTarget) {
       var totalDelta = {};
 
       for (var _key in finalStatus) {
-        totalDelta[_key] = finalStatus[_key] - parseInt(perviousStatus[_key]);
+        if (perviousStatus[_key] === undefined) {
+          // 当前一个状态不存在时首先尝试向前搜索，直到第0个
+          for (var j = i; j >= 0; j--) {
+            if (queue[j].props[_key] !== undefined) {
+              perviousStatus[_key] = queue[j].props[_key];
+              continue;
+            } // 若到第0个仍然找不到则直接访问原始对象中相关属性
+
+
+            if (j === 0 && queue[j].props[_key] === undefined) {
+              if (el[_key] !== undefined && !isNaN(parseFloat(el[_key]))) {
+                perviousStatus[_key] = parseFloat(el[_key]);
+              } else {
+                // 若依然访问不到，则直接设置该值为0
+                perviousStatus[_key] = 0;
+              }
+            }
+          }
+        }
+
+        totalDelta[_key] = finalStatus[_key] - parseFloat(perviousStatus[_key]); // console.table ? 
+        // 	console.table({'final':finalStatus[key],'pervious':perviousStatus[key],'delta':totalDelta[key]})
+        // 	:
+        // 	console.log({'final':finalStatus[key],'pervious':perviousStatus[key],'delta':totalDelta[key]})
+        // ;
       }
 
       var loop = function loop() {
@@ -2829,7 +2857,9 @@ function (_EventTarget) {
 }(_wrapNativeSuper(EventTarget));
 
 Object.assign(animation_Animation, {
-  getStyle: getStyle
+  getStyle: getStyle,
+  rand: rand,
+  clamp: clamp
 });
 /* harmony default export */ var animation = (animation_Animation);
 // EXTERNAL MODULE: ./src/polyfill.js
