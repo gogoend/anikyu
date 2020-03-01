@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>多个动画一起启动</title>
-    <script src="../dist/anikyu.js"></script>
+    <script src="../dist/anikyu.min.js"></script>
     <style>
         html,
         body {
@@ -96,7 +96,7 @@
                             delay: 200,
                             duration: 1500,
                             props: {
-                                s: 1.1
+                                s: 1.6
                             }
                         },
                         {
@@ -109,17 +109,15 @@
                         {
                             easeType: 'step',
                             delay: 200,
-                            duration: 1500,
+                            duration: 200,
                             props: {
-                                s: 0
+                                s: 1.5
                             }
                         },
                         {
-                            name: 'final',
-                            easeType: 'step',
-                            duration: 300,
+                            duration: 400,
                             props: {
-                                s: 0.5
+                                s: 1
                             }
                         }
                     ])
@@ -128,6 +126,30 @@
                         //     console.log(e.detail.newValue)
                         // }
                         els[i].style.transform = 'scale(' + e.detail.value.s + ')';
+
+                        let corner = i % 4, cornerStr = ''
+
+                        let radiusObj = {
+                            borderBottomLeftRadius: 100 + 'px',
+                            borderBottomRightRadius: 100 + 'px',
+                            borderTopLeftRadius: 100 + 'px',
+                            borderTopRightRadius: 100 + 'px',
+                        }
+
+                        switch (corner) {
+                            case 0: cornerStr = 'borderBottomLeftRadius'; break;
+                            case 1: cornerStr = 'borderBottomRightRadius'; break;
+                            case 2: cornerStr = 'borderTopLeftRadiuss'; break;
+                            case 3: cornerStr = 'borderTopRightRadius'; break;
+                        }
+
+                        for (let key in radiusObj) {
+                            if (key !== cornerStr) radiusObj[key] = 100 * (1 - e.detail.progress) + '%'
+                            else radiusObj[key] = 100 * e.detail.progress + '%'
+                        }
+
+                        Object.assign(els[i].style, radiusObj)
+                        
                         // console.log(e.detail.value, e.detail.target)
                     })
                     ani.addEventListener('finish', function (e) {
