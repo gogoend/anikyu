@@ -1,5 +1,5 @@
 import { easingFuncs as ease } from './easing_funcs.js';
-import { clamp, getStyle ,trigger } from './util.js';
+import { clamp, getStyle ,trigger,rand } from './util.js';
 
 class Animation extends EventTarget {
 
@@ -89,11 +89,11 @@ class Animation extends EventTarget {
 			}
 			totalDelta[key] = finalStatus[key] - parseFloat(perviousStatus[key]);
 
-			console.table ? 
-				console.table({'final':finalStatus[key],'pervious':perviousStatus[key],'delta':totalDelta[key]})
-				:
-				console.log({'final':finalStatus[key],'pervious':perviousStatus[key],'delta':totalDelta[key]})
-			;
+			// console.table ? 
+			// 	console.table({'final':finalStatus[key],'pervious':perviousStatus[key],'delta':totalDelta[key]})
+			// 	:
+			// 	console.log({'final':finalStatus[key],'pervious':perviousStatus[key],'delta':totalDelta[key]})
+			// ;
 			
 		}
 
@@ -224,7 +224,7 @@ class Animation extends EventTarget {
 }
 
 Object.assign(Animation, {
-	getStyle
+	getStyle,rand,clamp
 });
 
 export default Animation;
