@@ -346,11 +346,13 @@ class animation_Animation extends EventTarget {
 	// 动画执行器，用于在前后一对补间动画阶段之间进行补间
 	executor (index) {
 
+		if(!isNaN(parseInt(index))) {
+			this.i = index;
+		}
+
 		let { el, i, queue, next, status, config,reqAniHandler } = this;
 
 		cancelAnimationFrame(reqAniHandler);
-
-		if(!isNaN(parseInt(index))) this.i = index;
 
 		if (!queue[i] || !queue[i + 1]) {
 			return;
@@ -494,13 +496,15 @@ class animation_Animation extends EventTarget {
 	}
 
 	// 跳转到、上一个、下一个
-	jump (index) {
+	jump (index,finishCallFlag) {
 		let {status,queue,executor,resume} = this;
 
 		if(!queue[index]) return;
 		if(status.paused) resume();
 
-		executor(index);
+		executor(finishCallFlag ? index - 2 : index - 1);
+		// executor(index - 2);
+
 	}
 	prev () {
 		let {status,queue,i,executor,resume} = this;

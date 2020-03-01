@@ -2655,6 +2655,10 @@ function (_EventTarget) {
     value: function executor(index) {
       var _this2 = this;
 
+      if (!isNaN(parseInt(index))) {
+        this.i = index;
+      }
+
       var el = this.el,
           i = this.i,
           queue = this.queue,
@@ -2663,7 +2667,6 @@ function (_EventTarget) {
           config = this.config,
           reqAniHandler = this.reqAniHandler;
       cancelAnimationFrame(reqAniHandler);
-      if (!isNaN(parseInt(index))) this.i = index;
 
       if (!queue[i] || !queue[i + 1]) {
         return;
@@ -2804,14 +2807,14 @@ function (_EventTarget) {
 
   }, {
     key: "jump",
-    value: function jump(index) {
+    value: function jump(index, finishCallFlag) {
       var status = this.status,
           queue = this.queue,
           executor = this.executor,
           resume = this.resume;
       if (!queue[index]) return;
       if (status.paused) resume();
-      executor(index);
+      executor(finishCallFlag ? index - 2 : index - 1); // executor(index - 2);
     }
   }, {
     key: "prev",
