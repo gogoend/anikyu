@@ -2801,7 +2801,7 @@ function (_EventTarget) {
           executor = this.executor,
           resume = this.resume;
       if (!queue[i]) return;
-      if (status.paused) resume();
+      if (status.paused) resume.bind(this)();
       executor(i);
     } // 跳转到、上一个、下一个
 
@@ -2813,7 +2813,7 @@ function (_EventTarget) {
           executor = this.executor,
           resume = this.resume;
       if (!queue[index]) return;
-      if (status.paused) resume();
+      if (status.paused) resume.bind(this)();
       executor(finishCallFlag ? index - 2 : index - 1); // executor(index - 2);
     }
   }, {
@@ -2825,7 +2825,7 @@ function (_EventTarget) {
           executor = this.executor,
           resume = this.resume;
       if (!queue[i - 1]) return;
-      if (status.paused) resume();
+      if (status.paused) resume.bind(this)();
       this.i--;
       executor();
     }
@@ -2838,7 +2838,7 @@ function (_EventTarget) {
           executor = this.executor,
           resume = this.resume;
       if (!queue[i + 1]) return;
-      if (status.paused) resume();
+      if (status.paused) resume.bind(this)();
       this.i++;
       executor();
     } // 废弃

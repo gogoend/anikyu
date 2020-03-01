@@ -490,7 +490,7 @@ class animation_Animation extends EventTarget {
 		let {status,queue,i,executor,resume} = this;
 
 		if(!queue[i]) return;
-		if(status.paused) resume();
+		if(status.paused) (resume.bind(this))();
 
 		executor(i);
 	}
@@ -500,7 +500,7 @@ class animation_Animation extends EventTarget {
 		let {status,queue,executor,resume} = this;
 
 		if(!queue[index]) return;
-		if(status.paused) resume();
+		if(status.paused) (resume.bind(this))();
 
 		executor(finishCallFlag ? index - 2 : index - 1);
 		// executor(index - 2);
@@ -510,7 +510,7 @@ class animation_Animation extends EventTarget {
 		let {status,queue,i,executor,resume} = this;
 		if(!queue[i - 1]) return;
 
-		if(status.paused) resume();
+		if(status.paused) (resume.bind(this))();
 
 		this.i--;
 		executor();
@@ -519,7 +519,7 @@ class animation_Animation extends EventTarget {
 		let {status,queue,i,executor,resume} = this;
 		if(!queue[i + 1]) return;
 
-		if(status.paused) resume();
+		if(status.paused) (resume.bind(this))();
 
 		this.i++;
 		executor();
