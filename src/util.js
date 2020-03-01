@@ -18,4 +18,9 @@ function trigger (obj, eName ,eDetail) {
 	obj.dispatchEvent(theEvent);
 }
 
-export {clamp,getStyle,trigger};
+
+function rand (min,max){
+	return Math.random() * (max - min) + min;
+}
+
+export {clamp,getStyle,trigger,rand};
