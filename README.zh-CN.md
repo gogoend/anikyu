@@ -125,9 +125,11 @@ easeType - 每一个动画阶段默认的缓动函数，默认为'quadraticInOut
 
 重播当前动画阶段
 
-- .jump( index: Number )
+- .jump( index: Number, finishCallFlag: Boolean )
 
 index - 要跳转的动画阶段的索引。
+
+finishCallFlag - 如果你是在 finish 事件的处理函数中调用该函数的，则你应当传入该参数，并将其设为*true*
 
 跳转到第index个动画阶段进行播放
 

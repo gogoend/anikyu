@@ -122,9 +122,11 @@ Pause the current animation stage.
 
 Resume the current animation stage.
 
-- .jump( index: Number )
+- .jump( index: Number, finishCallFlag: Boolean )
 
 index - The index of the animation stage which to be jump.
+
+finishCallFlag - If you're calling the function in finish event handler, you need to pass the argument and set it to *true*.
 
 Jump to the animation stage whose index is *index* and continue playing. 
 
