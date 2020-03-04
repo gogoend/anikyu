@@ -32,6 +32,7 @@
             width: 20%;
             height: 20%;
             transform: scale(0);
+            mix-blend-mode: multiply;
         }
 
         .wrap>div:nth-child(even) {
@@ -79,67 +80,92 @@
 
         var obj = {
         }
-        window.anis=[]
+        window.anis = []
         for (var i = 0; i < els.length; i++) {
             (function (i) {
                 setTimeout(function () {
                     var ani = new Anikyu(obj, [
                         {
                             props: {
-                                s: 0.5
+                                s: 0,
+                                t: 0
                             }
                         },
                         {
-                            duration: 1500,
+                            duration: 700,
                             props: {
-                                s: 1
+                                s: 1,
+                                br: 50,
+                                t: 0
                             }
                         },
                         {
-                            delay: 200,
-                            duration: 1500,
+                            duration: 700,
                             props: {
-                                s: Math.random()
-                            }
-                        },
-                        {
-                            delay: 200,
-                            duration: 1500,
-                            props: {
-                                s: Math.random()
-                            }
-                        },
-                        {
-                            easeType: 'bounceInOut',
-                            duration: 2500,
-                            props: {
-                                s: 1.5
-                            }
-                        },
-                        {
-                            duration: 2000,
-                            easeType: 'bounceInOut',
-                            props: {
-                                s: Math.random(),
-                                t: Anikyu.rand(20, 100) * (Anikyu.rand(-1, 1) > 0 ? 1 : -1)
-                            }
-                        },
-                        {
-                            duration: 2000,
-                            props: {
-                                s: 0.4,
+                                s: 0,
+                                br: 50,
                                 t: 0
                             }
                         },
                         {
                             delay: 200,
+                            duration: 700,
+                            props: {
+                                s: Math.random(),
+                                br: 50,
+                                t: 0
+                            }
+                        },
+                        {
+                            delay: 400,
+                            duration: 700,
+                            props: {
+                                s: Math.random(),
+                                br: 50,
+                                t: 0
+                            }
+                        },
+                        {
+                            easeType: 'circularOut',
+                            duration: 1000,
+                            props: {
+                                s: Math.cos(i / 2 * Math.PI) + 0.2,
+                                t: 0
+                            }
+                        },
+                        {
+                            easeType: 'circularOut',
+                            duration: 1000,
+                            props: {
+                                s: Math.sin(i / 2 * Math.PI) + 0.2,
+                                t: 0
+                            }
+                        },
+                        {
+                            duration: 1000,
+                            easeType: 'elasticInOut',
+                            props: {
+                                s: Math.random(),
+                                t: Anikyu.rand(60, 100) * (Anikyu.rand(-1, 1) > 0 ? 1 : -1),
+                            }
+                        },
+                        {
+                            duration: 1200,
+                            easeType: 'elasticInOut',
+                            props: {
+                                s: Math.random(),
+                                t: Anikyu.rand(30, 60) * (Anikyu.rand(-1, 1) > 0 ? 1 : -1),
+                            }
+                        },
+                        {
                             name: 'final',
+                            easeType: 'bounceOut',
                             duration: 800,
                             props: {
-                                s: 0.5
+                                s: 0,
+                                t: Anikyu.rand(100, 200) * (Anikyu.rand(-1, 1) > 0 ? 1 : -1),
                             }
                         }
-
                     ])
                     ani.addEventListener('animate', function (e) {
                         // if (e.detail.name) {
@@ -149,19 +175,25 @@
                         let translateS = ''
 
                         if (e.detail.value.t !== undefined) {
-
-
                             translateS = `translate(${e.detail.value.t}px,${e.detail.value.t}px)`
 
                             // console.log(e.detail.value.t)
                         }
-
                         els[i].style.transform = scaleS + (isNaN(e.detail.value.t) ? '' : translateS)
 
-                        let corner = i % 4, cornerstr = ''
+                        if (e.detail.value.o !== undefined) {
+                            els[i].style.opacity = e.detail.value.o
+                        }
+
 
                         let radiusObj = {
                             borderRadius: 50 + '%'
+                        }
+
+                        if (e.detail.value.br !== undefined) {
+                            radiusObj = {
+                                borderRadius: e.detail.value.br + '%'
+                            }
                         }
 
                         Object.assign(els[i].style, radiusObj)
@@ -171,7 +203,7 @@
                         console.log(e.detail.stageIndex)
                         if (e.detail.name === 'final') {
                             // 若在结束时调用则需要传入 true
-                            ani.jump(1,true)
+                            ani.jump(1, true)
                         }
                     })
                     anis.push(ani)
