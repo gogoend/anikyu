@@ -1,0 +1,80 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tween.js Hello World 仿写</title>
+    <!-- <script src="../dist/anikyu.js"></script> -->
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            background-color: #fff;
+        }
+
+        .target {
+            position: absolute;
+            top: 100px;
+            left: 100px;
+            width: 100px;
+            height: 100px;
+            background-color: rgb(160, 221, 223);
+            padding: 1em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="target"></div>
+    <script type="module">
+        import Anikyu from '../src/anikyu.js';
+
+        var el = document.querySelector('.target')
+
+        var obj = {}
+
+        var ani = new Anikyu(obj, [
+            {
+                props: {
+                    top: 100,
+                    left: 100,
+                    rotate: 0
+                }
+            },
+            {
+                delay: 1000,
+                props: {
+                    top: 200,
+                    left: 700,
+                    rotate: 359
+                }
+            },
+            {
+                props: {
+                    top: 100,
+                    left: 100,
+                    rotate: 0
+                }
+            },
+        ], {
+            easeType: 'elasticInOut'
+        })
+        ani.addEventListener('animate', function (e) {
+            Object.assign(el.style, {
+                top: obj.top + 'px',
+                left: obj.left + 'px',
+                transform: 'rotate(' + Math.round(obj.rotate) + 'deg)'
+            })
+        })
+        ani.addEventListener('finish', function (e) {
+            if (e.detail.stageIndex === 2) {
+                ani.jump(0)
+            }
+        })
+
+    </script>
+</body>
+
+</html>
