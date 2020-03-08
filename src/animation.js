@@ -1,7 +1,15 @@
 import { easingFuncs as ease } from './easing_funcs.js';
 import { clamp, getStyle ,trigger,rand } from './util.js';
+import EventTargetPolyfill from './polyfill/EventTargetConstructor.js';
 
-class Animation extends EventTarget {
+// let EventTarget;
+
+// try{
+// 	new EventTarget;
+// } catch(err){
+// 	EventTarget = EventTargetPolyfill;
+// }
+class Animation extends EventTargetPolyfill {
 
 	constructor (el, queue, config) {
 		super();
