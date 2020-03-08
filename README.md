@@ -11,29 +11,17 @@ Anikyu is a tween animation library, based on JavaScript, can create continuous 
 
 ## Browser Compatibility
 
-If you prefer to import Anikyu by using ES Module, your browser needs using the following version at least.
+If you import Anikyu via script tag, it is recommanded to using at least the following or higher browsers:
 
 | Browser | Version |
 | - | - |
-| Chrome | 61 |
-| FireFox | 60 |
-| IE | Not Support |
+| IE | 9 |
+| Chrome | 49 |
+| FireFox | 52 |
 
-( The data is from [caniuse](https://caniuse.com/#feat=es6-module). )
+After importing this file, Anikyu will become a global variable.
 
-However, if your current browser doesn't support ES Module, or you want to import Anikyu by script tag, you can use Anikyu.js in dist folder. After importing this file, Anikyu will become a global variable.
-
-Besides, the current version is based on EventTarget class, its constructor are only supported by the following or later browsers:
-
-| Browser | Version |
-| - | - |
-| Chrome | 64 |
-| FireFox | 59 |
-| IE | Not Support |
-
-( The data is from [caniuse](https://caniuse.com/#feat=mdn-api_eventtarget_eventtarget). )
-
-At present, I don't find a proper polyfill to resolve the issue. If you have any solution, just send a Pull Request to the the repo.
+Besides, Anikyu can be imported via ES Module. For more information about the compatibility of ES Module, you can click [caniuse](https://caniuse.com/#feat=es6-module) .
 
 
 ## Import to your project

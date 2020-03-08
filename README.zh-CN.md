@@ -11,29 +11,17 @@ anikyu 是一个补间动画库，基于JavaScript，可以为一个指定对象
 
 ## 浏览器兼容性
 
-如果你希望通过以ES Module的方式引入Anikyu，浏览器的最低版本需求是：
+如果你使用script标签来引入Anikyu，推荐至少使用下列或更高版本浏览器：
 
 | 浏览器名称 | 版本 |
 | - | - |
-| Chrome | 61 |
-| FireFox | 60 |
-| IE | 不支持 |
+| IE | 9 |
+| Chrome | 49 |
+| FireFox | 52 |
 
-（数据来自 [caniuse](https://caniuse.com/#feat=es6-module) ）
+引入该文件以后，Anikyu将会成为一个全局变量。
 
-如果你当前浏览器不支持ES Module，或你希望通过script标签直接引入Anikyu，则可以使用dist文件夹中的Anikyu.js。引入该文件以后，Anikyu将会成为一个全局变量。
-
-此外，当前版本是基于EventTarget类来构建的，该类的构造函数仅支持下列或更高版本的浏览器：
-
-| 浏览器名称 | 版本 |
-| - | - |
-| Chrome | 64 |
-| FireFox | 59 |
-| IE | 不支持 |
-
-（数据来自 [caniuse](https://caniuse.com/#feat=mdn-api_eventtarget_eventtarget) ）
-
-目前，我暂时未找到一个合适的polyfill来解决这个问题。如果你有任何解决方案，可以向本项目的仓库发起PR。
+此外，Anikyu支持以ES Module的方式来引入，有关其兼容性可参阅 [caniuse](https://caniuse.com/#feat=es6-module) 。
 
 
 ## 引入到项目中
