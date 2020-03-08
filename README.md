@@ -61,7 +61,7 @@ config - The global configuration for every animation stage.
 
 You need to pass the object to be animated and the animation queue which will take effect on the passed object.
 
-The animationQueue is an Array which contains the statuses of the animated object at every stage during the whole animation happening.The tween will be created by using data from the two adjacent statuses.
+The animationQueue is an Array which contains the statuses of the animated object at every stage during the whole animation happening. The tween will be created by using data from the two adjacent statuses.
 
 Every status in animationQueue is described as the following Object:
 
@@ -100,7 +100,7 @@ It's described as the following Object:
 }
 ```
 
-manualNext - Whether play the next animation stage. It's very useful if you want to manually play the next animation stage after the pervious one finished. You need to call .next() manually to play the next animation stage when it's *true*. Default is *false*.
+manualNext - Whether play the next animation stage manually. It's very useful if you want to manually play the next animation stage after the pervious one finished. You need to call .next() manually to play the next animation stage when it's *true*. Default is *false*.
 
 duration - The default value of every animation stage. Default is *2000*.
 
@@ -142,14 +142,14 @@ Dispose the instance, then the instance will no longer can be used.
 
 ## Events
 
-In this release, the Anikyu is based on EventTarget, which means you can add event listener on the instance constructed by Anikyu.
+In this release, the Anikyu is based on event, which means you can add event listener on the instance constructed by Anikyu.
 
 For example, the following code is aimed to add a listener to listen to the *animate* event for Anikyu instance.
 
 ```JavaScript
-    anikyuInstance.addEventListener('animate',function(event){
-        console.log(event)
-    })
+anikyuInstance.addEventListener('animate',function(event){
+    console.log(event)
+})
 ```
 
 Besides, you can call .removeEventListener() on a Anikyu instance to remove the event listener.
@@ -205,7 +205,7 @@ name - The name of current animation stage, specified by user.
 
 ## Easing Functions
 
-Note: Those functions are passed as String via the easeType in the argument of the conductor of Anikyu, and called by Anikyu internally.
+Note: Those functions are passed as String via the easeType in the argument of the constructor of Anikyu, and called by Anikyu internally.
 
 - Constant rate function
 

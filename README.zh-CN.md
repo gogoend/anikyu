@@ -146,14 +146,14 @@ finishCallFlag - 如果你是在 finish 事件的处理函数中调用该函数�
 
 ## 事件
 
-该版本Anikyu是基于EventTarget来实现的，你可以在由Anikyu类产生的实例上添加事件监听器。
+该版本Anikyu是基于事件来实现的，你可以在由Anikyu类产生的实例上添加事件监听器。
 
 例如，下列代码为Anikyu实例的animate事件增加了监听：
 
 ```JavaScript
-    anikyuInstance.addEventListener('animate',function(event){
-        console.log(event)
-    })
+anikyuInstance.addEventListener('animate',function(event){
+    console.log(event)
+})
 ```
 
 此外，你也可以通过在Anikyu实例上调用 .removeEventListener() 来移除事件监听器。
