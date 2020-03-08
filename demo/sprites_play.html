@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tween.js Hello World 仿写</title>
-    <!-- <script src="../dist/anikyu.js"></script> -->
+    <title>雪碧图播放</title>
+    <script src="../dist/anikyu.js"></script>
     <style>
         html,
         body {
@@ -30,16 +30,14 @@
 </head>
 
 <body>
-    <div class="target"></div>
-    <script type="module">
-        import Anikyu from '../src/anikyu.js';
-
-        var el = document.querySelector('.target')
+    <div class="target" id="target"></div>
+    <script>
+        var el = document.getElementById('target')
 
         var obj = {}
 
-        let imgH = 25600, step = 99
-        let singleH = imgH / (1 + step)
+        var imgH = 25600, step = 99
+        var singleH = imgH / (1 + step)
 
         var ani = new Anikyu(obj, [
             {
@@ -49,7 +47,7 @@
             },
             {
                 easeType: 'step',
-                step,
+                step: step,
                 delay: 0,
                 duration: 3000,
                 props: {
@@ -69,11 +67,7 @@
             easeType: 'elasticInOut'
         })
         ani.addEventListener('animate', function (e) {
-            // console.log(e)
-
-            Object.assign(el.style, {
-                backgroundPositionY: e.detail.value.top + 'px'
-            })
+            el.style.backgroundPositionY = e.detail.value.top + 'px'
         })
         ani.addEventListener('finish', function (e) {
             if (e.detail.stageIndex === 2) {
