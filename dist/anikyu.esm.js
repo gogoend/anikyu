@@ -293,10 +293,21 @@ function getStyle (obj, attr) {
 }
 
 function trigger (obj, eName ,eDetail) {
-	
-	let theEvent = new CustomEvent(eName, {
-		detail: Object.assign({},eDetail)
-	});
+	let theEvent;
+	try {
+		theEvent = new CustomEvent(eName, {
+			detail: Object.assign({},eDetail),
+		});
+	} catch (e){
+		// 这里的代码用于兼容IE 9-11等无法使用CustomEvent构造函数的浏览器
+		theEvent = document.createEvent('CustomEvent');
+
+		// theEvent.initEvent(eName, true, true);
+		// initEvent无法传递detail，若直接对事件对象中的detail赋值会直接报错
+		// 因此需要使用initCustomEvent
+		theEvent.initCustomEvent(eName, true, true, eDetail);
+	}
+
 	obj.dispatchEvent(theEvent);
 }
 
@@ -306,11 +317,56 @@ function rand (min,max){
 }
 
 
+// CONCATENATED MODULE: ./src/polyfill/EventTargetConstructor.js
+let EventTarget = function () {
+	this.listeners = {};
+};
+
+EventTarget.prototype = Object.assign({},{
+	listeners:{},
+	addEventListener (type, callback){
+		if(!(type in this.listeners)){
+			this.listeners[type] = [];
+		}
+		this.listeners[type].push(callback);
+	},
+	removeEventListener (type, callback){
+		if(!(type in this.listeners)) return;
+		let typeHandlers = this.listeners[type];
+		for(let i = 0;i < typeHandlers.length;i++){
+			if(typeHandlers[i] === callback){
+				typeHandlers.splice(i,1);
+				return;
+			}
+		}
+	},
+	dispatchEvent (event){
+		if(!(event.type in this.listeners)){
+			return true;
+		}
+		let typeHandlers = this.listeners[event.type].concat();
+        
+		for(let i = 0;i < typeHandlers.length;i++){
+			typeHandlers[i].call(this,event);
+		}
+	}
+});
+
+/* harmony default export */ var EventTargetConstructor = (EventTarget);
+
 // CONCATENATED MODULE: ./src/animation.js
 
 
 
-class animation_Animation extends EventTarget {
+
+// let EventTarget;
+
+// try{
+// 	new EventTarget;
+// } catch(err){
+// 	EventTarget = EventTargetPolyfill;
+// }
+class animation_Animation extends EventTargetConstructor {
 
 	constructor (el, queue, config) {
 		super();
@@ -541,8 +597,8 @@ Object.assign(animation_Animation, {
 });
 
 /* harmony default export */ var animation = (animation_Animation);
-// EXTERNAL MODULE: ./src/polyfill.js
-var polyfill = __webpack_require__(0);
+// EXTERNAL MODULE: ./src/polyfill/requestAnimationFrame.js
+var polyfill_requestAnimationFrame = __webpack_require__(0);
 
 // CONCATENATED MODULE: ./src/anikyu.js
 
