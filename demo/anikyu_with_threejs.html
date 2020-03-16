@@ -20,13 +20,13 @@
     <script>
         //初始化指示器
         function initStats() {
-            var stats = new Stats();
-            stats.setMode(0);
-            stats.domElement.style.position = 'absolute';
-            stats.domElement.style.position = '0px';
-            stats.domElement.style.position = '0px';
-            document.getElementById("Stats-output").appendChild(stats.domElement);
-            return stats;
+            // var stats = new Stats();
+            // stats.setMode(0);
+            // stats.domElement.style.position = 'absolute';
+            // stats.domElement.style.position = '0px';
+            // stats.domElement.style.position = '0px';
+            // document.getElementById("Stats-output").appendChild(stats.domElement);
+            // return stats;
         }
         //初始化场景
         function init() {
@@ -64,7 +64,7 @@
             window.controls = controls
 
             function renderScene() {
-                stats.update();
+                // stats.update();
                 requestAnimationFrame(renderScene);
                 renderer.render(scene, camera);
             }
@@ -87,10 +87,10 @@
         }
         function setLights() {
             //点光源
-            // var spotLight = new THREE.SpotLight(0x806f00);
-            // spotLight.position.set(-40, 60, -10);
-            // spotLight.castShadow = true;
-            // lightGroup.add(spotLight);
+            var spotLight = new THREE.SpotLight(0x806f00, 0.1);
+            spotLight.position.set(-40, 60, -10);
+            spotLight.castShadow = true;
+            lightGroup.add(spotLight);
 
             var light1 = new THREE.PointLight(0xEEFF66, 0.5)
             light1.position.set(30, 31, -10);
@@ -103,9 +103,9 @@
             var light3 = new THREE.AmbientLight(0x888888);
             lightGroup.add(light3);
 
-            // var light4 = new THREE.PointLight(0xB8FFB8, 0.5);
-            // light4.position.set(10, 20, 30);
-            // lightGroup.add(light4);
+            var light4 = new THREE.PointLight(0xB8FFB8, 0.1);
+            light4.position.set(10, 20, 30);
+            lightGroup.add(light4);
         }
 
         window.boxes = []
@@ -190,7 +190,17 @@
                                 }
                             }
                         )
-                    }, i * 20)
+                        document.addEventListener("visibilitychange", () => {
+                            if (document.hidden) {
+                                // 页面被挂起
+                                ani.pause()
+                            }
+                            else {
+                                ani.resume()
+                                // 页面呼出
+                            }
+                        });
+                    }, 10*i)
                 })(i)
             }
         })
