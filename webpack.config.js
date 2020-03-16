@@ -9,7 +9,8 @@ module.exports = [{
 		filename: 'anikyu.js',
 		library: 'Anikyu',
 		libraryTarget: 'umd',
-		libraryExport: 'default'
+		libraryExport: 'default',
+		globalObject: 'this'
 	},
 	mode: 'production',
 	optimization:{
@@ -31,7 +32,8 @@ module.exports = [{
 		filename: 'anikyu.min.js',
 		library: 'Anikyu',
 		libraryTarget: 'umd',
-		libraryExport: 'default'
+		libraryExport: 'default',
+		globalObject: 'this'
 	},
 	mode: 'production',
 	module: {

@@ -3,7 +3,7 @@
 // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
 // requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
 // MIT license
-(function () {
+(function (window) {
 	var lastTime = 0;
 	var vendors = ['ms', 'moz', 'webkit', 'o'];
 	for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
@@ -22,4 +22,4 @@
 	if (!window.cancelAnimationFrame) window.cancelAnimationFrame = function (id) {
 		clearTimeout(id);
 	};
-}());
+}(typeof window === 'undefined' ? global : window));
