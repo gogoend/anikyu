@@ -174,18 +174,18 @@
                         ani.addEventListener(
                             'animate',
                             function (e) {
-                                // console.log(e.detail);
-                                window.boxes[i].rotateZ((e.detail.frameDelta.s) * Math.PI / 180)
-                                // window.boxes[i].scale = new THREE.Vector3(1 + e.detail.percent, 1, 1)
-                                // window.boxes[i].position.y+=e.detail.frameDelta.s*0.01
-                                // window.boxes[i].translateY((e.detail.frameDelta.s) * 0.1)
+                                // console.log(e);
+                                window.boxes[i].rotateZ((e.frameDelta.s) * Math.PI / 180)
+                                // window.boxes[i].scale = new THREE.Vector3(1 + e.percent, 1, 1)
+                                // window.boxes[i].position.y+=e.frameDelta.s*0.01
+                                // window.boxes[i].translateY((e.frameDelta.s) * 0.1)
 
                             }
                         )
                         ani.addEventListener(
                             'finish',
                             function (e) {
-                                if (e.detail.stageIndex === 1) {
+                                if (e.stageIndex === 1) {
                                     ani.jump(0)
                                 }
                             }

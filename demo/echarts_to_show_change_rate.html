@@ -91,9 +91,9 @@
         ])
         ani.addEventListener('animate', function (e) {
             xNameArr.push(' ')
-            console.log(e.detail)
-            xStageDeltaArr.push(e.detail.stageDelta.a);
-            xFrameDeltaArr.push(e.detail.frameDelta.a);
+            console.log(e)
+            xStageDeltaArr.push(e.stageDelta.a);
+            xFrameDeltaArr.push(e.frameDelta.a);
 
             myChart.setOption({
                 series: [

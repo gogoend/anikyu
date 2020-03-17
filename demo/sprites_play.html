@@ -67,10 +67,10 @@
             easeType: 'elasticInOut'
         })
         ani.addEventListener('animate', function (e) {
-            el.style.backgroundPositionY = e.detail.value.top + 'px'
+            el.style.backgroundPositionY = e.value.top + 'px'
         })
         ani.addEventListener('finish', function (e) {
-            if (e.detail.stageIndex === 2) {
+            if (e.stageIndex === 2) {
                 ani.jump(0)
             }
         })
