@@ -1,3 +1,13 @@
 let Anikyu = require('../dist/anikyu.js');
-
-console.log(Anikyu);
+let obj = {};
+let aniArr = [{
+	props: { s: 0 }
+}, {
+	easeType: 'elasticOut',
+	duration: 4000,
+	props: { s: 360 }
+}];
+let ani = new Anikyu(obj,aniArr);
+ani.addEventListener('animate',function (e){
+	console.log(e);
+});
