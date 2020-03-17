@@ -82,19 +82,19 @@ var Anikyu =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-// requestAnimationFrame
+/* WEBPACK VAR INJECTION */(function(global) {// requestAnimationFrame
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
 // requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
 // MIT license
-(function () {
+(function (window) {
 	var lastTime = 0;
 	var vendors = ['ms', 'moz', 'webkit', 'o'];
 	for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
@@ -113,10 +113,37 @@ var Anikyu =
 	if (!window.cancelAnimationFrame) window.cancelAnimationFrame = function (id) {
 		clearTimeout(id);
 	};
-}());
+}(typeof window === 'undefined' ? global : window));
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(1)))
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || new Function("return this")();
+} catch (e) {
+	// This works if the window reference is available
+	if (typeof window === "object") g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -292,23 +319,8 @@ function getStyle (obj, attr) {
 	}
 }
 
-function trigger (obj, eName ,eDetail) {
-	let theEvent;
-	try {
-		theEvent = new CustomEvent(eName, {
-			detail: Object.assign({},eDetail),
-		});
-	} catch (e){
-		// 这里的代码用于兼容IE 9-11等无法使用CustomEvent构造函数的浏览器
-		theEvent = document.createEvent('CustomEvent');
-
-		// theEvent.initEvent(eName, true, true);
-		// initEvent无法传递detail，若直接对事件对象中的detail赋值会直接报错
-		// 因此需要使用initCustomEvent
-		theEvent.initCustomEvent(eName, true, true, eDetail);
-	}
-
-	obj.dispatchEvent(theEvent);
+function trigger (obj, eDetail) {
+	obj.fireEvent( eDetail.type, eDetail);
 }
 
 
@@ -317,12 +329,12 @@ function rand (min,max){
 }
 
 
-// CONCATENATED MODULE: ./src/polyfill/EventTargetConstructor.js
-let EventTarget = function () {
+// CONCATENATED MODULE: ./src/event_doer.js
+let EventDoer = function () {
 	this.listeners = {};
 };
 
-EventTarget.prototype = Object.assign({},{
+EventDoer.prototype = Object.assign({},{
 	listeners:{},
 	addEventListener (type, callback){
 		if(!(type in this.listeners)){
@@ -340,33 +352,32 @@ EventTarget.prototype = Object.assign({},{
 			}
 		}
 	},
-	dispatchEvent (event){
-		if(!(event.type in this.listeners)){
+	fireEvent (name, detail){
+		if(!(name in this.listeners)){
 			return true;
 		}
-		let typeHandlers = this.listeners[event.type].concat();
-        
+		let typeHandlers = this.listeners[name].concat();
+
 		for(let i = 0;i < typeHandlers.length;i++){
-			typeHandlers[i].call(this,event);
+			typeHandlers[i].call(this,detail);
 		}
+	},
+	getListeners (name){
+		if(name){
+			return this.listeners[name];
+		}
+		return this.listeners;
 	}
 });
 
-/* harmony default export */ var EventTargetConstructor = (EventTarget);
+/* harmony default export */ var event_doer = (EventDoer);
 
-// CONCATENATED MODULE: ./src/animation.js
-
-
+// CONCATENATED MODULE: ./src/anikyu_class.js
 
 
-// let EventTarget;
 
-// try{
-// 	new EventTarget;
-// } catch(err){
-// 	EventTarget = EventTargetPolyfill;
-// }
-class animation_Animation extends EventTargetConstructor {
+
+class anikyu_class_Anikyu extends event_doer {
 
 	constructor (el, queue, config) {
 		super();
@@ -491,7 +502,8 @@ class animation_Animation extends EventTargetConstructor {
 						// if (queue[i + 1].onFinished instanceof Function) {
 						// 	queue[i + 1].onFinished(this);
 						// }
-						trigger(this,'finish',{
+						trigger(this,{
+							type:'finish',
 							stageIndex:currentStageIndex,
 							name:queue[currentStageIndex].name
 						});
@@ -502,7 +514,8 @@ class animation_Animation extends EventTargetConstructor {
 					// debugger
 					return;
 				}
-				trigger(this,'animate',{
+				trigger(this,{
+					type:'animate',
 					stageIndex:this.i,
 					name:queue[currentStageIndex].name ? queue[currentStageIndex].name : '',
 					progress:currentProgress,
@@ -584,7 +597,9 @@ class animation_Animation extends EventTargetConstructor {
 	// 废弃
 	dispose () {
 		cancelAnimationFrame(this.reqAniHandler);
-		trigger(this,'dispose');
+		trigger(this,{
+			type: 'dispose'
+		});
 		for(let key in this){
 			this[key] = undefined;
 			delete this[key];
@@ -592,11 +607,11 @@ class animation_Animation extends EventTargetConstructor {
 	}
 }
 
-Object.assign(animation_Animation, {
+Object.assign(anikyu_class_Anikyu, {
 	getStyle: getStyle,rand: rand,clamp: clamp
 });
 
-/* harmony default export */ var animation = (animation_Animation);
+/* harmony default export */ var anikyu_class = (anikyu_class_Anikyu);
 // EXTERNAL MODULE: ./src/polyfill/requestAnimationFrame.js
 var polyfill_requestAnimationFrame = __webpack_require__(0);
 
@@ -607,7 +622,7 @@ var polyfill_requestAnimationFrame = __webpack_require__(0);
 // 判断文件是如何引入的，如果是通过模块引入则不在全局暴露Anikyu
 // 直接在Webpack配置中改为UMD
 
-/* harmony default export */ var anikyu = __webpack_exports__["default"] = (animation);
+/* harmony default export */ var anikyu = __webpack_exports__["default"] = (anikyu_class);
 
 /***/ })
 /******/ ]);
