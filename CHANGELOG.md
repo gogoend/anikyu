@@ -1,7 +1,7 @@
 # 0.2.2
 - ~~增加EventTarget构造函数的Polyfill，以便支持相关浏览器~~
 - 不再使用浏览器原生EventTarget对象以及事件，而是直接使用Anikyu内部实现的EventDoer对象来对其进行模拟并增强
-- 对于事件回调函数中的参数，原先需要通过event.detail来访问的属性已经移动到event下，event.detail不再存在，若要由旧版本进行迁移，请直接访问event
+- 对于事件回调函数中的参数，原先需要通过event.detail来访问的属性已经移动到event下，event.detail不再存在；若要从旧版本迁移，请直接访问event
 - 修复对IE 9或更高版本IE浏览器的支持
 - 增加对Node.js环境的支持
 
