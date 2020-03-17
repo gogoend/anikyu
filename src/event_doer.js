@@ -1,8 +1,8 @@
-let EventTarget = function () {
+let EventDoer = function () {
 	this.listeners = {};
 };
 
-EventTarget.prototype = Object.assign({},{
+EventDoer.prototype = Object.assign({},{
 	listeners:{},
 	addEventListener (type, callback){
 		if(!(type in this.listeners)){
@@ -20,16 +20,22 @@ EventTarget.prototype = Object.assign({},{
 			}
 		}
 	},
-	dispatchEvent (event){
-		if(!(event.type in this.listeners)){
+	fireEvent (name, detail){
+		if(!(name in this.listeners)){
 			return true;
 		}
-		let typeHandlers = this.listeners[event.type].concat();
-        
+		let typeHandlers = this.listeners[name].concat();
+
 		for(let i = 0;i < typeHandlers.length;i++){
-			typeHandlers[i].call(this,event);
+			typeHandlers[i].call(this,detail);
 		}
+	},
+	getListeners (name){
+		if(name){
+			return this.listeners[name];
+		}
+		return this.listeners;
 	}
 });
 
-export default EventTarget;
+export default EventDoer;

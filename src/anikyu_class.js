@@ -1,15 +1,8 @@
 import { easingFuncs as ease } from './easing_funcs.js';
 import { clamp, getStyle ,trigger,rand } from './util.js';
-import AnikyuEventTarget from './polyfill/EventTargetConstructor.js';
+import EventDoer from './event_doer.js';
 
-// let EventTarget;
-
-// try{
-// 	new EventTarget;
-// } catch(err){
-// 	EventTarget = EventTargetPolyfill;
-// }
-class Animation extends AnikyuEventTarget {
+class Anikyu extends EventDoer {
 
 	constructor (el, queue, config) {
 		super();
@@ -134,7 +127,8 @@ class Animation extends AnikyuEventTarget {
 						// if (queue[i + 1].onFinished instanceof Function) {
 						// 	queue[i + 1].onFinished(this);
 						// }
-						trigger(this,'finish',{
+						trigger(this,{
+							type:'finish',
 							stageIndex:currentStageIndex,
 							name:queue[currentStageIndex].name
 						});
@@ -145,7 +139,8 @@ class Animation extends AnikyuEventTarget {
 					// debugger
 					return;
 				}
-				trigger(this,'animate',{
+				trigger(this,{
+					type:'animate',
 					stageIndex:this.i,
 					name:queue[currentStageIndex].name ? queue[currentStageIndex].name : '',
 					progress:currentProgress,
@@ -227,7 +222,9 @@ class Animation extends AnikyuEventTarget {
 	// 废弃
 	dispose () {
 		cancelAnimationFrame(this.reqAniHandler);
-		trigger(this,'dispose');
+		trigger(this,{
+			type: 'dispose'
+		});
 		for(let key in this){
 			this[key] = undefined;
 			delete this[key];
@@ -235,8 +232,8 @@ class Animation extends AnikyuEventTarget {
 	}
 }
 
-Object.assign(Animation, {
+Object.assign(Anikyu, {
 	getStyle,rand,clamp
 });
 
-export default Animation;
+export default Anikyu;
