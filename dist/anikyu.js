@@ -1814,7 +1814,7 @@ var anikyu_class_Anikyu = /*#__PURE__*/function (_EventDoer) {
               trigger(_this2, {
                 type: 'finish',
                 stageIndex: currentStageIndex,
-                name: queue[currentStageIndex].name
+                name: queue[currentStageIndex].name ? queue[currentStageIndex].name : ''
               });
 
               if (!config.manualNext) {
@@ -1918,15 +1918,19 @@ var anikyu_class_Anikyu = /*#__PURE__*/function (_EventDoer) {
   }, {
     key: "dispose",
     value: function dispose() {
-      cancelAnimationFrame(this.reqAniHandler);
+      var queue = this.queue,
+          i = this.i,
+          reqAniHandler = this.reqAniHandler;
+      var currentStageIndex = i + 1;
+      cancelAnimationFrame(reqAniHandler);
       trigger(this, {
-        type: 'dispose'
-      });
-
-      for (var key in this) {
-        this[key] = undefined;
-        delete this[key];
-      }
+        type: 'dispose',
+        stageIndex: i,
+        name: queue[currentStageIndex].name ? queue[currentStageIndex].name : ''
+      }); // for(let key in this){
+      // 	this[key] = undefined;
+      // 	delete this[key];
+      // }
     }
   }]);
 

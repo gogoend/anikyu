@@ -518,7 +518,7 @@ class anikyu_class_Anikyu extends event_doer {
 						trigger(this,{
 							type:'finish',
 							stageIndex:currentStageIndex,
-							name:queue[currentStageIndex].name
+							name:queue[currentStageIndex].name ? queue[currentStageIndex].name : ''
 						});
 						if (!config.manualNext) {
 							next.call(this);
@@ -609,14 +609,19 @@ class anikyu_class_Anikyu extends event_doer {
 
 	// 废弃
 	dispose () {
-		cancelAnimationFrame(this.reqAniHandler);
+		let { queue, i, reqAniHandler } = this;
+
+		let currentStageIndex = i + 1;
+		cancelAnimationFrame(reqAniHandler);
 		trigger(this,{
-			type: 'dispose'
+			type: 'dispose',
+			stageIndex: i,
+			name: queue[currentStageIndex].name ? queue[currentStageIndex].name : ''
 		});
-		for(let key in this){
-			this[key] = undefined;
-			delete this[key];
-		}
+		// for(let key in this){
+		// 	this[key] = undefined;
+		// 	delete this[key];
+		// }
 	}
 }
 
