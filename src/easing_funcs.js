@@ -1,4 +1,4 @@
-export const easingFuncs = {
+export var easingFuncs = {
 	linear: function (k) {
 		return k;
 	},

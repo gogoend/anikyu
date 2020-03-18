@@ -1,41 +1,45 @@
-let EventDoer = function () {
+var EventDoer = function () {
 	this.listeners = {};
 };
 
-EventDoer.prototype = Object.assign({},{
+var eventDoerInstanceFunc = {
 	listeners:{},
-	addEventListener (type, callback){
+	addEventListener: function (type, callback){
 		if(!(type in this.listeners)){
 			this.listeners[type] = [];
 		}
 		this.listeners[type].push(callback);
 	},
-	removeEventListener (type, callback){
+	removeEventListener: function (type, callback){
 		if(!(type in this.listeners)) return;
-		let typeHandlers = this.listeners[type];
-		for(let i = 0;i < typeHandlers.length;i++){
+		var typeHandlers = this.listeners[type];
+		for(var i = 0;i < typeHandlers.length;i++){
 			if(typeHandlers[i] === callback){
 				typeHandlers.splice(i,1);
 				return;
 			}
 		}
 	},
-	fireEvent (name, detail){
+	fireEvent: function (name, detail){
 		if(!(name in this.listeners)){
 			return true;
 		}
-		let typeHandlers = this.listeners[name].concat();
+		var typeHandlers = this.listeners[name].concat();
 
-		for(let i = 0;i < typeHandlers.length;i++){
+		for(var i = 0;i < typeHandlers.length;i++){
 			typeHandlers[i].call(this,detail);
 		}
 	},
-	getListeners (name){
+	getListeners: function (name){
 		if(name){
 			return this.listeners[name];
 		}
 		return this.listeners;
 	}
-});
+};
+
+for( var key in eventDoerInstanceFunc){
+	EventDoer.prototype[key] = eventDoerInstanceFunc[key];
+}
 
 export default EventDoer;
