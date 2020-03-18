@@ -1334,21 +1334,22 @@ module.exports = g;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+// ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es7.symbol.async-iterator.js
+// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es7.symbol.async-iterator.js
 var es7_symbol_async_iterator = __webpack_require__(37);
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.symbol.js
+// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.symbol.js
 var es6_symbol = __webpack_require__(38);
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.object.set-prototype-of.js
+// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.object.set-prototype-of.js
 var es6_object_set_prototype_of = __webpack_require__(52);
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.function.name.js
+// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.function.name.js
 var es6_function_name = __webpack_require__(54);
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.object.assign.js
+// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.object.assign.js
 var es6_object_assign = __webpack_require__(36);
 
 // CONCATENATED MODULE: ./src/easing_funcs.js
@@ -1573,9 +1574,11 @@ var easingFuncs = {
   }
 };
 // CONCATENATED MODULE: ./src/util.js
+// 用于对数值进行钳制
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
-}
+} // 用于获得DOM元素computedStyle
+
 
 function getStyle(obj, attr) {
   if (obj.currentStyle) {
@@ -1583,11 +1586,22 @@ function getStyle(obj, attr) {
   } else {
     return getComputedStyle(obj, false)[attr];
   }
-}
+} // 用于手动触发对象的事件
+
 
 function trigger(obj, eDetail) {
   obj.fireEvent(eDetail.type, eDetail);
-}
+} // 用于处理获得时间函数的兼容性，performance.now() 更为精准
+
+
+function now() {
+  if (typeof performance !== 'undefined' && performance.now) {
+    return performance.now();
+  }
+
+  return Date.now ? Date.now() : new Date().getTime();
+} // 产生范围内随机数
+
 
 function rand(min, max) {
   return Math.random() * (max - min) + min;
@@ -1670,9 +1684,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
-var anikyu_class_Anikyu =
-/*#__PURE__*/
-function (_EventDoer) {
+var anikyu_class_Anikyu = /*#__PURE__*/function (_EventDoer) {
   _inherits(Anikyu, _EventDoer);
 
   function Anikyu(el, queue, config) {
@@ -1743,7 +1755,7 @@ function (_EventDoer) {
       var easeType = queue[i + 1].easeType ? queue[i + 1].easeType : config.easeType;
       var duration = queue[i + 1].duration ? queue[i + 1].duration : config.duration;
       var step = queue[i + 1].step ? queue[i + 1].step : undefined;
-      status.startTime = new Date().getTime() + delay;
+      status.startTime = now() + delay;
       var totalDelta = {};
 
       for (var _key in finalStatus) {
@@ -1777,7 +1789,7 @@ function (_EventDoer) {
       var loop = function loop() {
         if (!status.paused) {
           // let endTime = status.startTime + duration;
-          var currentTime = new Date().getTime();
+          var currentTime = now();
           var currentProgress = clamp((currentTime - status.startTime) / duration, 0, 1);
           var newValue = {},
               stageDelta = {},
@@ -1839,7 +1851,7 @@ function (_EventDoer) {
     value: function pause() {
       var status = this.status;
       if (status.paused) return;
-      var pausedTime = new Date().getTime();
+      var pausedTime = now();
       status.passedTime = pausedTime - status.startTime;
       status.paused = true;
     }
@@ -1848,7 +1860,7 @@ function (_EventDoer) {
     value: function resume() {
       var status = this.status;
       if (!status.paused) return;
-      var startTime = new Date().getTime();
+      var startTime = now();
       status.startTime = startTime - status.passedTime;
       status.paused = false;
     }

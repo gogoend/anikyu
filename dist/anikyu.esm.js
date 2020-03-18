@@ -147,6 +147,7 @@ module.exports = g;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+// ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
 
 // CONCATENATED MODULE: ./src/easing_funcs.js
@@ -307,9 +308,12 @@ const easingFuncs = {
 	}
 };
 // CONCATENATED MODULE: ./src/util.js
+// 用于对数值进行钳制
 function clamp (value, min, max) {
 	return Math.max(min, Math.min(max, value));
 }
+
+// 用于获得DOM元素computedStyle
 function getStyle (obj, attr) {
 	if (obj.currentStyle) {
 		return obj.currentStyle[attr];
@@ -319,11 +323,20 @@ function getStyle (obj, attr) {
 	}
 }
 
+// 用于手动触发对象的事件
 function trigger (obj, eDetail) {
 	obj.fireEvent( eDetail.type, eDetail);
 }
 
+// 用于处理获得时间函数的兼容性，performance.now() 更为精准
+function now () {
+	if (typeof performance !== 'undefined' && performance.now) {
+		return performance.now();
+	}
+	return Date.now ? Date.now() : (new Date()).getTime();
+}
 
+// 产生范围内随机数
 function rand (min,max){
 	return Math.random() * (max - min) + min;
 }
@@ -441,7 +454,7 @@ class anikyu_class_Anikyu extends event_doer {
 
 		let step = queue[i + 1].step ? queue[i + 1].step : undefined;
 
-		status.startTime = new Date().getTime() + delay;
+		status.startTime = now() + delay;
 
 		let totalDelta = {};
 
@@ -479,7 +492,7 @@ class anikyu_class_Anikyu extends event_doer {
 
 			if (!status.paused) {
 				// let endTime = status.startTime + duration;
-				let currentTime = new Date().getTime();
+				let currentTime = now();
 				let currentProgress = clamp((currentTime - status.startTime) / duration, 0, 1);
 
 				let newValue = {},stageDelta = {},frameDelta = {};
@@ -541,7 +554,7 @@ class anikyu_class_Anikyu extends event_doer {
 
 		if(status.paused) return;
 
-		let pausedTime = new Date().getTime();
+		let pausedTime = now();
 		status.passedTime = pausedTime - status.startTime;
 		status.paused = true;
 	}
@@ -550,7 +563,7 @@ class anikyu_class_Anikyu extends event_doer {
 
 		if(!status.paused) return;
 
-		let startTime =  new Date().getTime();
+		let startTime =  now();
 		status.startTime = startTime - status.passedTime;
 		status.paused = false;
 	}
