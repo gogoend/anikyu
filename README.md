@@ -20,9 +20,12 @@ If you import Anikyu via script tag, it is recommended to using at least the fol
 | FireFox | 52 |
 
 Anikyu don't plan to support obsolete browsers.
+
 After importing this file, Anikyu will become a global variable.
 
 Besides, Anikyu can be imported via ES Module. For more information about the compatibility of ES Module, you can click [caniuse](https://caniuse.com/#feat=es6-module) .
+
+Due to some compatibility issues, the tween animation may have different effects between different browsers. For example, IE 9 don't support some CSS rules, or some rule don't receive number as its value, which result in unexpected effects.
 
 
 ## Import to your project
