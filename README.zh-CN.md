@@ -19,7 +19,7 @@ anikyu 是一个补间动画库，基于JavaScript，可以为一个指定对象
 | Chrome | 49 |
 | FireFox | 52 |
 
-引入该文件以后，Anikyu将会成为一个全局变量。
+不支持更早期的浏览器版本。引入该文件以后，Anikyu将会成为一个全局变量。
 
 此外，Anikyu支持以ES Module的方式来引入，有关其兼容性可参阅 [caniuse](https://caniuse.com/#feat=es6-module) 。
 
@@ -107,7 +107,9 @@ duration - 每一个动画阶段默认的持续时间，默认为2000
 easeType - 每一个动画阶段默认的缓动函数，默认为'quadraticInOut'，其它可选值请参阅本页面下方“[缓动函数](#缓动函数)”章节
 
 
-## 实例方法
+## 方法
+
+### 实例方法
 
 你可以在由Anikyu类产生的实例上调用下列方法。
 
@@ -143,6 +145,31 @@ finishCallFlag - 如果你是在 finish 事件的处理函数中调用该函数�
 
 废弃该实例，之后该实例将不再可用
 
+### 事件方法
+
+- .addEventListener( type: String, callback: Function )
+- .removeEventListener( type: String, callback: Function )
+
+type - 事件名称，目前可选值有：'animate' 、 'finish' 和 'dispose'
+
+callback - 回调函数，对应事件被触发后将会调用，其参数包含有相关事件的细节，可参阅本页面下方“[事件](#事件)”章节
+
+用于增加或移除对该实例的事件监听
+
+- .fireEvent( name: String, detail: Object )
+
+name - 事件名称
+
+detail - 事件细节，传递给事件处理函数
+
+用于触发该实例上的事件。该函数由Anikyu在内部进行调用，不建议手动调用
+
+- .getListeners( name: String )
+
+name - 事件名称
+
+用于获得该实例上与事件名称对应的一系列事件处理函数。若不传入事件名称则返回所有事件处理函数
+
 
 ## 事件
 
@@ -166,6 +193,7 @@ Anikyu支持以下事件：
 
 ```JavaScript
 {
+    type: String,
     stageIndex: Number,
     name: String,
     progress: Number,
@@ -175,6 +203,7 @@ Anikyu支持以下事件：
     frameDelta: Object
 }
 ```
+type - 事件类型
 
 stageIndex - 当前动画阶段的索引
 
@@ -196,10 +225,29 @@ frameDelta - 当前这一帧与前一帧的差值
 
 ```JavaScript
 {
+    type: String,
     stageIndex: Number,
     name: String
 }
 ```
+type - 事件类型
+
+stageIndex - 当前动画阶段的索引
+
+name - 当前动画阶段的名称，可以由用户指定
+
+- dispose
+
+当前Anikyu实例被废弃时会触发一次dispose事件。事件的回调函数接收下列对象作为参数：
+
+```JavaScript
+{
+    type: String,
+    stageIndex: Number,
+    name: String
+}
+```
+type - 事件类型
 
 stageIndex - 当前动画阶段的索引
 
@@ -245,3 +293,7 @@ step
 [MIT](http://opensource.org/licenses/MIT)
 
 Copyright (c) 2020, [gogoend](http://github.com/gogoend)
+
+## 致谢
+
+[秘易网络](http://www.mastereach.net/)

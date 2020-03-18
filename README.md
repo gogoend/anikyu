@@ -11,7 +11,7 @@ Anikyu is a tween animation library, based on JavaScript, can create continuous 
 
 ## Browser Compatibility
 
-If you import Anikyu via script tag, it is recommanded to using at least the following or higher browsers:
+If you import Anikyu via script tag, it is recommended to using at least the following or higher browsers:
 
 | Browser | Version |
 | - | - |
@@ -19,6 +19,7 @@ If you import Anikyu via script tag, it is recommanded to using at least the fol
 | Chrome | 49 |
 | FireFox | 52 |
 
+Anikyu don't plan to support obsolete browsers.
 After importing this file, Anikyu will become a global variable.
 
 Besides, Anikyu can be imported via ES Module. For more information about the compatibility of ES Module, you can click [caniuse](https://caniuse.com/#feat=es6-module) .
@@ -107,7 +108,9 @@ duration - The default value of every animation stage. Default is *2000*.
 easeType - The default ease function of every animation stage. Default is *'quadraticInOut'*. For other possible values, please view the [*Easing Functions*](#Easing-Functions) section.
 
 
-## Instance Methods
+## Methods
+
+### Instance Methods
 
 You can call the following methods on the instance constructed by Anikyu.
 
@@ -139,6 +142,33 @@ Jump to next animation stage and continue playing.
 
 Dispose the instance, then the instance will no longer can be used.
 
+### Event Methods
+
+- .addEventListener( type: String, callback: Function )
+- .removeEventListener( type: String, callback: Function )
+
+type - Event type. The possible values are 'animate', 'finish' and 'dispose'.
+
+callback - The function to be call after the corresponding event being fired. Its argument contains the event detail. For details, please view the [Events](#Events) section.
+
+Used for adding or removing the event listener on the instance.
+
+
+- .fireEvent( name: String, detail: Object )
+
+name - Event name. At present the possible values are 'animate', 'finish' and 'dispose'.
+
+detail - Event detail. It will be passed to event handler.
+
+Used for firing the event listener on the instance. This function is called by Anikyu internally, and not recommended to call manually.
+
+
+- .getListeners( name: String )
+
+name - Event name.
+
+Used for getting event handlers corresponding to the event name on this instance. If the event name is not passed, all of the event handlers on the instance will be returned.
+
 
 ## Events
 
@@ -162,6 +192,7 @@ Fire every time the frame being requested. The callback receives the following o
 
 ```JavaScript
 {
+    type: String,
     stageIndex: Number,
     name: String,
     progress: Number,
@@ -171,6 +202,7 @@ Fire every time the frame being requested. The callback receives the following o
     frameDelta: Object
 }
 ```
+type - Event type.
 
 stageIndex - The index of current animation stage.
 
@@ -188,15 +220,33 @@ frameDelta - The difference values between the current and the pervious frame.
 
 - finish
 
-Fire when current animation stage finished. The callback receives the following object as the argument.
-
+Fire when current animation stage finished. The callback receives the following object as the argument:
 
 ```JavaScript
 {
+    type: String,
     stageIndex: Number,
     name: String
 }
 ```
+type - Event type.
+
+stageIndex - The index of current animation stage.
+
+name - The name of current animation stage, specified by user.
+
+- dispose
+
+Fire when the Anikyu instance being disposed. The callback receives the following object as the argument:
+
+```JavaScript
+{
+    type: String,
+    stageIndex: Number,
+    name: String
+}
+```
+type - Event type.
 
 stageIndex - The index of current animation stage.
 
@@ -242,3 +292,7 @@ This function represents a ladder-like change trend. In addition to receiving a 
 [MIT](http://opensource.org/licenses/MIT)
 
 Copyright (c) 2020, [gogoend](http://github.com/gogoend)
+
+## Thanks
+
+[MasterEach](http://www.mastereach.net/)
