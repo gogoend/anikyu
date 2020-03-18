@@ -99,8 +99,9 @@ class Anikyu extends EventDoer {
 			// ;
 			
 		}
+		let _this = this;
 
-		let loop = () => {
+		let loop = function () {
 
 			if (!status.paused) {
 				// let endTime = status.startTime + duration;
@@ -116,32 +117,38 @@ class Anikyu extends EventDoer {
 					frameDelta[key] = (newValue[key] === undefined ? 0 : newValue[key]) - (el[key] === undefined ? 0 : parseFloat(el[key]));
 				}
 
-				Object.assign(el,newValue);
+				if(Object.assign){
+					Object.assign(el,newValue);
+				} else {
+					for(let key in newValue){
+						el[key] = newValue[key];
+					}
+				}
 
 				if (currentProgress == 1) {
 					// clearInterval(timer)
 					// cancelAnimationFrame(this.reqAniHandler);
 					// 如何执行下一步？
 
-					setTimeout(()=>{
+					setTimeout(function (){
 						// if (queue[i + 1].onFinished instanceof Function) {
 						// 	queue[i + 1].onFinished(this);
 						// }
-						trigger(this,{
+						trigger(_this,{
 							type:'finish',
 							stageIndex:currentStageIndex,
 							name:queue[currentStageIndex].name
 						});
 						if (!config.manualNext) {
-							next.call(this);
+							next.call(_this);
 						}
 					}, delay);
 					// debugger
 					return;
 				}
-				trigger(this,{
+				trigger(_this,{
 					type:'animate',
-					stageIndex:this.i,
+					stageIndex:_this.i,
 					name:queue[currentStageIndex].name ? queue[currentStageIndex].name : '',
 					progress:currentProgress,
 					target:el,
@@ -153,7 +160,7 @@ class Anikyu extends EventDoer {
 				// 	queue[i + 1].onAnimating(this);
 				// }
 			}
-			this.reqAniHandler = requestAnimationFrame(loop);
+			_this.reqAniHandler = requestAnimationFrame(loop);
 		};
 		setTimeout(loop,delay);
 		// loop();
