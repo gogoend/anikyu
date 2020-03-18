@@ -1,5 +1,5 @@
 import { easingFuncs as ease } from './easing_funcs.js';
-import { clamp, getStyle ,trigger,rand } from './util.js';
+import { clamp, getStyle, trigger, rand, now } from './util.js';
 import EventDoer from './event_doer.js';
 
 class Anikyu extends EventDoer {
@@ -66,7 +66,7 @@ class Anikyu extends EventDoer {
 
 		let step = queue[i + 1].step ? queue[i + 1].step : undefined;
 
-		status.startTime = new Date().getTime() + delay;
+		status.startTime = now() + delay;
 
 		let totalDelta = {};
 
@@ -104,7 +104,7 @@ class Anikyu extends EventDoer {
 
 			if (!status.paused) {
 				// let endTime = status.startTime + duration;
-				let currentTime = new Date().getTime();
+				let currentTime = now();
 				let currentProgress = clamp((currentTime - status.startTime) / duration, 0, 1);
 
 				let newValue = {},stageDelta = {},frameDelta = {};
@@ -166,7 +166,7 @@ class Anikyu extends EventDoer {
 
 		if(status.paused) return;
 
-		let pausedTime = new Date().getTime();
+		let pausedTime = now();
 		status.passedTime = pausedTime - status.startTime;
 		status.paused = true;
 	}
@@ -175,7 +175,7 @@ class Anikyu extends EventDoer {
 
 		if(!status.paused) return;
 
-		let startTime =  new Date().getTime();
+		let startTime =  now();
 		status.startTime = startTime - status.passedTime;
 		status.paused = false;
 	}
