@@ -168,21 +168,21 @@
                         }
                     ])
                     ani.addEventListener('animate', function (e) {
-                        // if (e.name) {
-                        //     console.log(e.newValue)
+                        // if (e.detail.name) {
+                        //     console.log(e.detail.newValue)
                         // }
-                        let scaleS = `scale(${e.value.s}) `;
+                        let scaleS = `scale(${e.detail.value.s}) `;
                         let translateS = ''
 
-                        if (e.value.t !== undefined) {
-                            translateS = `translate(${e.value.t}px,${e.value.t}px)`
+                        if (e.detail.value.t !== undefined) {
+                            translateS = `translate(${e.detail.value.t}px,${e.detail.value.t}px)`
 
-                            // console.log(e.value.t)
+                            // console.log(e.detail.value.t)
                         }
-                        els[i].style.transform = scaleS + (isNaN(e.value.t) ? '' : translateS)
+                        els[i].style.transform = scaleS + (isNaN(e.detail.value.t) ? '' : translateS)
 
-                        if (e.value.o !== undefined) {
-                            els[i].style.opacity = e.value.o
+                        if (e.detail.value.o !== undefined) {
+                            els[i].style.opacity = e.detail.value.o
                         }
 
 
@@ -190,18 +190,18 @@
                             borderRadius: 50 + '%'
                         }
 
-                        if (e.value.br !== undefined) {
+                        if (e.detail.value.br !== undefined) {
                             radiusObj = {
-                                borderRadius: e.value.br + '%'
+                                borderRadius: e.detail.value.br + '%'
                             }
                         }
 
                         Object.assign(els[i].style, radiusObj)
-                        // console.log(e.value, e.target)
+                        // console.log(e.detail.value, e.target)
                     })
                     ani.addEventListener('finish', function (e) {
-                        console.log(e.stageIndex)
-                        if (e.name === 'final') {
+                        console.log(e.detail.stageIndex)
+                        if (e.detail.name === 'final') {
                             // 若在结束时调用则需要传入 true
                             ani.jump(1, true)
                         }

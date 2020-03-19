@@ -120,18 +120,18 @@
 
         zzz.addEventListener('finish', function (e) {
             console.log(e)
-            if (e.name !== 'final') return
+            if (e.detail.name !== 'final') return
             window.anikyuInstance = new Anikyu(el1.style, el1AnimationQueue, {
                 // manualNext: true
             });
-            window.anikyuInstance.addEventListener('animate', function(e){
-                if (e.name) {
-                    console.log(e.value.width, e.target.width, e.name, '正在进行')
+            window.anikyuInstance.addEventListener('animate', function (e) {
+                if (e.detail.name) {
+                    console.log(e.detail.value.width, e.target.width, e.detail.name, '正在进行')
                 }
             })
-            window.anikyuInstance.addEventListener('finish', function(e){
-                if (e.name === '测试阶段') {
-                    document.title = e.name + ' 已完成'
+            window.anikyuInstance.addEventListener('finish', function (e) {
+                if (e.detail.name === '测试阶段') {
+                    document.title = e.detail.name + ' 已完成'
                 }
             })
         })
