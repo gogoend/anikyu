@@ -1589,8 +1589,12 @@ function getStyle(obj, attr) {
 } // 用于手动触发对象的事件
 
 
-function trigger(obj, eDetail) {
-  obj.fireEvent(eDetail.type, eDetail);
+function trigger(obj, type, target, detail) {
+  obj.fireEvent(type, {
+    type: type,
+    target: target,
+    detail: detail
+  });
 } // 用于处理获得时间函数的兼容性，performance.now() 更为精准
 
 
@@ -1811,8 +1815,7 @@ var anikyu_class_Anikyu = /*#__PURE__*/function (_EventDoer) {
               // if (queue[i + 1].onFinished instanceof Function) {
               // 	queue[i + 1].onFinished(this);
               // }
-              trigger(_this2, {
-                type: 'finish',
+              trigger(_this2, 'finish', el, {
                 stageIndex: currentStageIndex,
                 name: queue[currentStageIndex].name ? queue[currentStageIndex].name : ''
               });
@@ -1825,12 +1828,11 @@ var anikyu_class_Anikyu = /*#__PURE__*/function (_EventDoer) {
             return;
           }
 
-          trigger(_this2, {
-            type: 'animate',
+          trigger(_this2, 'animate', el, {
             stageIndex: _this2.i,
             name: queue[currentStageIndex].name ? queue[currentStageIndex].name : '',
             progress: currentProgress,
-            target: el,
+            // target:el,
             value: newValue,
             stageDelta: stageDelta,
             frameDelta: frameDelta
@@ -1920,11 +1922,11 @@ var anikyu_class_Anikyu = /*#__PURE__*/function (_EventDoer) {
     value: function dispose() {
       var queue = this.queue,
           i = this.i,
-          reqAniHandler = this.reqAniHandler;
+          reqAniHandler = this.reqAniHandler,
+          el = this.el;
       var currentStageIndex = i + 1;
       cancelAnimationFrame(reqAniHandler);
-      trigger(this, {
-        type: 'dispose',
+      trigger(this, 'dispose', el, {
         stageIndex: i,
         name: queue[currentStageIndex].name ? queue[currentStageIndex].name : ''
       }); // for(let key in this){

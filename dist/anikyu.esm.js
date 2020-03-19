@@ -324,8 +324,12 @@ function getStyle (obj, attr) {
 }
 
 // 用于手动触发对象的事件
-function trigger (obj, eDetail) {
-	obj.fireEvent( eDetail.type, eDetail);
+function trigger (obj, type, target,detail) {
+	obj.fireEvent( type, {
+		type,
+		target,
+		detail
+	});
 }
 
 // 用于处理获得时间函数的兼容性，performance.now() 更为精准
@@ -515,8 +519,7 @@ class anikyu_class_Anikyu extends event_doer {
 						// if (queue[i + 1].onFinished instanceof Function) {
 						// 	queue[i + 1].onFinished(this);
 						// }
-						trigger(this,{
-							type:'finish',
+						trigger(this,'finish',el ,{
 							stageIndex:currentStageIndex,
 							name:queue[currentStageIndex].name ? queue[currentStageIndex].name : ''
 						});
@@ -527,12 +530,11 @@ class anikyu_class_Anikyu extends event_doer {
 					// debugger
 					return;
 				}
-				trigger(this,{
-					type:'animate',
+				trigger(this,'animate',el ,{
 					stageIndex:this.i,
 					name:queue[currentStageIndex].name ? queue[currentStageIndex].name : '',
 					progress:currentProgress,
-					target:el,
+					// target:el,
 					value:newValue,
 					stageDelta,
 					frameDelta
@@ -609,12 +611,11 @@ class anikyu_class_Anikyu extends event_doer {
 
 	// 废弃
 	dispose () {
-		let { queue, i, reqAniHandler } = this;
+		let { queue, i, reqAniHandler,el } = this;
 
 		let currentStageIndex = i + 1;
 		cancelAnimationFrame(reqAniHandler);
-		trigger(this,{
-			type: 'dispose',
+		trigger(this,'dispose',el,{
 			stageIndex: i,
 			name: queue[currentStageIndex].name ? queue[currentStageIndex].name : ''
 		});
