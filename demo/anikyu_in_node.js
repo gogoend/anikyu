@@ -1,3 +1,4 @@
+'use strict';
 let Anikyu = require('../dist/anikyu.min.js');
 let obj = {};
 let aniArr = [{
@@ -9,6 +10,6 @@ let aniArr = [{
 }];
 let ani = new Anikyu(obj,aniArr);
 ani.addEventListener('animate',function (e){
-	console.clear();
+	if(console.clear) console.clear();
 	console.log(e);
 });
