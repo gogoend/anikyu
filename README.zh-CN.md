@@ -204,33 +204,49 @@ anikyuInstance.addEventListener('animate',function(event){
 
 此外，你也可以通过在Anikyu实例上调用 .removeEventListener() 来移除事件监听器。
 
-Anikyu支持以下事件：
+### 事件回调函数
 
-- animate
-
-每当请求一次动画帧时会触发一次animate事件。事件的回调函数接收下列对象作为参数：
+回调函数接收类似如下形式的对象作为参数：
 
 ```JavaScript
 {
     type: String,
+    detail: Object,
+    target: Object
+}
+```
+
+type - 事件类型
+
+detail - 事件详情
+
+target - 对当前对象的引用，包含了该对象在当前帧的所有值
+
+
+### 事件分类
+
+Anikyu支持以下事件：
+
+- animate
+
+每当请求一次动画帧时会触发一次animate事件。事件的回调函数接收下列对象作为其参数中的detail：
+
+```JavaScript
+{
     stageIndex: Number,
     name: String,
     progress: Number,
-    target: Object,
     value: Object,
     stageDelta: Object,
     frameDelta: Object
 }
 ```
-type - 事件类型
 
 stageIndex - 当前动画阶段的索引
 
 name - 当前动画阶段的名称，可以由用户指定
 
 progress - 当前动画阶段进度
-
-target - 对当前对象的引用，包含了该对象在当前帧的所有值
 
 value - 当前帧该对象的值
 
@@ -240,16 +256,14 @@ frameDelta - 当前这一帧与前一帧的差值
 
 - finish
 
-当前动画阶段结束时会触发一次finish事件。事件的回调函数接收下列对象作为参数：
+当前动画阶段结束时会触发一次finish事件。事件的回调函数接收下列对象作为其参数中的detail：
 
 ```JavaScript
 {
-    type: String,
     stageIndex: Number,
     name: String
 }
 ```
-type - 事件类型
 
 stageIndex - 当前动画阶段的索引
 
@@ -257,16 +271,14 @@ name - 当前动画阶段的名称，可以由用户指定
 
 - dispose
 
-当前Anikyu实例被废弃时会触发一次dispose事件。事件的回调函数接收下列对象作为参数：
+当前Anikyu实例被废弃时会触发一次dispose事件。事件的回调函数接收下列对象作为其参数中的detail：
 
 ```JavaScript
 {
-    type: String,
     stageIndex: Number,
     name: String
 }
 ```
-type - 事件类型
 
 stageIndex - 当前动画阶段的索引
 

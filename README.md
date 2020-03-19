@@ -206,33 +206,49 @@ anikyuInstance.addEventListener('animate',function(event){
 
 Besides, you can call .removeEventListener() on a Anikyu instance to remove the event listener.
 
-Anikyu supports the following events:
+### Event Callback
 
-- animate
-
-Fire every time the frame being requested. The callback receives the following object as the argument.
+The callback receives the following object as the argument.
 
 ```JavaScript
 {
     type: String,
+    detail: Object,
+    target: Object
+}
+```
+
+type - Event type.
+
+detail - Event detail.
+
+target - The reference to the current Object, which contains all values at current frame of the Object.
+
+
+### Event Types
+
+Anikyu supports the following events:
+
+- animate
+
+Fire when every time the frame being requested. The callback receives the following object as .detail in the argument:
+
+```JavaScript
+{
     stageIndex: Number,
     name: String,
     progress: Number,
-    target: Object,
     value: Object,
     stageDelta: Object,
     frameDelta: Object
 }
 ```
-type - Event type.
 
 stageIndex - The index of current animation stage.
 
 name - The name of current animation stage, specified by user.
 
 progress - The progress of current animation stage.
-
-target - The reference to the current Object, which contains all values at current frame of the Object.
 
 value - The values of the target object at current frame.
 
@@ -242,16 +258,14 @@ frameDelta - The difference values between the current and the pervious frame.
 
 - finish
 
-Fire when current animation stage finished. The callback receives the following object as the argument:
+Fire when current animation stage finished. The callback receives the following object as .detail in the argument:
 
 ```JavaScript
 {
-    type: String,
     stageIndex: Number,
     name: String
 }
 ```
-type - Event type.
 
 stageIndex - The index of current animation stage.
 
@@ -259,16 +273,14 @@ name - The name of current animation stage, specified by user.
 
 - dispose
 
-Fire when the Anikyu instance being disposed. The callback receives the following object as the argument:
+Fire when the Anikyu instance being disposed. The callback receives the following object as .detail in the argument:
 
 ```JavaScript
 {
-    type: String,
     stageIndex: Number,
     name: String
 }
 ```
-type - Event type.
 
 stageIndex - The index of current animation stage.
 
