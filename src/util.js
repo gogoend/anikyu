@@ -14,8 +14,12 @@ function getStyle (obj, attr) {
 }
 
 // 用于手动触发对象的事件
-function trigger (obj, eDetail) {
-	obj.fireEvent( eDetail.type, eDetail);
+function trigger (obj, type, target,detail) {
+	obj.fireEvent( type, {
+		type,
+		target,
+		detail
+	});
 }
 
 // 用于处理获得时间函数的兼容性，performance.now() 更为精准

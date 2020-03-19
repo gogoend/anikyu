@@ -127,8 +127,7 @@ class Anikyu extends EventDoer {
 						// if (queue[i + 1].onFinished instanceof Function) {
 						// 	queue[i + 1].onFinished(this);
 						// }
-						trigger(this,{
-							type:'finish',
+						trigger(this,'finish',el ,{
 							stageIndex:currentStageIndex,
 							name:queue[currentStageIndex].name ? queue[currentStageIndex].name : ''
 						});
@@ -139,12 +138,11 @@ class Anikyu extends EventDoer {
 					// debugger
 					return;
 				}
-				trigger(this,{
-					type:'animate',
+				trigger(this,'animate',el ,{
 					stageIndex:this.i,
 					name:queue[currentStageIndex].name ? queue[currentStageIndex].name : '',
 					progress:currentProgress,
-					target:el,
+					// target:el,
 					value:newValue,
 					stageDelta,
 					frameDelta
@@ -221,12 +219,11 @@ class Anikyu extends EventDoer {
 
 	// 废弃
 	dispose () {
-		let { queue, i, reqAniHandler } = this;
+		let { queue, i, reqAniHandler,el } = this;
 
 		let currentStageIndex = i + 1;
 		cancelAnimationFrame(reqAniHandler);
-		trigger(this,{
-			type: 'dispose',
+		trigger(this,'dispose',el,{
 			stageIndex: i,
 			name: queue[currentStageIndex].name ? queue[currentStageIndex].name : ''
 		});
