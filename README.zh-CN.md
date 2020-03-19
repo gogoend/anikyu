@@ -9,7 +9,8 @@
 anikyu 是一个补间动画库，基于JavaScript，可以为一个指定对象中的数值创建连续补间动画。
 
 
-## 浏览器兼容性
+## 运行环境以及兼容性
+### 在浏览器中
 
 如果你使用script标签来引入Anikyu，推荐至少使用下列或更高版本浏览器：
 
@@ -19,13 +20,22 @@ anikyu 是一个补间动画库，基于JavaScript，可以为一个指定对象
 | Chrome | 49 |
 | FireFox | 52 |
 
-不支持更早期的浏览器版本。
+Anikyu或许可以在早期浏览器中意外地运行，但将来并不会有计划去实际地支持早期浏览器。
 
 引入该文件以后，Anikyu将会成为一个全局变量。
 
 此外，Anikyu支持以ES Module的方式来引入，有关其兼容性可参阅 [caniuse](https://caniuse.com/#feat=es6-module) 。
 
-由于兼容性问题，补间动画可能会在不同浏览器之间具有不同效果，例如 IE 9 浏览器不支持某些CSS规则，或无法将数值作为属性值，导致补间效果不符合预期。
+由于兼容性问题，补间动画可能会在不同浏览器之间具有不同效果，例如 IE 9 浏览器中的某些CSS规则，属性值必须携带单位，仅有数值是无效的。这些情况可能会导致补间效果不符合预期。
+
+### 在Node.js中
+
+Anikyu目前可以在Node.js中运行，但尚未经过严格测试，仅仅在下列环境中成功运行了demo文件：
+
+| 操作系统 | Node.js环境 |
+| - | - |
+| Windows XP | v5.1.0 |
+| Windows 10 | v10.16.0 |
 
 
 ## 引入到项目中
@@ -43,7 +53,12 @@ import Anikyu from 'anikyu';
 
 ### 使用Script标签
 ```HTML
-<script src="https://unpkg.com/anikyu/dist/anikyu.js"></script>
+<script src="./dist/anikyu.js"></script>
+```
+
+### 使用Node.js
+```JavaScript
+let Anikyu = require('./dist/anikyu.min.js');
 ```
 
 

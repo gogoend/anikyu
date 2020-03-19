@@ -8,8 +8,8 @@
 
 Anikyu is a tween animation library, based on JavaScript, can create continuous tween animation for number values in one specified object.
 
-
-## Browser Compatibility
+## Environment and compatibility
+### In Browser
 
 If you import Anikyu via script tag, it is recommended to using at least the following or higher browsers:
 
@@ -19,13 +19,22 @@ If you import Anikyu via script tag, it is recommended to using at least the fol
 | Chrome | 49 |
 | FireFox | 52 |
 
-Anikyu don't plan to support obsolete browsers.
+Anikyu may be run in obsolete browsers unexpectedly, but there won't be any plan to actually support them.
 
 After importing this file, Anikyu will become a global variable.
 
 Besides, Anikyu can be imported via ES Module. For more information about the compatibility of ES Module, you can click [caniuse](https://caniuse.com/#feat=es6-module) .
 
-Due to some compatibility issues, the tween animation may have different effects between different browsers. For example, IE 9 don't support some CSS rules, or some rule don't receive number as its value, which result in unexpected effects.
+Due to some compatibility issues, the tween animation may have different effects between different browsers. For example, some CSS rules don't directly accept a number as its value in IE 9, because they needs a unit. Those situations may result in unexpected effects.
+
+### In Node.js
+
+In this version, Anikyu can run in Node.js. However, it has not been rigorously tested yet. There is only a simple demo, which can be run in following environment:
+
+| OS | Node.js Version |
+| - | - |
+| Windows XP | v5.1.0 |
+| Windows 10 | v10.16.0 |
 
 
 ## Import to your project
@@ -43,7 +52,12 @@ import Anikyu from 'anikyu';
 
 ### Using script Tag
 ```HTML
-<script src="https://unpkg.com/anikyu/dist/anikyu.js"></script>
+<script src="./dist/anikyu.js"></script>
+```
+
+### Using Node.js
+```JavaScript
+let Anikyu = require('../dist/anikyu.min.js');
 ```
 
 
@@ -75,7 +89,8 @@ Every status in animationQueue is described as the following Object:
     delay: Number,
     duration: Number,
     easeType: String,
-    name: String
+    name: String,
+    step: Number
 }
 ```
 
@@ -124,6 +139,10 @@ Pause the current animation stage.
 - .resume()
 
 Resume the current animation stage.
+
+- .replay()
+
+Replay the current animation stage.
 
 - .jump( index: Number, finishCallFlag: Boolean )
 
