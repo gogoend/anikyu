@@ -117,27 +117,6 @@ class Anikyu extends EventDoer {
 				}
 
 				Object.assign(el,newValue);
-
-				if (currentProgress == 1) {
-					// clearInterval(timer)
-					// cancelAnimationFrame(this.reqAniHandler);
-					// 如何执行下一步？
-
-					setTimeout(()=>{
-						// if (queue[i + 1].onFinished instanceof Function) {
-						// 	queue[i + 1].onFinished(this);
-						// }
-						trigger(this,'finish',el ,{
-							stageIndex:currentStageIndex,
-							name:queue[currentStageIndex].name ? queue[currentStageIndex].name : ''
-						});
-						if (!config.manualNext) {
-							next.call(this);
-						}
-					}, delay);
-					// debugger
-					return;
-				}
 				trigger(this,'animate',el ,{
 					stageIndex:this.i,
 					name:queue[currentStageIndex].name ? queue[currentStageIndex].name : '',
@@ -150,6 +129,29 @@ class Anikyu extends EventDoer {
 				// if (queue[i + 1].onAnimating instanceof Function) {
 				// 	queue[i + 1].onAnimating(this);
 				// }
+				if (currentProgress == 1) {
+					// clearInterval(timer)
+					// cancelAnimationFrame(this.reqAniHandler);
+					// 如何执行下一步？
+
+					setTimeout(()=>{
+						// if (queue[i + 1].onFinished instanceof Function) {
+						// 	queue[i + 1].onFinished(this);
+						// }
+						for (let key in finalStatus) {
+							el[key] = finalStatus[key];
+						}
+						trigger(this,'finish',el ,{
+							stageIndex:currentStageIndex,
+							name:queue[currentStageIndex].name ? queue[currentStageIndex].name : ''
+						});
+						if (!config.manualNext) {
+							next.call(this);
+						}
+					}, delay);
+					// debugger
+					return;
+				}
 			}
 			this.reqAniHandler = requestAnimationFrame(loop);
 		};
