@@ -1,7 +1,7 @@
 # 0.2.2
-- ~~增加EventTarget构造函数的Polyfill，以便支持相关浏览器~~
 - 调整animate、finish在动画循环函数中的触发顺序
 - 在动画阶段完成时确保对象值为预想值
+- ~~增加EventTarget构造函数的Polyfill，以便支持相关浏览器~~
 - 不再使用浏览器原生EventTarget以及CustomEvent，而是直接使用Anikyu内部实现的EventDoer对象来对其进行模拟并增强，如需升级请注意迁移。当前版本的事件回调函数中，event.detail.target已变为event.target
 - 修复对IE 9或更高版本IE浏览器的支持
 - 增加对Node.js环境的支持
