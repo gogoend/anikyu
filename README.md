@@ -25,7 +25,7 @@ After importing this file, Anikyu will become a global variable.
 
 Besides, Anikyu can be imported via ES Module. For more information about the compatibility of ES Module, you can click [caniuse](https://caniuse.com/#feat=es6-module) .
 
-Due to some compatibility issues, the tween animation may have different effects between different browsers. For example, some CSS rules don't directly accept a number as its value in IE 9, because they needs a unit. Those situations may result in unexpected effects.
+Due to some compatibility issues, the tween animation may have different effects on different browsers. For example, some CSS rules don't directly accept a number as its value in IE 9, because they needs a unit. Those situations may result in unexpected effects.
 
 ### In Node.js
 
