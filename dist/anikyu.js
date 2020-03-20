@@ -1806,6 +1806,17 @@ var anikyu_class_Anikyu = /*#__PURE__*/function (_EventDoer) {
           }
 
           Object.assign(el, newValue);
+          trigger(_this2, 'animate', el, {
+            stageIndex: _this2.i,
+            name: queue[currentStageIndex].name ? queue[currentStageIndex].name : '',
+            progress: currentProgress,
+            // target:el,
+            value: newValue,
+            stageDelta: stageDelta,
+            frameDelta: frameDelta
+          }); // if (queue[i + 1].onAnimating instanceof Function) {
+          // 	queue[i + 1].onAnimating(this);
+          // }
 
           if (currentProgress == 1) {
             // clearInterval(timer)
@@ -1815,6 +1826,10 @@ var anikyu_class_Anikyu = /*#__PURE__*/function (_EventDoer) {
               // if (queue[i + 1].onFinished instanceof Function) {
               // 	queue[i + 1].onFinished(this);
               // }
+              for (var _key3 in finalStatus) {
+                el[_key3] = finalStatus[_key3];
+              }
+
               trigger(_this2, 'finish', el, {
                 stageIndex: currentStageIndex,
                 name: queue[currentStageIndex].name ? queue[currentStageIndex].name : ''
@@ -1827,18 +1842,6 @@ var anikyu_class_Anikyu = /*#__PURE__*/function (_EventDoer) {
 
             return;
           }
-
-          trigger(_this2, 'animate', el, {
-            stageIndex: _this2.i,
-            name: queue[currentStageIndex].name ? queue[currentStageIndex].name : '',
-            progress: currentProgress,
-            // target:el,
-            value: newValue,
-            stageDelta: stageDelta,
-            frameDelta: frameDelta
-          }); // if (queue[i + 1].onAnimating instanceof Function) {
-          // 	queue[i + 1].onAnimating(this);
-          // }
         }
 
         _this2.reqAniHandler = requestAnimationFrame(loop);
