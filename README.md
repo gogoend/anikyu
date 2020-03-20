@@ -208,7 +208,9 @@ Besides, you can call .removeEventListener() on a Anikyu instance to remove the 
 
 ### Event Callback
 
-The callback receives the following object as the argument.
+In older pervious release ( <=0.2.1 ), the argument of callback is a CustomEvent from DOM. To update to newer release ( >=0.2.2 ), please take care of the compatibility issue. 
+
+In this release, the callback receives the following object as the argument.
 
 ```JavaScript
 {

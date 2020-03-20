@@ -2,10 +2,10 @@
 - ~~增加EventTarget构造函数的Polyfill，以便支持相关浏览器~~
 - 调整animate、finish在动画循环函数中的触发顺序
 - 在动画阶段完成时确保对象值为预想值
-- 不再使用浏览器原生EventTarget对象以及事件，而是直接使用Anikyu内部实现的EventDoer对象来对其进行模拟并增强
-- 对于事件回调函数中的参数，原先需要通过event.detail来访问的属性已经移动到event下，event.detail不再存在；若要从旧版本迁移，请直接访问event
+- 不再使用浏览器原生EventTarget以及CustomEvent，而是直接使用Anikyu内部实现的EventDoer对象来对其进行模拟并增强，如需升级请注意迁移。当前版本的事件回调函数中，event.detail.target已变为event.target
 - 修复对IE 9或更高版本IE浏览器的支持
 - 增加对Node.js环境的支持
+- 暂时移除rollup，减少包冗余
 
 # 0.2.1
 - 在为前一动画阶段中不存在的属性值进行补间时，按照优先顺序，使用这些值来填充：早前包含该属性的动画阶段的值 / 原始对象初始值 / 0

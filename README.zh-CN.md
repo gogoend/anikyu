@@ -206,7 +206,9 @@ anikyuInstance.addEventListener('animate',function(event){
 
 ### 事件回调函数
 
-回调函数接收类似如下形式的对象作为参数：
+在早期版本（<=0.2.1）中，回调函数参数使用的是DOM原生事件对象（CustomEvent），升级到较新版本（>=0.2.2）时请注意兼容性问题。
+
+在当前版本中，回调函数接收类似如下形式的事件对象作为参数：
 
 ```JavaScript
 {
