@@ -321,6 +321,12 @@ step
 该函数表示阶梯形式的数值变化，除了可以类似以上函数接收一个 Number 值表示播放进度外，还可以再接收另一个 Number 值表示分段步数。该值值由用户在构造函数中的 *step* 属性里指定，若该值不是整数，则将通过 Math.ceil() 对其向上取整。
 
 
+## Polyfill
+
+Anikyu包含了一些Polyfill，以用于支持某些环境：
+
+- requestAnimationFrame (for IE and Node.js)
+
 ## License
 
 [MIT](http://opensource.org/licenses/MIT)
