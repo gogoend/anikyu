@@ -323,6 +323,12 @@ step
 This function represents a ladder-like change trend. In addition to receiving a Number value represent the progress of the animation stage similar to the above functions, it can also receive the another integer Number that represent the number of step of the functions. The value is specified via *step* in the argument of Anikyu constructor. If the value is not an integer, it will be rounded up by Math.ceil().
 
 
+## Polyfill
+
+In order to support some environments, there are some polyfills included in Anikyu:
+
+- requestAnimationFrame (for IE and Node.js)
+
 ## License
 
 [MIT](http://opensource.org/licenses/MIT)
