@@ -1,6 +1,7 @@
 # Anikyu - Animation Queue
 
   <a href="https://npmcharts.com/compare/anikyu?minimal=true"><img src="https://img.shields.io/npm/dm/anikyu.svg" alt="Downloads"></a>
+  <a href="https://www.jsdelivr.com/package/npm/anikyu"><img src="https://data.jsdelivr.com/v1/package/npm/anikyu/badge?style=rounded" alt="jsDelivr"/></a>
   <a href="https://www.npmjs.com/package/anikyu"><img src="https://img.shields.io/npm/v/anikyu.svg" alt="Version"></a>
   <a href="https://www.npmjs.com/package/anikyu"><img src="https://img.shields.io/npm/l/anikyu.svg" alt="License"></a>
 
@@ -8,7 +9,9 @@
 
 Anikyu is a tween animation library, based on JavaScript, can create continuous tween animation for number values in one specified object.
 
+
 ## Environment and compatibility
+
 ### In Browser
 
 If you import Anikyu via script tag, it is recommended to using at least the following or higher browsers:
@@ -57,7 +60,7 @@ import Anikyu from 'anikyu';
 
 ### Using Node.js
 ```JavaScript
-let Anikyu = require('../dist/anikyu.min.js');
+let Anikyu = require('./dist/anikyu.js');
 ```
 
 
@@ -226,7 +229,6 @@ detail - Event detail.
 
 target - The reference to the current Object, which contains all values at current frame of the Object.
 
-
 ### Event Types
 
 Anikyu supports the following events:
@@ -329,11 +331,13 @@ In order to support some environments, there are some polyfills included in Anik
 
 - requestAnimationFrame (for IE and Node.js)
 
+
 ## License
 
 [MIT](http://opensource.org/licenses/MIT)
 
 Copyright (c) 2020, [gogoend](http://github.com/gogoend)
+
 
 ## Thanks
 

@@ -1,6 +1,7 @@
 # Anikyu - Animation Queue
 
   <a href="https://npmcharts.com/compare/anikyu?minimal=true"><img src="https://img.shields.io/npm/dm/anikyu.svg" alt="Downloads"></a>
+  <a href="https://www.jsdelivr.com/package/npm/anikyu"><img src="https://data.jsdelivr.com/v1/package/npm/anikyu/badge?style=rounded" alt="jsDelivr"/></a>
   <a href="https://www.npmjs.com/package/anikyu"><img src="https://img.shields.io/npm/v/anikyu.svg" alt="Version"></a>
   <a href="https://www.npmjs.com/package/anikyu"><img src="https://img.shields.io/npm/l/anikyu.svg" alt="License"></a>
 
@@ -10,6 +11,7 @@ anikyu 是一个补间动画库，基于JavaScript，可以为一个指定对象
 
 
 ## 运行环境以及兼容性
+
 ### 在浏览器中
 
 如果你使用script标签来引入Anikyu，推荐至少使用下列或更高版本浏览器：
@@ -58,7 +60,7 @@ import Anikyu from 'anikyu';
 
 ### 使用Node.js
 ```JavaScript
-let Anikyu = require('./dist/anikyu.min.js');
+let Anikyu = require('./dist/anikyu.js');
 ```
 
 
@@ -224,7 +226,6 @@ detail - 事件详情
 
 target - 对当前对象的引用，包含了该对象在当前帧的所有值
 
-
 ### 事件分类
 
 Anikyu支持以下事件：
@@ -327,11 +328,13 @@ Anikyu包含了一些Polyfill，以用于支持某些环境：
 
 - requestAnimationFrame (for IE and Node.js)
 
+
 ## License
 
 [MIT](http://opensource.org/licenses/MIT)
 
 Copyright (c) 2020, [gogoend](http://github.com/gogoend)
+
 
 ## 致谢
 
