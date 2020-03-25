@@ -6,3 +6,4 @@ rollup.config.js
 .eslintignore
 .eslintrc.js
 webpack.config.js
+.vscode
