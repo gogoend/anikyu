@@ -27,6 +27,14 @@
         import Anikyu from '../src/anikyu.js';
         // import Anikyu from '../dist/anikyu.esm.js';
 
+        // 混合随机函数
+        let fnMix = {
+            random: function () {
+                return Math.random();
+            }
+        };
+        Anikyu.mixEaseFn(fnMix);
+
         let el1 = document.getElementById('wow');
 
         let el2 = document.getElementById('lol');
@@ -42,7 +50,7 @@
             },
             {
                 duration: 3000,
-                easeType: 'bounceInOut',
+                easeType: 'random',
                 props: {
                     width: 100,
                     height: 200
