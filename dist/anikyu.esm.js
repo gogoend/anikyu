@@ -150,6 +150,88 @@ module.exports = g;
 // ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
 
+// CONCATENATED MODULE: ./src/util.js
+// 用于对数值进行钳制
+function clamp (value, min, max) {
+	return Math.max(min, Math.min(max, value));
+}
+
+// 用于获得DOM元素computedStyle
+function getStyle (obj, attr) {
+	if (obj.currentStyle) {
+		return obj.currentStyle[attr];
+	}
+	else {
+		return getComputedStyle(obj, false)[attr];
+	}
+}
+
+// 用于手动触发对象的事件
+function trigger (obj, type, target,detail) {
+	obj.fireEvent( type, {
+		type,
+		target,
+		detail
+	});
+}
+
+// 用于处理获得时间函数的兼容性，performance.now() 更为精准
+function now () {
+	if (typeof performance !== 'undefined' && performance.now) {
+		return performance.now();
+	}
+	return Date.now ? Date.now() : (new Date()).getTime();
+}
+
+// 产生范围内随机数
+function rand (min,max){
+	return Math.random() * (max - min) + min;
+}
+
+
+// CONCATENATED MODULE: ./src/event_doer.js
+let EventDoer = function () {
+	this.listeners = {};
+};
+
+EventDoer.prototype = Object.assign({},{
+	listeners:{},
+	addEventListener (type, callback){
+		if(!(type in this.listeners)){
+			this.listeners[type] = [];
+		}
+		this.listeners[type].push(callback);
+	},
+	removeEventListener (type, callback){
+		if(!(type in this.listeners)) return;
+		let typeHandlers = this.listeners[type];
+		for(let i = 0;i < typeHandlers.length;i++){
+			if(typeHandlers[i] === callback){
+				typeHandlers.splice(i,1);
+				return;
+			}
+		}
+	},
+	fireEvent (name, detail){
+		if(!(name in this.listeners)){
+			return true;
+		}
+		let typeHandlers = this.listeners[name].concat();
+
+		for(let i = 0;i < typeHandlers.length;i++){
+			typeHandlers[i].call(this,detail);
+		}
+	},
+	getListeners (name){
+		if(name){
+			return this.listeners[name];
+		}
+		return this.listeners;
+	}
+});
+
+/* harmony default export */ var event_doer = (EventDoer);
+
 // CONCATENATED MODULE: ./src/easing_funcs.js
 const easingFuncs = {
 	linear: function (k) {
@@ -307,92 +389,154 @@ const easingFuncs = {
 		return easingFuncs.bounceOut(k * 2 - 1) * 0.5 + 0.5;
 	}
 };
-// CONCATENATED MODULE: ./src/util.js
-// 用于对数值进行钳制
-function clamp (value, min, max) {
-	return Math.max(min, Math.min(max, value));
+// CONCATENATED MODULE: ./src/executor.js
+
+
+
+let ease = Object.assign(easingFuncs)
+
+// 获得动画在当前进度时的变化增量
+function getAddedValue (from, to, percent, easeFn, step) {
+	return (to - from) * easeFn(percent, step);
 }
 
-// 用于获得DOM元素computedStyle
-function getStyle (obj, attr) {
-	if (obj.currentStyle) {
-		return obj.currentStyle[attr];
+// 动画执行器，用于在前后一对补间动画阶段之间进行补间
+function executor (index) {
+
+	if (!isNaN(parseInt(index))) {
+		this.i = index;
 	}
-	else {
-		return getComputedStyle(obj, false)[attr];
+
+	let { el, i, queue, next, status, config, reqAniHandler } = this;
+
+	cancelAnimationFrame(reqAniHandler);
+
+	if (!queue[i] || !queue[i + 1]) {
+		return;
 	}
-}
+	let perviousStatus = queue[i].props,
+		finalStatus = queue[i + 1].props;
 
-// 用于手动触发对象的事件
-function trigger (obj, type, target,detail) {
-	obj.fireEvent( type, {
-		type,
-		target,
-		detail
-	});
-}
+	let delay = queue[i + 1].delay !== undefined ? queue[i + 1].delay : 0;
+	let currentStageIndex = this.i + 1;
 
-// 用于处理获得时间函数的兼容性，performance.now() 更为精准
-function now () {
-	if (typeof performance !== 'undefined' && performance.now) {
-		return performance.now();
+	// 确保每一次的初始状态都和前一对象中的属性相等
+	// 修复重播当前、跳转到、上一个、下一个函数不正常工作的问题
+	for (let key in perviousStatus) {
+		el[key] = perviousStatus[key];
 	}
-	return Date.now ? Date.now() : (new Date()).getTime();
-}
 
-// 产生范围内随机数
-function rand (min,max){
-	return Math.random() * (max - min) + min;
-}
+	let easeType = queue[i + 1].easeType ? queue[i + 1].easeType : config.easeType;
+	let duration = queue[i + 1].duration ? queue[i + 1].duration : config.duration;
 
+	let step = queue[i + 1].step ? queue[i + 1].step : undefined;
 
-// CONCATENATED MODULE: ./src/event_doer.js
-let EventDoer = function () {
-	this.listeners = {};
-};
+	status.startTime = now() + delay;
 
-EventDoer.prototype = Object.assign({},{
-	listeners:{},
-	addEventListener (type, callback){
-		if(!(type in this.listeners)){
-			this.listeners[type] = [];
+	// let totalDelta = {};
+
+	for (let key in finalStatus) {
+		if (perviousStatus[key] === undefined) {
+			// 当前一个状态不存在时首先尝试向前搜索，直到第0个
+			for (var j = i; j >= 0; j--) {
+				if (queue[j].props[key] !== undefined) {
+					perviousStatus[key] = queue[j].props[key];
+					continue;
+				}
+				// 若到第0个仍然找不到则直接访问原始对象中相关属性
+				if (j === 0 && queue[j].props[key] === undefined) {
+					if (el[key] !== undefined && !isNaN(parseFloat(el[key]))) {
+						perviousStatus[key] = parseFloat(el[key]);
+					} else {
+						// 若依然访问不到，则直接设置该值为0
+						perviousStatus[key] = 0;
+					}
+				}
+			}
+
 		}
-		this.listeners[type].push(callback);
-	},
-	removeEventListener (type, callback){
-		if(!(type in this.listeners)) return;
-		let typeHandlers = this.listeners[type];
-		for(let i = 0;i < typeHandlers.length;i++){
-			if(typeHandlers[i] === callback){
-				typeHandlers.splice(i,1);
+		// totalDelta[key] = finalStatus[key] - parseFloat(perviousStatus[key]);
+
+		// console.table ? 
+		// 	console.table({'final':finalStatus[key],'pervious':perviousStatus[key],'delta':totalDelta[key]})
+		// 	:
+		// 	console.log({'final':finalStatus[key],'pervious':perviousStatus[key],'delta':totalDelta[key]})
+		// ;
+
+	}
+
+	let loop = () => {
+
+		if (!status.paused) {
+			// let endTime = status.startTime + duration;
+			let currentTime = now();
+			let currentProgress = clamp((currentTime - status.startTime) / duration, 0, 1);
+
+			let newValue = {}, stageDelta = {}, frameDelta = {};
+			for (let key in perviousStatus) {
+
+				let perviousVal = parseFloat(perviousStatus[key]);
+				let finalVal = parseFloat(finalStatus[key]);
+
+				newValue[key] = perviousVal + getAddedValue(perviousVal, finalVal, currentProgress, ease[easeType], step); // totalDelta[key] * ease[easeType].call(this, currentProgress, step);
+
+				stageDelta[key] = (newValue[key] === undefined ? 0 : newValue[key]) - (perviousVal === undefined ? 0 : perviousVal);
+
+				frameDelta[key] = (newValue[key] === undefined ? 0 : newValue[key]) - (el[key] === undefined ? 0 : parseFloat(el[key]));
+			}
+
+			Object.assign(el, newValue);
+			trigger(this, 'animate', el, {
+				stageIndex: this.i,
+				name: queue[currentStageIndex].name ? queue[currentStageIndex].name : '',
+				progress: currentProgress,
+				// target:el,
+				value: newValue,
+				stageDelta,
+				frameDelta
+			});
+			// if (queue[i + 1].onAnimating instanceof Function) {
+			// 	queue[i + 1].onAnimating(this);
+			// }
+			if (currentProgress == 1) {
+			// clearInterval(timer)
+			// cancelAnimationFrame(this.reqAniHandler);
+			// 如何执行下一步？
+
+				setTimeout(() => {
+				// if (queue[i + 1].onFinished instanceof Function) {
+				// 	queue[i + 1].onFinished(this);
+				// }
+					for (let key in finalStatus) {
+						el[key] = finalStatus[key];
+					}
+					trigger(this, 'finish', el, {
+						stageIndex: currentStageIndex,
+						name: queue[currentStageIndex].name ? queue[currentStageIndex].name : ''
+					});
+					if (!config.manualNext) {
+						next.call(this);
+					}
+				}, delay);
+				// debugger
 				return;
 			}
 		}
-	},
-	fireEvent (name, detail){
-		if(!(name in this.listeners)){
-			return true;
-		}
-		let typeHandlers = this.listeners[name].concat();
-
-		for(let i = 0;i < typeHandlers.length;i++){
-			typeHandlers[i].call(this,detail);
-		}
-	},
-	getListeners (name){
-		if(name){
-			return this.listeners[name];
-		}
-		return this.listeners;
-	}
-});
-
-/* harmony default export */ var event_doer = (EventDoer);
-
+		this.reqAniHandler = requestAnimationFrame(loop);
+	};
+	setTimeout(loop, delay);
+	// loop();
+}
 // CONCATENATED MODULE: ./src/anikyu_class.js
 
 
 
+
+function mixEaseFn (obj){
+	for(let key in obj){
+		ease[key] = obj[key];
+	}
+}
 
 class anikyu_class_Anikyu extends event_doer {
 
@@ -406,7 +550,7 @@ class anikyu_class_Anikyu extends event_doer {
 			easeType: 'quadraticInOut',
 			manualNext: false
 		};
-		this.config = Object.assign(JSON.parse(JSON.stringify(defaultConfig)),config);
+		this.config = Object.assign(JSON.parse(JSON.stringify(defaultConfig)), config);
 
 		this.i = 0;
 
@@ -418,137 +562,13 @@ class anikyu_class_Anikyu extends event_doer {
 			return;
 		}
 		if (!this.config.manualNext) {
-			this.executor();
+			executor.call(this);
 		}
 
-		this.executor = this.executor.bind(this);
+		// this.executor = this.executor.bind(this);
 
 		this.reqAniHandler = null;
 
-	}
-
-	// 动画执行器，用于在前后一对补间动画阶段之间进行补间
-	executor (index) {
-
-		if(!isNaN(parseInt(index))) {
-			this.i = index;
-		}
-
-		let { el, i, queue, next, status, config,reqAniHandler } = this;
-
-		cancelAnimationFrame(reqAniHandler);
-
-		if (!queue[i] || !queue[i + 1]) {
-			return;
-		}
-		let perviousStatus = queue[i].props,
-			finalStatus = queue[i + 1].props;
-
-		let delay = queue[i + 1].delay !== undefined ? queue[i + 1].delay : 0;
-		let currentStageIndex = this.i + 1;
-
-		// 确保每一次的初始状态都和前一对象中的属性相等
-		// 修复重播当前、跳转到、上一个、下一个函数不正常工作的问题
-		for (let key in perviousStatus) {
-			el[key] = perviousStatus[key];
-		}
-
-		let easeType = queue[i + 1].easeType ? queue[i + 1].easeType : config.easeType;
-		let duration = queue[i + 1].duration ? queue[i + 1].duration : config.duration;
-
-		let step = queue[i + 1].step ? queue[i + 1].step : undefined;
-
-		status.startTime = now() + delay;
-
-		let totalDelta = {};
-
-		for (let key in finalStatus) {
-			if(perviousStatus[key] === undefined){
-				// 当前一个状态不存在时首先尝试向前搜索，直到第0个
-				for(var j = i;j >= 0;j--){
-					if(queue[j].props[key] !== undefined) {
-						perviousStatus[key] = queue[j].props[key];
-						continue;
-					}
-					// 若到第0个仍然找不到则直接访问原始对象中相关属性
-					if(j === 0 && queue[j].props[key] === undefined){
-						if(el[key] !== undefined && !isNaN(parseFloat(el[key]))){
-							perviousStatus[key] = parseFloat(el[key]);
-						}else{
-							// 若依然访问不到，则直接设置该值为0
-							perviousStatus[key] = 0;
-						}
-					}
-				}
-
-			}
-			totalDelta[key] = finalStatus[key] - parseFloat(perviousStatus[key]);
-
-			// console.table ? 
-			// 	console.table({'final':finalStatus[key],'pervious':perviousStatus[key],'delta':totalDelta[key]})
-			// 	:
-			// 	console.log({'final':finalStatus[key],'pervious':perviousStatus[key],'delta':totalDelta[key]})
-			// ;
-			
-		}
-
-		let loop = () => {
-
-			if (!status.paused) {
-				// let endTime = status.startTime + duration;
-				let currentTime = now();
-				let currentProgress = clamp((currentTime - status.startTime) / duration, 0, 1);
-
-				let newValue = {},stageDelta = {},frameDelta = {};
-				for (let key in perviousStatus) {
-					newValue[key] = perviousStatus[key] + totalDelta[key] * easingFuncs[easeType].call(this, currentProgress, step);
-
-					stageDelta[key] = (newValue[key] === undefined ? 0 : newValue[key]) - (perviousStatus[key] === undefined ? 0 : perviousStatus[key]);
-
-					frameDelta[key] = (newValue[key] === undefined ? 0 : newValue[key]) - (el[key] === undefined ? 0 : parseFloat(el[key]));
-				}
-
-				Object.assign(el,newValue);
-				trigger(this,'animate',el ,{
-					stageIndex:this.i,
-					name:queue[currentStageIndex].name ? queue[currentStageIndex].name : '',
-					progress:currentProgress,
-					// target:el,
-					value:newValue,
-					stageDelta,
-					frameDelta
-				});
-				// if (queue[i + 1].onAnimating instanceof Function) {
-				// 	queue[i + 1].onAnimating(this);
-				// }
-				if (currentProgress == 1) {
-					// clearInterval(timer)
-					// cancelAnimationFrame(this.reqAniHandler);
-					// 如何执行下一步？
-
-					setTimeout(()=>{
-						// if (queue[i + 1].onFinished instanceof Function) {
-						// 	queue[i + 1].onFinished(this);
-						// }
-						for (let key in finalStatus) {
-							el[key] = finalStatus[key];
-						}
-						trigger(this,'finish',el ,{
-							stageIndex:currentStageIndex,
-							name:queue[currentStageIndex].name ? queue[currentStageIndex].name : ''
-						});
-						if (!config.manualNext) {
-							next.call(this);
-						}
-					}, delay);
-					// debugger
-					return;
-				}
-			}
-			this.reqAniHandler = requestAnimationFrame(loop);
-		};
-		setTimeout(loop,delay);
-		// loop();
 	}
 
 	// 动画流程控制
@@ -556,7 +576,7 @@ class anikyu_class_Anikyu extends event_doer {
 	pause () {
 		let { status } = this;
 
-		if(status.paused) return;
+		if (status.paused) return;
 
 		let pausedTime = now();
 		status.passedTime = pausedTime - status.startTime;
@@ -565,71 +585,66 @@ class anikyu_class_Anikyu extends event_doer {
 	resume () {
 		let { status } = this;
 
-		if(!status.paused) return;
+		if (!status.paused) return;
 
-		let startTime =  now();
+		let startTime = now();
 		status.startTime = startTime - status.passedTime;
 		status.paused = false;
 	}
 
 	replay () {
-		let {status,queue,i,executor,resume} = this;
+		let { status, queue, i, resume } = this;
 
-		if(!queue[i]) return;
-		if(status.paused) (resume.bind(this))();
+		if (!queue[i]) return;
+		if (status.paused) (resume.bind(this))();
 
-		executor(i);
+		executor.call(this, i);
 	}
 
 	// 跳转到、上一个、下一个
-	jump (index,finishCallFlag) {
-		let {status,queue,executor,resume} = this;
+	jump (index, finishCallFlag) {
+		let { status, queue, resume } = this;
 
-		if(!queue[index]) return;
-		if(status.paused) (resume.bind(this))();
+		if (!queue[index]) return;
+		if (status.paused) (resume.bind(this))();
 
-		executor(finishCallFlag ? index - 2 : index - 1);
-		// executor(index - 2);
+		executor.call(this, finishCallFlag ? index - 2 : index - 1);
 
 	}
 	prev () {
-		let {status,queue,i,executor,resume} = this;
-		if(!queue[i - 1]) return;
+		let { status, queue, i, resume } = this;
+		if (!queue[i - 1]) return;
 
-		if(status.paused) (resume.bind(this))();
+		if (status.paused) (resume.bind(this))();
 
 		this.i--;
-		executor();
+		executor.call(this);
 	}
 	next () {
-		let {status,queue,i,executor,resume} = this;
-		if(!queue[i + 1]) return;
+		let { status, queue, i, resume } = this;
+		if (!queue[i + 1]) return;
 
-		if(status.paused) (resume.bind(this))();
+		if (status.paused) (resume.bind(this))();
 
 		this.i++;
-		executor();
+		executor.call(this);
 	}
 
 	// 废弃
 	dispose () {
-		let { queue, i, reqAniHandler,el } = this;
+		let { queue, i, reqAniHandler, el } = this;
 
 		let currentStageIndex = i + 1;
 		cancelAnimationFrame(reqAniHandler);
-		trigger(this,'dispose',el,{
+		trigger(this, 'dispose', el, {
 			stageIndex: i,
 			name: queue[currentStageIndex].name ? queue[currentStageIndex].name : ''
 		});
-		// for(let key in this){
-		// 	this[key] = undefined;
-		// 	delete this[key];
-		// }
 	}
 }
 
 Object.assign(anikyu_class_Anikyu, {
-	getStyle: getStyle,rand: rand,clamp: clamp
+	getStyle: getStyle, rand: rand, clamp: clamp, mixEaseFn
 });
 
 /* harmony default export */ var anikyu_class = (anikyu_class_Anikyu);

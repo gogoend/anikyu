@@ -121,7 +121,7 @@ module.exports = !__webpack_require__(7)(function () {
 /***/ (function(module, exports, __webpack_require__) {
 
 var anObject = __webpack_require__(6);
-var IE8_DOM_DEFINE = __webpack_require__(23);
+var IE8_DOM_DEFINE = __webpack_require__(24);
 var toPrimitive = __webpack_require__(15);
 var dP = Object.defineProperty;
 
@@ -197,8 +197,8 @@ module.exports = function (exec) {
 /***/ (function(module, exports, __webpack_require__) {
 
 // to indexed object, toObject with fallback for non-array-like ES3 strings
-var IObject = __webpack_require__(28);
-var defined = __webpack_require__(30);
+var IObject = __webpack_require__(29);
+var defined = __webpack_require__(31);
 module.exports = function (it) {
   return IObject(defined(it));
 };
@@ -235,7 +235,7 @@ var store = global[SHARED] || (global[SHARED] = {});
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.14 / 15.2.3.14 Object.keys(O)
-var $keys = __webpack_require__(27);
+var $keys = __webpack_require__(28);
 var enumBugKeys = __webpack_require__(19);
 
 module.exports = Object.keys || function keys(O) {
@@ -299,8 +299,8 @@ module.exports = function (it, S) {
 var global = __webpack_require__(0);
 var core = __webpack_require__(9);
 var hide = __webpack_require__(17);
-var redefine = __webpack_require__(25);
-var ctx = __webpack_require__(26);
+var redefine = __webpack_require__(26);
+var ctx = __webpack_require__(27);
 var PROTOTYPE = 'prototype';
 
 var $export = function (type, name, source) {
@@ -390,10 +390,20 @@ exports.f = Object.getOwnPropertySymbols;
 /* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
+// 19.1.3.1 Object.assign(target, source)
+var $export = __webpack_require__(16);
+
+$export($export.S + $export.F, 'Object', { assign: __webpack_require__(55) });
+
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
 var global = __webpack_require__(0);
 var core = __webpack_require__(9);
 var LIBRARY = __webpack_require__(13);
-var wksExt = __webpack_require__(22);
+var wksExt = __webpack_require__(23);
 var defineProperty = __webpack_require__(2).f;
 module.exports = function (name) {
   var $Symbol = core.Symbol || (core.Symbol = LIBRARY ? {} : global.Symbol || {});
@@ -402,23 +412,23 @@ module.exports = function (name) {
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports.f = __webpack_require__(14);
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = !__webpack_require__(1) && !__webpack_require__(7)(function () {
-  return Object.defineProperty(__webpack_require__(24)('div'), 'a', { get: function () { return 7; } }).a != 7;
+  return Object.defineProperty(__webpack_require__(25)('div'), 'a', { get: function () { return 7; } }).a != 7;
 });
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isObject = __webpack_require__(3);
@@ -431,14 +441,14 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var global = __webpack_require__(0);
 var hide = __webpack_require__(17);
 var has = __webpack_require__(4);
 var SRC = __webpack_require__(5)('src');
-var $toString = __webpack_require__(39);
+var $toString = __webpack_require__(40);
 var TO_STRING = 'toString';
 var TPL = ('' + $toString).split(TO_STRING);
 
@@ -468,11 +478,11 @@ __webpack_require__(9).inspectSource = function (it) {
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // optional / simple context binding
-var aFunction = __webpack_require__(40);
+var aFunction = __webpack_require__(41);
 module.exports = function (fn, that, length) {
   aFunction(fn);
   if (that === undefined) return fn;
@@ -494,13 +504,13 @@ module.exports = function (fn, that, length) {
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var has = __webpack_require__(4);
 var toIObject = __webpack_require__(8);
-var arrayIndexOf = __webpack_require__(44)(false);
-var IE_PROTO = __webpack_require__(32)('IE_PROTO');
+var arrayIndexOf = __webpack_require__(45)(false);
+var IE_PROTO = __webpack_require__(33)('IE_PROTO');
 
 module.exports = function (object, names) {
   var O = toIObject(object);
@@ -517,11 +527,11 @@ module.exports = function (object, names) {
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // fallback for non-array-like ES3 and non-enumerable old V8 strings
-var cof = __webpack_require__(29);
+var cof = __webpack_require__(30);
 // eslint-disable-next-line no-prototype-builtins
 module.exports = Object('z').propertyIsEnumerable(0) ? Object : function (it) {
   return cof(it) == 'String' ? it.split('') : Object(it);
@@ -529,7 +539,7 @@ module.exports = Object('z').propertyIsEnumerable(0) ? Object : function (it) {
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -540,7 +550,7 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports) {
 
 // 7.2.1 RequireObjectCoercible(argument)
@@ -551,7 +561,7 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports) {
 
 // 7.1.4 ToInteger
@@ -563,7 +573,7 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var shared = __webpack_require__(10)('keys');
@@ -574,22 +584,22 @@ module.exports = function (key) {
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 7.1.13 ToObject(argument)
-var defined = __webpack_require__(30);
+var defined = __webpack_require__(31);
 module.exports = function (it) {
   return Object(defined(it));
 };
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.7 / 15.2.3.4 Object.getOwnPropertyNames(O)
-var $keys = __webpack_require__(27);
+var $keys = __webpack_require__(28);
 var hiddenKeys = __webpack_require__(19).concat('length', 'prototype');
 
 exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
@@ -598,7 +608,7 @@ exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var pIE = __webpack_require__(12);
@@ -606,7 +616,7 @@ var createDesc = __webpack_require__(18);
 var toIObject = __webpack_require__(8);
 var toPrimitive = __webpack_require__(15);
 var has = __webpack_require__(4);
-var IE8_DOM_DEFINE = __webpack_require__(23);
+var IE8_DOM_DEFINE = __webpack_require__(24);
 var gOPD = Object.getOwnPropertyDescriptor;
 
 exports.f = __webpack_require__(1) ? gOPD : function getOwnPropertyDescriptor(O, P) {
@@ -620,24 +630,36 @@ exports.f = __webpack_require__(1) ? gOPD : function getOwnPropertyDescriptor(O,
 
 
 /***/ }),
-/* 36 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// 19.1.3.1 Object.assign(target, source)
-var $export = __webpack_require__(16);
-
-$export($export.S + $export.F, 'Object', { assign: __webpack_require__(55) });
-
-
-/***/ }),
 /* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(21)('asyncIterator');
+var dP = __webpack_require__(2).f;
+var FProto = Function.prototype;
+var nameRE = /^\s*function ([^ (]*)/;
+var NAME = 'name';
+
+// 19.2.4.2 name
+NAME in FProto || __webpack_require__(1) && dP(FProto, NAME, {
+  configurable: true,
+  get: function () {
+    try {
+      return ('' + this).match(nameRE)[1];
+    } catch (e) {
+      return '';
+    }
+  }
+});
 
 
 /***/ }),
 /* 38 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(22)('asyncIterator');
+
+
+/***/ }),
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -647,26 +669,26 @@ var global = __webpack_require__(0);
 var has = __webpack_require__(4);
 var DESCRIPTORS = __webpack_require__(1);
 var $export = __webpack_require__(16);
-var redefine = __webpack_require__(25);
-var META = __webpack_require__(41).KEY;
+var redefine = __webpack_require__(26);
+var META = __webpack_require__(42).KEY;
 var $fails = __webpack_require__(7);
 var shared = __webpack_require__(10);
-var setToStringTag = __webpack_require__(42);
+var setToStringTag = __webpack_require__(43);
 var uid = __webpack_require__(5);
 var wks = __webpack_require__(14);
-var wksExt = __webpack_require__(22);
-var wksDefine = __webpack_require__(21);
-var enumKeys = __webpack_require__(43);
-var isArray = __webpack_require__(47);
+var wksExt = __webpack_require__(23);
+var wksDefine = __webpack_require__(22);
+var enumKeys = __webpack_require__(44);
+var isArray = __webpack_require__(48);
 var anObject = __webpack_require__(6);
 var isObject = __webpack_require__(3);
-var toObject = __webpack_require__(33);
+var toObject = __webpack_require__(34);
 var toIObject = __webpack_require__(8);
 var toPrimitive = __webpack_require__(15);
 var createDesc = __webpack_require__(18);
-var _create = __webpack_require__(48);
-var gOPNExt = __webpack_require__(51);
-var $GOPD = __webpack_require__(35);
+var _create = __webpack_require__(49);
+var gOPNExt = __webpack_require__(52);
+var $GOPD = __webpack_require__(36);
 var $GOPS = __webpack_require__(20);
 var $DP = __webpack_require__(2);
 var $keys = __webpack_require__(11);
@@ -792,7 +814,7 @@ if (!USE_NATIVE) {
 
   $GOPD.f = $getOwnPropertyDescriptor;
   $DP.f = $defineProperty;
-  __webpack_require__(34).f = gOPNExt.f = $getOwnPropertyNames;
+  __webpack_require__(35).f = gOPNExt.f = $getOwnPropertyNames;
   __webpack_require__(12).f = $propertyIsEnumerable;
   $GOPS.f = $getOwnPropertySymbols;
 
@@ -890,14 +912,14 @@ setToStringTag(global.JSON, 'JSON', true);
 
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(10)('native-function-to-string', Function.toString);
 
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports) {
 
 module.exports = function (it) {
@@ -907,7 +929,7 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var META = __webpack_require__(5)('meta');
@@ -966,7 +988,7 @@ var meta = module.exports = {
 
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var def = __webpack_require__(2).f;
@@ -979,7 +1001,7 @@ module.exports = function (it, tag, stat) {
 
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // all enumerable object keys, includes symbols
@@ -1000,14 +1022,14 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // false -> Array#indexOf
 // true  -> Array#includes
 var toIObject = __webpack_require__(8);
-var toLength = __webpack_require__(45);
-var toAbsoluteIndex = __webpack_require__(46);
+var toLength = __webpack_require__(46);
+var toAbsoluteIndex = __webpack_require__(47);
 module.exports = function (IS_INCLUDES) {
   return function ($this, el, fromIndex) {
     var O = toIObject($this);
@@ -1029,11 +1051,11 @@ module.exports = function (IS_INCLUDES) {
 
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 7.1.15 ToLength
-var toInteger = __webpack_require__(31);
+var toInteger = __webpack_require__(32);
 var min = Math.min;
 module.exports = function (it) {
   return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
@@ -1041,10 +1063,10 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var toInteger = __webpack_require__(31);
+var toInteger = __webpack_require__(32);
 var max = Math.max;
 var min = Math.min;
 module.exports = function (index, length) {
@@ -1054,38 +1076,38 @@ module.exports = function (index, length) {
 
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 7.2.2 IsArray(argument)
-var cof = __webpack_require__(29);
+var cof = __webpack_require__(30);
 module.exports = Array.isArray || function isArray(arg) {
   return cof(arg) == 'Array';
 };
 
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
 var anObject = __webpack_require__(6);
-var dPs = __webpack_require__(49);
+var dPs = __webpack_require__(50);
 var enumBugKeys = __webpack_require__(19);
-var IE_PROTO = __webpack_require__(32)('IE_PROTO');
+var IE_PROTO = __webpack_require__(33)('IE_PROTO');
 var Empty = function () { /* empty */ };
 var PROTOTYPE = 'prototype';
 
 // Create object with fake `null` prototype: use iframe Object with cleared prototype
 var createDict = function () {
   // Thrash, waste and sodomy: IE GC bug
-  var iframe = __webpack_require__(24)('iframe');
+  var iframe = __webpack_require__(25)('iframe');
   var i = enumBugKeys.length;
   var lt = '<';
   var gt = '>';
   var iframeDocument;
   iframe.style.display = 'none';
-  __webpack_require__(50).appendChild(iframe);
+  __webpack_require__(51).appendChild(iframe);
   iframe.src = 'javascript:'; // eslint-disable-line no-script-url
   // createDict = iframe.contentWindow.Object;
   // html.removeChild(iframe);
@@ -1112,7 +1134,7 @@ module.exports = Object.create || function create(O, Properties) {
 
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var dP = __webpack_require__(2);
@@ -1131,7 +1153,7 @@ module.exports = __webpack_require__(1) ? Object.defineProperties : function def
 
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var document = __webpack_require__(0).document;
@@ -1139,12 +1161,12 @@ module.exports = document && document.documentElement;
 
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
 var toIObject = __webpack_require__(8);
-var gOPN = __webpack_require__(34).f;
+var gOPN = __webpack_require__(35).f;
 var toString = {}.toString;
 
 var windowNames = typeof window == 'object' && window && Object.getOwnPropertyNames
@@ -1164,16 +1186,16 @@ module.exports.f = function getOwnPropertyNames(it) {
 
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.3.19 Object.setPrototypeOf(O, proto)
 var $export = __webpack_require__(16);
-$export($export.S, 'Object', { setPrototypeOf: __webpack_require__(53).set });
+$export($export.S, 'Object', { setPrototypeOf: __webpack_require__(54).set });
 
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Works with __proto__ only. Old v8 can't work with null proto objects.
@@ -1188,7 +1210,7 @@ module.exports = {
   set: Object.setPrototypeOf || ('__proto__' in {} ? // eslint-disable-line
     function (test, buggy, set) {
       try {
-        set = __webpack_require__(26)(Function.call, __webpack_require__(35).f(Object.prototype, '__proto__').set, 2);
+        set = __webpack_require__(27)(Function.call, __webpack_require__(36).f(Object.prototype, '__proto__').set, 2);
         set(test, []);
         buggy = !(test instanceof Array);
       } catch (e) { buggy = true; }
@@ -1204,28 +1226,6 @@ module.exports = {
 
 
 /***/ }),
-/* 54 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var dP = __webpack_require__(2).f;
-var FProto = Function.prototype;
-var nameRE = /^\s*function ([^ (]*)/;
-var NAME = 'name';
-
-// 19.2.4.2 name
-NAME in FProto || __webpack_require__(1) && dP(FProto, NAME, {
-  configurable: true,
-  get: function () {
-    try {
-      return ('' + this).match(nameRE)[1];
-    } catch (e) {
-      return '';
-    }
-  }
-});
-
-
-/***/ }),
 /* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1236,8 +1236,8 @@ var DESCRIPTORS = __webpack_require__(1);
 var getKeys = __webpack_require__(11);
 var gOPS = __webpack_require__(20);
 var pIE = __webpack_require__(12);
-var toObject = __webpack_require__(33);
-var IObject = __webpack_require__(28);
+var toObject = __webpack_require__(34);
+var IObject = __webpack_require__(29);
 var $assign = Object.assign;
 
 // should work with symbols and should have deterministic property order (V8 bug)
@@ -1337,21 +1337,107 @@ module.exports = g;
 // ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
 
-// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es7.symbol.async-iterator.js
-var es7_symbol_async_iterator = __webpack_require__(37);
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es7.symbol.async-iterator.js
+var es7_symbol_async_iterator = __webpack_require__(38);
 
-// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.symbol.js
-var es6_symbol = __webpack_require__(38);
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.symbol.js
+var es6_symbol = __webpack_require__(39);
 
-// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.object.set-prototype-of.js
-var es6_object_set_prototype_of = __webpack_require__(52);
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.object.set-prototype-of.js
+var es6_object_set_prototype_of = __webpack_require__(53);
 
-// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.function.name.js
-var es6_function_name = __webpack_require__(54);
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.function.name.js
+var es6_function_name = __webpack_require__(37);
 
-// EXTERNAL MODULE: ./node_modules/_core-js@2.6.11@core-js/modules/es6.object.assign.js
-var es6_object_assign = __webpack_require__(36);
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.object.assign.js
+var es6_object_assign = __webpack_require__(21);
 
+// CONCATENATED MODULE: ./src/util.js
+// 用于对数值进行钳制
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+} // 用于获得DOM元素computedStyle
+
+
+function getStyle(obj, attr) {
+  if (obj.currentStyle) {
+    return obj.currentStyle[attr];
+  } else {
+    return getComputedStyle(obj, false)[attr];
+  }
+} // 用于手动触发对象的事件
+
+
+function trigger(obj, type, target, detail) {
+  obj.fireEvent(type, {
+    type: type,
+    target: target,
+    detail: detail
+  });
+} // 用于处理获得时间函数的兼容性，performance.now() 更为精准
+
+
+function now() {
+  if (typeof performance !== 'undefined' && performance.now) {
+    return performance.now();
+  }
+
+  return Date.now ? Date.now() : new Date().getTime();
+} // 产生范围内随机数
+
+
+function rand(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+
+// CONCATENATED MODULE: ./src/event_doer.js
+
+
+var EventDoer = function EventDoer() {
+  this.listeners = {};
+};
+
+EventDoer.prototype = Object.assign({}, {
+  listeners: {},
+  addEventListener: function addEventListener(type, callback) {
+    if (!(type in this.listeners)) {
+      this.listeners[type] = [];
+    }
+
+    this.listeners[type].push(callback);
+  },
+  removeEventListener: function removeEventListener(type, callback) {
+    if (!(type in this.listeners)) return;
+    var typeHandlers = this.listeners[type];
+
+    for (var i = 0; i < typeHandlers.length; i++) {
+      if (typeHandlers[i] === callback) {
+        typeHandlers.splice(i, 1);
+        return;
+      }
+    }
+  },
+  fireEvent: function fireEvent(name, detail) {
+    if (!(name in this.listeners)) {
+      return true;
+    }
+
+    var typeHandlers = this.listeners[name].concat();
+
+    for (var i = 0; i < typeHandlers.length; i++) {
+      typeHandlers[i].call(this, detail);
+    }
+  },
+  getListeners: function getListeners(name) {
+    if (name) {
+      return this.listeners[name];
+    }
+
+    return this.listeners;
+  }
+});
+/* harmony default export */ var event_doer = (EventDoer);
 // CONCATENATED MODULE: ./src/easing_funcs.js
 var easingFuncs = {
   linear: function linear(k) {
@@ -1573,92 +1659,143 @@ var easingFuncs = {
     return easingFuncs.bounceOut(k * 2 - 1) * 0.5 + 0.5;
   }
 };
-// CONCATENATED MODULE: ./src/util.js
-// 用于对数值进行钳制
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
-} // 用于获得DOM元素computedStyle
+// CONCATENATED MODULE: ./src/executor.js
 
 
-function getStyle(obj, attr) {
-  if (obj.currentStyle) {
-    return obj.currentStyle[attr];
-  } else {
-    return getComputedStyle(obj, false)[attr];
-  }
-} // 用于手动触发对象的事件
 
 
-function trigger(obj, type, target, detail) {
-  obj.fireEvent(type, {
-    type: type,
-    target: target,
-    detail: detail
-  });
-} // 用于处理获得时间函数的兼容性，performance.now() 更为精准
+var ease = Object.assign(easingFuncs); // 获得动画在当前进度时的变化增量
+
+function getAddedValue(from, to, percent, easeFn, step) {
+  return (to - from) * easeFn(percent, step);
+} // 动画执行器，用于在前后一对补间动画阶段之间进行补间
 
 
-function now() {
-  if (typeof performance !== 'undefined' && performance.now) {
-    return performance.now();
+function executor(index) {
+  var _this = this;
+
+  if (!isNaN(parseInt(index))) {
+    this.i = index;
   }
 
-  return Date.now ? Date.now() : new Date().getTime();
-} // 产生范围内随机数
+  var el = this.el,
+      i = this.i,
+      queue = this.queue,
+      next = this.next,
+      status = this.status,
+      config = this.config,
+      reqAniHandler = this.reqAniHandler;
+  cancelAnimationFrame(reqAniHandler);
+
+  if (!queue[i] || !queue[i + 1]) {
+    return;
+  }
+
+  var perviousStatus = queue[i].props,
+      finalStatus = queue[i + 1].props;
+  var delay = queue[i + 1].delay !== undefined ? queue[i + 1].delay : 0;
+  var currentStageIndex = this.i + 1; // 确保每一次的初始状态都和前一对象中的属性相等
+  // 修复重播当前、跳转到、上一个、下一个函数不正常工作的问题
+
+  for (var key in perviousStatus) {
+    el[key] = perviousStatus[key];
+  }
+
+  var easeType = queue[i + 1].easeType ? queue[i + 1].easeType : config.easeType;
+  var duration = queue[i + 1].duration ? queue[i + 1].duration : config.duration;
+  var step = queue[i + 1].step ? queue[i + 1].step : undefined;
+  status.startTime = now() + delay; // let totalDelta = {};
+
+  for (var _key in finalStatus) {
+    if (perviousStatus[_key] === undefined) {
+      // 当前一个状态不存在时首先尝试向前搜索，直到第0个
+      for (var j = i; j >= 0; j--) {
+        if (queue[j].props[_key] !== undefined) {
+          perviousStatus[_key] = queue[j].props[_key];
+          continue;
+        } // 若到第0个仍然找不到则直接访问原始对象中相关属性
 
 
-function rand(min, max) {
-  return Math.random() * (max - min) + min;
-}
+        if (j === 0 && queue[j].props[_key] === undefined) {
+          if (el[_key] !== undefined && !isNaN(parseFloat(el[_key]))) {
+            perviousStatus[_key] = parseFloat(el[_key]);
+          } else {
+            // 若依然访问不到，则直接设置该值为0
+            perviousStatus[_key] = 0;
+          }
+        }
+      }
+    } // totalDelta[key] = finalStatus[key] - parseFloat(perviousStatus[key]);
+    // console.table ? 
+    // 	console.table({'final':finalStatus[key],'pervious':perviousStatus[key],'delta':totalDelta[key]})
+    // 	:
+    // 	console.log({'final':finalStatus[key],'pervious':perviousStatus[key],'delta':totalDelta[key]})
+    // ;
 
+  }
 
-// CONCATENATED MODULE: ./src/event_doer.js
+  var loop = function loop() {
+    if (!status.paused) {
+      // let endTime = status.startTime + duration;
+      var currentTime = now();
+      var currentProgress = clamp((currentTime - status.startTime) / duration, 0, 1);
+      var newValue = {},
+          stageDelta = {},
+          frameDelta = {};
 
+      for (var _key2 in perviousStatus) {
+        var perviousVal = parseFloat(perviousStatus[_key2]);
+        var finalVal = parseFloat(finalStatus[_key2]);
+        newValue[_key2] = perviousVal + getAddedValue(perviousVal, finalVal, currentProgress, ease[easeType], step); // totalDelta[key] * ease[easeType].call(this, currentProgress, step);
 
-var EventDoer = function EventDoer() {
-  this.listeners = {};
-};
+        stageDelta[_key2] = (newValue[_key2] === undefined ? 0 : newValue[_key2]) - (perviousVal === undefined ? 0 : perviousVal);
+        frameDelta[_key2] = (newValue[_key2] === undefined ? 0 : newValue[_key2]) - (el[_key2] === undefined ? 0 : parseFloat(el[_key2]));
+      }
 
-EventDoer.prototype = Object.assign({}, {
-  listeners: {},
-  addEventListener: function addEventListener(type, callback) {
-    if (!(type in this.listeners)) {
-      this.listeners[type] = [];
-    }
+      Object.assign(el, newValue);
+      trigger(_this, 'animate', el, {
+        stageIndex: _this.i,
+        name: queue[currentStageIndex].name ? queue[currentStageIndex].name : '',
+        progress: currentProgress,
+        // target:el,
+        value: newValue,
+        stageDelta: stageDelta,
+        frameDelta: frameDelta
+      }); // if (queue[i + 1].onAnimating instanceof Function) {
+      // 	queue[i + 1].onAnimating(this);
+      // }
 
-    this.listeners[type].push(callback);
-  },
-  removeEventListener: function removeEventListener(type, callback) {
-    if (!(type in this.listeners)) return;
-    var typeHandlers = this.listeners[type];
+      if (currentProgress == 1) {
+        // clearInterval(timer)
+        // cancelAnimationFrame(this.reqAniHandler);
+        // 如何执行下一步？
+        setTimeout(function () {
+          // if (queue[i + 1].onFinished instanceof Function) {
+          // 	queue[i + 1].onFinished(this);
+          // }
+          for (var _key3 in finalStatus) {
+            el[_key3] = finalStatus[_key3];
+          }
 
-    for (var i = 0; i < typeHandlers.length; i++) {
-      if (typeHandlers[i] === callback) {
-        typeHandlers.splice(i, 1);
+          trigger(_this, 'finish', el, {
+            stageIndex: currentStageIndex,
+            name: queue[currentStageIndex].name ? queue[currentStageIndex].name : ''
+          });
+
+          if (!config.manualNext) {
+            next.call(_this);
+          }
+        }, delay); // debugger
+
         return;
       }
     }
-  },
-  fireEvent: function fireEvent(name, detail) {
-    if (!(name in this.listeners)) {
-      return true;
-    }
 
-    var typeHandlers = this.listeners[name].concat();
+    _this.reqAniHandler = requestAnimationFrame(loop);
+  };
 
-    for (var i = 0; i < typeHandlers.length; i++) {
-      typeHandlers[i].call(this, detail);
-    }
-  },
-  getListeners: function getListeners(name) {
-    if (name) {
-      return this.listeners[name];
-    }
-
-    return this.listeners;
-  }
-});
-/* harmony default export */ var event_doer = (EventDoer);
+  setTimeout(loop, delay); // loop();
+}
 // CONCATENATED MODULE: ./src/anikyu_class.js
 
 
@@ -1688,6 +1825,12 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+function mixEaseFn(obj) {
+  for (var key in obj) {
+    ease[key] = obj[key];
+  }
+}
+
 var anikyu_class_Anikyu = /*#__PURE__*/function (_EventDoer) {
   _inherits(Anikyu, _EventDoer);
 
@@ -1715,143 +1858,17 @@ var anikyu_class_Anikyu = /*#__PURE__*/function (_EventDoer) {
     }
 
     if (!_this.config.manualNext) {
-      _this.executor();
-    }
+      executor.call(_assertThisInitialized(_this));
+    } // this.executor = this.executor.bind(this);
 
-    _this.executor = _this.executor.bind(_assertThisInitialized(_this));
+
     _this.reqAniHandler = null;
     return _this;
-  } // 动画执行器，用于在前后一对补间动画阶段之间进行补间
+  } // 动画流程控制
+  // 暂停、继续、重播当前
 
 
   _createClass(Anikyu, [{
-    key: "executor",
-    value: function executor(index) {
-      var _this2 = this;
-
-      if (!isNaN(parseInt(index))) {
-        this.i = index;
-      }
-
-      var el = this.el,
-          i = this.i,
-          queue = this.queue,
-          next = this.next,
-          status = this.status,
-          config = this.config,
-          reqAniHandler = this.reqAniHandler;
-      cancelAnimationFrame(reqAniHandler);
-
-      if (!queue[i] || !queue[i + 1]) {
-        return;
-      }
-
-      var perviousStatus = queue[i].props,
-          finalStatus = queue[i + 1].props;
-      var delay = queue[i + 1].delay !== undefined ? queue[i + 1].delay : 0;
-      var currentStageIndex = this.i + 1; // 确保每一次的初始状态都和前一对象中的属性相等
-      // 修复重播当前、跳转到、上一个、下一个函数不正常工作的问题
-
-      for (var key in perviousStatus) {
-        el[key] = perviousStatus[key];
-      }
-
-      var easeType = queue[i + 1].easeType ? queue[i + 1].easeType : config.easeType;
-      var duration = queue[i + 1].duration ? queue[i + 1].duration : config.duration;
-      var step = queue[i + 1].step ? queue[i + 1].step : undefined;
-      status.startTime = now() + delay;
-      var totalDelta = {};
-
-      for (var _key in finalStatus) {
-        if (perviousStatus[_key] === undefined) {
-          // 当前一个状态不存在时首先尝试向前搜索，直到第0个
-          for (var j = i; j >= 0; j--) {
-            if (queue[j].props[_key] !== undefined) {
-              perviousStatus[_key] = queue[j].props[_key];
-              continue;
-            } // 若到第0个仍然找不到则直接访问原始对象中相关属性
-
-
-            if (j === 0 && queue[j].props[_key] === undefined) {
-              if (el[_key] !== undefined && !isNaN(parseFloat(el[_key]))) {
-                perviousStatus[_key] = parseFloat(el[_key]);
-              } else {
-                // 若依然访问不到，则直接设置该值为0
-                perviousStatus[_key] = 0;
-              }
-            }
-          }
-        }
-
-        totalDelta[_key] = finalStatus[_key] - parseFloat(perviousStatus[_key]); // console.table ? 
-        // 	console.table({'final':finalStatus[key],'pervious':perviousStatus[key],'delta':totalDelta[key]})
-        // 	:
-        // 	console.log({'final':finalStatus[key],'pervious':perviousStatus[key],'delta':totalDelta[key]})
-        // ;
-      }
-
-      var loop = function loop() {
-        if (!status.paused) {
-          // let endTime = status.startTime + duration;
-          var currentTime = now();
-          var currentProgress = clamp((currentTime - status.startTime) / duration, 0, 1);
-          var newValue = {},
-              stageDelta = {},
-              frameDelta = {};
-
-          for (var _key2 in perviousStatus) {
-            newValue[_key2] = perviousStatus[_key2] + totalDelta[_key2] * easingFuncs[easeType].call(_this2, currentProgress, step);
-            stageDelta[_key2] = (newValue[_key2] === undefined ? 0 : newValue[_key2]) - (perviousStatus[_key2] === undefined ? 0 : perviousStatus[_key2]);
-            frameDelta[_key2] = (newValue[_key2] === undefined ? 0 : newValue[_key2]) - (el[_key2] === undefined ? 0 : parseFloat(el[_key2]));
-          }
-
-          Object.assign(el, newValue);
-          trigger(_this2, 'animate', el, {
-            stageIndex: _this2.i,
-            name: queue[currentStageIndex].name ? queue[currentStageIndex].name : '',
-            progress: currentProgress,
-            // target:el,
-            value: newValue,
-            stageDelta: stageDelta,
-            frameDelta: frameDelta
-          }); // if (queue[i + 1].onAnimating instanceof Function) {
-          // 	queue[i + 1].onAnimating(this);
-          // }
-
-          if (currentProgress == 1) {
-            // clearInterval(timer)
-            // cancelAnimationFrame(this.reqAniHandler);
-            // 如何执行下一步？
-            setTimeout(function () {
-              // if (queue[i + 1].onFinished instanceof Function) {
-              // 	queue[i + 1].onFinished(this);
-              // }
-              for (var _key3 in finalStatus) {
-                el[_key3] = finalStatus[_key3];
-              }
-
-              trigger(_this2, 'finish', el, {
-                stageIndex: currentStageIndex,
-                name: queue[currentStageIndex].name ? queue[currentStageIndex].name : ''
-              });
-
-              if (!config.manualNext) {
-                next.call(_this2);
-              }
-            }, delay); // debugger
-
-            return;
-          }
-        }
-
-        _this2.reqAniHandler = requestAnimationFrame(loop);
-      };
-
-      setTimeout(loop, delay); // loop();
-    } // 动画流程控制
-    // 暂停、继续、重播当前
-
-  }, {
     key: "pause",
     value: function pause() {
       var status = this.status;
@@ -1875,11 +1892,10 @@ var anikyu_class_Anikyu = /*#__PURE__*/function (_EventDoer) {
       var status = this.status,
           queue = this.queue,
           i = this.i,
-          executor = this.executor,
           resume = this.resume;
       if (!queue[i]) return;
       if (status.paused) resume.bind(this)();
-      executor(i);
+      executor.call(this, i);
     } // 跳转到、上一个、下一个
 
   }, {
@@ -1887,11 +1903,10 @@ var anikyu_class_Anikyu = /*#__PURE__*/function (_EventDoer) {
     value: function jump(index, finishCallFlag) {
       var status = this.status,
           queue = this.queue,
-          executor = this.executor,
           resume = this.resume;
       if (!queue[index]) return;
       if (status.paused) resume.bind(this)();
-      executor(finishCallFlag ? index - 2 : index - 1); // executor(index - 2);
+      executor.call(this, finishCallFlag ? index - 2 : index - 1);
     }
   }, {
     key: "prev",
@@ -1899,12 +1914,11 @@ var anikyu_class_Anikyu = /*#__PURE__*/function (_EventDoer) {
       var status = this.status,
           queue = this.queue,
           i = this.i,
-          executor = this.executor,
           resume = this.resume;
       if (!queue[i - 1]) return;
       if (status.paused) resume.bind(this)();
       this.i--;
-      executor();
+      executor.call(this);
     }
   }, {
     key: "next",
@@ -1912,12 +1926,11 @@ var anikyu_class_Anikyu = /*#__PURE__*/function (_EventDoer) {
       var status = this.status,
           queue = this.queue,
           i = this.i,
-          executor = this.executor,
           resume = this.resume;
       if (!queue[i + 1]) return;
       if (status.paused) resume.bind(this)();
       this.i++;
-      executor();
+      executor.call(this);
     } // 废弃
 
   }, {
@@ -1932,10 +1945,7 @@ var anikyu_class_Anikyu = /*#__PURE__*/function (_EventDoer) {
       trigger(this, 'dispose', el, {
         stageIndex: i,
         name: queue[currentStageIndex].name ? queue[currentStageIndex].name : ''
-      }); // for(let key in this){
-      // 	this[key] = undefined;
-      // 	delete this[key];
-      // }
+      });
     }
   }]);
 
@@ -1945,7 +1955,8 @@ var anikyu_class_Anikyu = /*#__PURE__*/function (_EventDoer) {
 Object.assign(anikyu_class_Anikyu, {
   getStyle: getStyle,
   rand: rand,
-  clamp: clamp
+  clamp: clamp,
+  mixEaseFn: mixEaseFn
 });
 /* harmony default export */ var anikyu_class = (anikyu_class_Anikyu);
 // EXTERNAL MODULE: ./src/polyfill/requestAnimationFrame.js
