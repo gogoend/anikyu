@@ -6,11 +6,11 @@ import { minify } from 'uglify-es';
 export default {
   input: './src/anikyu.js',
   output: [{
-    file: `./dist/anikyu.min.js`,
+    file: `./dist/anikyu.js`,
     name: `Anikyu`,
     format: 'umd'
   },{
-    file: `./dist/anikyu.esm.min.js`,
+    file: `./dist/anikyu.esm.js`,
     format: 'es'
   }],
   plugins: [
