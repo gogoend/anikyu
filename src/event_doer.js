@@ -3,7 +3,7 @@ let EventDoer = function () {
 };
 
 EventDoer.prototype = Object.assign({},{
-	listeners:{},
+	listeners:null,
 	addEventListener (type, callback){
 		if(!(type in this.listeners)){
 			this.listeners[type] = [];
