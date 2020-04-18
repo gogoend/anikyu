@@ -1,7 +1,7 @@
 import resolve from 'rollup-plugin-node-resolve';
 import babel from 'rollup-plugin-babel';
-import uglify from 'rollup-plugin-uglify';
-import { minify } from 'uglify-es';
+import uglify from 'rollup-plugin-uglify-es';
+import commonjs from 'rollup-plugin-commonjs';
 
 export default {
   input: './src/anikyu.js',
@@ -15,9 +15,15 @@ export default {
   }],
   plugins: [
     resolve(),
-    babel({
-      exclude: 'node_modules/**'
+    commonjs({
+      extensions: [ '.js' ],
+      ignoreGlobal: false,
+      sourceMap: false,
     }),
-    uglify({}, minify)
+    babel({
+      exclude: 'node_modules/**',
+      runtimeHelpers: true
+    }),
+    uglify()
   ]
 };
