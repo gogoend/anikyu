@@ -130,6 +130,45 @@ easeType - 每一个动画阶段默认的缓动函数，默认为'quadraticInOut
 
 ## 方法
 
+### 类方法
+
+这些方法在Anikyu上。
+
+- .getStyle( el:Element, attr:String )
+
+el - 文档中的某个元素
+
+attr - 该元素上某个CSS属性
+
+获得指定元素已计算的某个CSS属性的值。
+
+- .rand( min:Number, max:Number )
+
+min - 区间最小值
+
+max - 区间最大值
+
+获得一个在 (min, max] 之间的随机数
+
+- .clamp( value:Number, min:Number, max:Number )
+
+value - 将会被限制的值
+
+min - 区间最小值
+
+max - 区间最大值
+
+将value值限制在 [ max, min ] 之间。若 value 大于max/小于min，则最终返回的值为 max/min。
+
+- .mixEaseFn( obj:Object )
+
+obj - 用于存储函数的对象，类似：
+    {
+        functionName: function( percent ){ ... ; return percent}
+    }
+
+将用户自定义的缓动函数混合到Anikyu类中。该函数接收一个 [ 0, 1 ] 之间、表示当前动画进度的小数，返回经过缓动函数处理过的进度值。
+
 ### 实例方法
 
 你可以在由Anikyu类产生的实例上调用下列方法。

@@ -131,6 +131,46 @@ easeType - The default ease function of every animation stage. Default is *'quad
 
 ## Methods
 
+### Class Methods
+
+Those methods is provide by Anikyu self.
+
+- .getStyle( el:Element, attr:String )
+
+el - A Element in the document.
+
+attr - A CSS property name of the Element. 
+
+Get a computed CSS style of the specified Element.
+
+- .rand( min:Number, max:Number )
+
+min - The minimum of the interval.
+
+max - The maximum of the interval.
+
+Get a random number from (min, max].
+
+- .clamp( value:Number, min:Number, max:Number )
+
+value - The value to be clamped.
+
+min - The minimum of the interval.
+
+max - The maximum of the interval.
+
+Clamp the value in [ max, min ].
+
+
+- .mixEaseFn( obj:Object )
+
+obj - The object for storing the customized easing functions. It looks like :
+    {
+        functionName: function( percent ){ ... ; return percent}
+    }
+
+Attach the customized easing functions to Anikyu class. The easing functions receive a float number, which is represents the current animation progress and in the range [0, 1]. The function returns an another float which is represents the current animation progress processed by easing function.
+
 ### Instance Methods
 
 You can call the following methods on the instance constructed by Anikyu.
