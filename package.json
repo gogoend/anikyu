@@ -28,19 +28,16 @@
   },
   "homepage": "https://github.com/gogoend/anikyu#readme",
   "devDependencies": {
-    "babel-cli": "^6.26.0",
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-external-helpers": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.0.0",
+    "@rollup/plugin-babel": "^5.1.0",
+    "@rollup/plugin-commonjs": "^14.0.0",
+    "@rollup/plugin-node-resolve": "^8.4.0",
     "babel-eslint": "^10.0.1",
-    "babel-plugin-external-helpers": "^6.22.0",
-    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
-    "babel-preset-latest": "^6.24.1",
     "eslint": "^6.8.0",
-    "rollup-plugin-babel": "^3.0.2",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-node-resolve": "^3.0.0",
-    "rollup-plugin-uglify-es": "0.0.1"
-  },
-  "dependencies": {
-    "rollup": "^2.6.1"
+    "rollup": "^2.22.0"
   }
 }
