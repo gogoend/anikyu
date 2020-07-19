@@ -1,156 +1,3 @@
-var Anikyu =
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(global) {// requestAnimationFrame
-// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-// http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
-// requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
-// MIT license
-(function (window) {
-	var lastTime = 0;
-	var vendors = ['ms', 'moz', 'webkit', 'o'];
-	for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-		window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
-		window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
-	}
-	if (!window.requestAnimationFrame) window.requestAnimationFrame = function (callback) {
-		var currTime = new Date().getTime();
-		var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-		var id = window.setTimeout(function () {
-			callback(currTime + timeToCall);
-		}, timeToCall);
-		lastTime = currTime + timeToCall;
-		return id;
-	};
-	if (!window.cancelAnimationFrame) window.cancelAnimationFrame = function (id) {
-		clearTimeout(id);
-	};
-}(typeof window === 'undefined' ? global : window));
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(1)))
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || new Function("return this")();
-} catch (e) {
-	// This works if the window reference is available
-	if (typeof window === "object") g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-// ESM COMPAT FLAG
-__webpack_require__.r(__webpack_exports__);
-
-// CONCATENATED MODULE: ./src/util.js
 // 用于对数值进行钳制
 function clamp (value, min, max) {
 	return Math.max(min, Math.min(max, value));
@@ -188,8 +35,6 @@ function rand (min,max){
 	return Math.random() * (max - min) + min;
 }
 
-
-// CONCATENATED MODULE: ./src/event_doer.js
 let EventDoer = function () {
 	this.listeners = {};
 };
@@ -230,9 +75,6 @@ EventDoer.prototype = Object.assign({},{
 	}
 });
 
-/* harmony default export */ var event_doer = (EventDoer);
-
-// CONCATENATED MODULE: ./src/easing_funcs.js
 const easingFuncs = {
 	linear: function (k) {
 		return k;
@@ -389,11 +231,8 @@ const easingFuncs = {
 		return easingFuncs.bounceOut(k * 2 - 1) * 0.5 + 0.5;
 	}
 };
-// CONCATENATED MODULE: ./src/executor.js
 
-
-
-let ease = Object.assign(easingFuncs)
+let ease = Object.assign(easingFuncs);
 
 // 获得动画在当前进度时的变化增量
 function getAddedValue (from, to, percent, easeFn, step) {
@@ -527,10 +366,6 @@ function executor (index) {
 	setTimeout(loop, delay);
 	// loop();
 }
-// CONCATENATED MODULE: ./src/anikyu_class.js
-
-
-
 
 function mixEaseFn (obj){
 	for(let key in obj){
@@ -538,7 +373,7 @@ function mixEaseFn (obj){
 	}
 }
 
-class anikyu_class_Anikyu extends event_doer {
+class Anikyu extends EventDoer {
 
 	constructor (el, queue, config) {
 		super();
@@ -643,25 +478,34 @@ class anikyu_class_Anikyu extends event_doer {
 	}
 }
 
-Object.assign(anikyu_class_Anikyu, {
-	getStyle: getStyle, rand: rand, clamp: clamp, mixEaseFn
+Object.assign(Anikyu, {
+	getStyle, rand, clamp, mixEaseFn
 });
 
-/* harmony default export */ var anikyu_class = (anikyu_class_Anikyu);
-// EXTERNAL MODULE: ./src/polyfill/requestAnimationFrame.js
-var polyfill_requestAnimationFrame = __webpack_require__(0);
+// requestAnimationFrame
+// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+// http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
+// requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
+// MIT license
+(function (window) {
+	var lastTime = 0;
+	var vendors = ['ms', 'moz', 'webkit', 'o'];
+	for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+		window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+		window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
+	}
+	if (!window.requestAnimationFrame) window.requestAnimationFrame = function (callback) {
+		var currTime = new Date().getTime();
+		var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+		var id = window.setTimeout(function () {
+			callback(currTime + timeToCall);
+		}, timeToCall);
+		lastTime = currTime + timeToCall;
+		return id;
+	};
+	if (!window.cancelAnimationFrame) window.cancelAnimationFrame = function (id) {
+		clearTimeout(id);
+	};
+}(typeof window === 'undefined' ? global : window));
 
-// CONCATENATED MODULE: ./src/anikyu.js
-
-
-
-// 判断文件是如何引入的，如果是通过模块引入则不在全局暴露Anikyu
-// 直接在Webpack配置中改为UMD
-
-/* harmony default export */ var anikyu = __webpack_exports__["default"] = (anikyu_class);
-
-/***/ })
-/******/ ]);
-
-
-export default Anikyu['default'];
+export default Anikyu;
