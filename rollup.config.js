@@ -1,7 +1,7 @@
 import resolve from '@rollup/plugin-node-resolve';
 import babel from '@rollup/plugin-babel';
-// import uglify from 'rollup-plugin-uglify-es';
 import commonjs from '@rollup/plugin-commonjs';
+import { terser } from "rollup-plugin-terser";
 
 export default {
   input: './src/anikyu.js',
@@ -9,9 +9,25 @@ export default {
     file: `./dist/anikyu.js`,
     name: `Anikyu`,
     format: 'umd'
-  }, {
+  },
+  {
+    file: `./dist/anikyu.min.js`,
+    name: `Anikyu`,
+    format: 'umd',
+    plugins:[
+      terser()
+    ]
+  },
+  {
     file: `./dist/anikyu.esm.js`,
     format: 'es'
+  },
+  {
+    file: `./dist/anikyu.esm.min.js`,
+    format: 'es',
+    plugins:[
+      terser()
+    ]
   }],
   plugins: [
     resolve({
@@ -25,7 +41,6 @@ export default {
     babel({
       exclude: 'node_modules/**',
       babelHelpers: 'runtime'
-    }),
-    // uglify()
+    })
   ]
 };
