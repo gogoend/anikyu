@@ -31,7 +31,7 @@ export default {
           {
             "modules": false,
             "useBuiltIns": "usage",
-            // "corejs":3
+            "corejs":3
           }
         ]
       ],
@@ -40,7 +40,7 @@ export default {
         [
           "@babel/plugin-transform-runtime",
           {
-            "useESModules": true
+            "useESModules": false
           }
         ]
       ]
