@@ -14,7 +14,9 @@ export default {
     format: 'es'
   }],
   plugins: [
-    resolve(),
+    resolve({
+      browser:true
+    }),
     commonjs({
       extensions: ['.js'],
       ignoreGlobal: false,
@@ -25,13 +27,10 @@ export default {
       babelHelpers: 'runtime',
       "presets": [
         [
-          "env",
+          "@babel/env",
           {
             "modules": false,
-            "targets": {
-              // The % refers to the global coverage of users from browserslist
-              "browsers": [">0.25%", "not ie 11", "not op_mini all"]
-            }
+            "useBuiltIns": "usage"
           }
         ]
       ],
@@ -40,7 +39,7 @@ export default {
         [
           "@babel/plugin-transform-runtime",
           {
-            corejs: 3
+            corejs: 2
           }
         ]
       ]
