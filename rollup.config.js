@@ -20,30 +20,11 @@ export default {
     commonjs({
       extensions: ['.js'],
       ignoreGlobal: false,
-      sourceMap: true,
+      sourceMap: false,
     }),
     babel({
       exclude: 'node_modules/**',
-      babelHelpers: 'runtime',
-      "presets": [
-        [
-          "@babel/env",
-          {
-            "modules": false,
-            "useBuiltIns": "usage",
-            "corejs":3
-          }
-        ]
-      ],
-      "plugins": [
-        "@babel/plugin-external-helpers",
-        [
-          "@babel/plugin-transform-runtime",
-          {
-            "useESModules": false
-          }
-        ]
-      ]
+      babelHelpers: 'runtime'
     }),
     // uglify()
   ]
