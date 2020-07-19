@@ -1,6 +1,7 @@
 import babel from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
+import { terser } from "rollup-plugin-terser";
 
 export default {
   input: './src/anikyu.js',
@@ -10,8 +11,23 @@ export default {
     format: 'umd'
   },
   {
+    file: `./dist/anikyu.min.js`,
+    name: `Anikyu`,
+    format: 'umd',
+    plugins:[
+      terser()
+    ]
+  },
+  {
     file: `./dist/anikyu.esm.js`,
     format: 'es'
+  },
+  {
+    file: `./dist/anikyu.esm.min.js`,
+    format: 'es',
+    plugins:[
+      terser()
+    ]
   }],
   plugins: [
     commonjs({
