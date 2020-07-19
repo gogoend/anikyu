@@ -20,7 +20,7 @@ export default {
     commonjs({
       extensions: ['.js'],
       ignoreGlobal: false,
-      sourceMap: false,
+      sourceMap: true,
     }),
     babel({
       exclude: 'node_modules/**',
@@ -30,7 +30,8 @@ export default {
           "@babel/env",
           {
             "modules": false,
-            "useBuiltIns": "usage"
+            "useBuiltIns": "usage",
+            // "corejs":3
           }
         ]
       ],
@@ -39,7 +40,7 @@ export default {
         [
           "@babel/plugin-transform-runtime",
           {
-            corejs: 2
+            "useESModules": true
           }
         ]
       ]
