@@ -1,7 +1,16 @@
 import Anikyu from './anikyu_class.js';
 import './polyfill/requestAnimationFrame.js';
 
-// 判断文件是如何引入的，如果是通过模块引入则不在全局暴露Anikyu
-// 直接在Webpack配置中改为UMD
+import { version } from '../package.json';
+
+Object.assign(Anikyu, {
+	VERSION: version
+});
+
+console.log(
+	'%c Anikyu ', `
+    font-size:5em;background-color:rgb(252,107,150);color:#fff;`,
+	`\nVersion:${Anikyu.VERSION}`
+);
 
 export default Anikyu;

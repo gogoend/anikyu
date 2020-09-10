@@ -2,6 +2,11 @@ import babel from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import { terser } from "rollup-plugin-terser";
+import json from '@rollup/plugin-json';
+
+let publicPlugins = [
+  json()
+]
 
 let babelPlugins = [
   commonjs({
@@ -26,6 +31,7 @@ export default [
       format: 'umd',
     },
     plugins: [
+      ...publicPlugins,
       ...babelPlugins
     ]
   },
@@ -37,6 +43,7 @@ export default [
       format: 'umd',
     },
     plugins: [
+      ...publicPlugins,
       ...babelPlugins,
       terser()
     ]
@@ -45,7 +52,7 @@ export default [
     input: './src/anikyu.js',
     output: [{
       file: `./dist/anikyu.esm.js`,
-      format: 'es'
+      format: 'es',
     }, {
       file: `./dist/anikyu.esm.min.js`,
       format: 'es',
@@ -53,5 +60,8 @@ export default [
         terser()
       ]
     }],
+    plugins:[
+      ...publicPlugins
+    ]
   }
 ]
