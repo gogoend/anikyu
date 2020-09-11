@@ -12,11 +12,16 @@ function getAddedValue (from, to, percent, easeFn, step) {
 export default function executor (index, percent = 0 ) {
 	console.log(this,'zzz');
 
+	let {queue} = this;
 	if (!isNaN(parseInt(index))) {
 		this.i = index;
 	}
 
-	let { el, i, queue, status, config, reqAniHandler } = this;
+	if(percent >= 1){
+		this.i = clamp(this.i + 1,0,queue.length);
+		percent = 0;
+	}
+	let { el, i, status, config, reqAniHandler } = this;
 
 	cancelAnimationFrame(reqAniHandler);
 	this.reqAniHandler = 0;
