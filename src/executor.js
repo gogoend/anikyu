@@ -1,7 +1,7 @@
 import { clamp, trigger, now } from './util.js';
 import { easingFuncs } from './easing_funcs.js';
 
-export let ease = Object.assign(easingFuncs)
+export let ease = Object.assign(easingFuncs);
 
 // 获得动画在当前进度时的变化增量
 function getAddedValue (from, to, percent, easeFn, step) {
@@ -9,21 +9,22 @@ function getAddedValue (from, to, percent, easeFn, step) {
 }
 
 // 动画执行器，用于在前后一对补间动画阶段之间进行补间
-export default function executor (index) {
+export default function executor (index, percent = 0 ) {
+	console.log(this,'zzz');
 
 	if (!isNaN(parseInt(index))) {
 		this.i = index;
 	}
 
-	let { el, i, queue, next, status, config, reqAniHandler } = this;
+	let { el, i, queue, status, config, reqAniHandler } = this;
 
 	cancelAnimationFrame(reqAniHandler);
+	this.reqAniHandler = 0;
 
 	if (!queue[i] || !queue[i + 1]) {
 		return;
 	}
-	let perviousStatus = queue[i].props,
-		finalStatus = queue[i + 1].props;
+	let perviousStatus = queue[i].props, finalStatus = queue[i + 1].props;
 
 	let delay = queue[i + 1].delay !== undefined ? queue[i + 1].delay : 0;
 	let currentStageIndex = this.i + 1;
@@ -39,7 +40,12 @@ export default function executor (index) {
 
 	let step = queue[i + 1].step ? queue[i + 1].step : undefined;
 
-	status.startTime = now() + delay;
+
+	// 考虑一下如何把传入的percent给算进来
+	// // eslint-disable-next-line no-debugger
+	// debugger;
+	let passedTime = percent * duration;
+	status.startTime = now() - passedTime + delay;
 
 	// let totalDelta = {};
 
@@ -63,75 +69,81 @@ export default function executor (index) {
 			}
 
 		}
-		// totalDelta[key] = finalStatus[key] - parseFloat(perviousStatus[key]);
-
-		// console.table ? 
-		// 	console.table({'final':finalStatus[key],'pervious':perviousStatus[key],'delta':totalDelta[key]})
-		// 	:
-		// 	console.log({'final':finalStatus[key],'pervious':perviousStatus[key],'delta':totalDelta[key]})
-		// ;
-
 	}
 
-	let loop = () => {
+	let getNextFrame = (percent) => {
 
-		if (!status.paused) {
-			// let endTime = status.startTime + duration;
-			let currentTime = now();
-			let currentProgress = clamp((currentTime - status.startTime) / duration, 0, 1);
+		let perviousStatus = queue[this.i].props, finalStatus = queue[this.i + 1].props;
+		
+		let currentProgress = percent;// ? percent : clamp((currentTime - status.startTime) / duration, 0, 1);
+		console.log(currentProgress);
 
-			let newValue = {}, stageDelta = {}, frameDelta = {};
-			for (let key in perviousStatus) {
+		let newValue = {}, stageDelta = {}, frameDelta = {};
+		for (let key in perviousStatus) {
 
-				let perviousVal = parseFloat(perviousStatus[key]);
-				let finalVal = parseFloat(finalStatus[key]);
+			let perviousVal = parseFloat(perviousStatus[key]);
+			let finalVal = parseFloat(finalStatus[key]);
 
-				newValue[key] = perviousVal + getAddedValue(perviousVal, finalVal, currentProgress, ease[easeType], step); // totalDelta[key] * ease[easeType].call(this, currentProgress, step);
+			newValue[key] = perviousVal + getAddedValue(perviousVal, finalVal, currentProgress, ease[easeType], step); // totalDelta[key] * ease[easeType].call(this, currentProgress, step);
 
-				stageDelta[key] = (newValue[key] === undefined ? 0 : newValue[key]) - (perviousVal === undefined ? 0 : perviousVal);
+			stageDelta[key] = (newValue[key] === undefined ? 0 : newValue[key]) - (perviousVal === undefined ? 0 : perviousVal);
 
-				frameDelta[key] = (newValue[key] === undefined ? 0 : newValue[key]) - (el[key] === undefined ? 0 : parseFloat(el[key]));
-			}
+			frameDelta[key] = (newValue[key] === undefined ? 0 : newValue[key]) - (el[key] === undefined ? 0 : parseFloat(el[key]));
+		}
 
-			Object.assign(el, newValue);
-			trigger(this, 'animate', el, {
-				stageIndex: this.i,
-				name: queue[currentStageIndex].name ? queue[currentStageIndex].name : '',
-				progress: currentProgress,
-				// target:el,
-				value: newValue,
-				stageDelta,
-				frameDelta
-			});
-			// if (queue[i + 1].onAnimating instanceof Function) {
-			// 	queue[i + 1].onAnimating(this);
-			// }
-			if (currentProgress == 1) {
+		Object.assign(el, newValue);
+		trigger(this, 'animate', el, {
+			stageIndex: this.i,
+			name: queue[currentStageIndex].name ? queue[currentStageIndex].name : '',
+			progress: currentProgress,
+			// target:el,
+			value: newValue,
+			stageDelta,
+			frameDelta
+		});
+		// if (queue[i + 1].onAnimating instanceof Function) {
+		// 	queue[i + 1].onAnimating(this);
+		// }
+		if (currentProgress == 1) {
 			// clearInterval(timer)
 			// cancelAnimationFrame(this.reqAniHandler);
 			// 如何执行下一步？
 
-				setTimeout(() => {
-				// if (queue[i + 1].onFinished instanceof Function) {
-				// 	queue[i + 1].onFinished(this);
-				// }
-					for (let key in finalStatus) {
-						el[key] = finalStatus[key];
-					}
-					trigger(this, 'finish', el, {
-						stageIndex: currentStageIndex,
-						name: queue[currentStageIndex].name ? queue[currentStageIndex].name : ''
-					});
-					if (!config.manualNext) {
-						next.call(this);
-					}
-				}, delay);
-				// debugger
-				return;
+			// setTimeout(() => {
+			// if (queue[i + 1].onFinished instanceof Function) {
+			// 	queue[i + 1].onFinished(this);
+			// }
+			for (let key in finalStatus) {
+				el[key] = finalStatus[key];
 			}
+			trigger(this, 'finish', el, {
+				stageIndex: currentStageIndex,
+				name: queue[currentStageIndex].name ? queue[currentStageIndex].name : ''
+			});
+			if (!config.manualNext) {
+				// debugger
+				// next.call(this);
+				executor.call(this,this.i += 1);
+			}
+			// }, delay);
+			// debugger
+			return;
+		}
+		
+	};
+
+	let loop = () => {
+		if (!status.paused) {
+			// let endTime = status.startTime + duration;
+			let currentTime = now();
+			let currentProgress = percent ? percent : clamp((currentTime - status.startTime) / duration, 0, 1);
+			getNextFrame(currentProgress);
 		}
 		this.reqAniHandler = requestAnimationFrame(loop);
 	};
-	setTimeout(loop, delay);
+	if(!this.reqAniHandler){
+		loop();
+	}
+	// setTimeout(loop, delay);
 	// loop();
 }

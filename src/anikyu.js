@@ -1,11 +1,11 @@
 import Anikyu from './anikyu_class.js';
 import './polyfill/requestAnimationFrame.js';
 
-import { version } from '../package.json';
+// import { version } from '../package.json';
 
-Object.assign(Anikyu, {
-	VERSION: version
-});
+// Object.assign(Anikyu, {
+// 	VERSION: version
+// });
 
 console.log(
 	'%c Anikyu ', `

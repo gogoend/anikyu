@@ -45,56 +45,67 @@ class Anikyu extends EventDoer {
 	// 暂停、继续、重播当前
 	pause () {
 		let { status } = this;
-
+		
+		// setTimeout(()=>{
 		if (status.paused) return;
-
 		let pausedTime = now();
 		status.passedTime = pausedTime - status.startTime;
 		status.paused = true;
+		// });
 	}
 	resume () {
 		let { status } = this;
 
+		// setTimeout(()=>{
 		if (!status.paused) return;
-
 		let startTime = now();
 		status.startTime = startTime - status.passedTime;
 		status.paused = false;
+		// });
 	}
 
 	replay () {
 		let { status, queue, i, resume } = this;
 
 		if (!queue[i]) return;
-		if (status.paused) (resume.bind(this))();
-
+		// if (status.paused) (resume.bind(this))();
+		if(i === queue.length - 1){
+			i = i - 1;
+		}
 		executor.call(this, i);
 	}
 
 	// 跳转到、上一个、下一个
-	jump (index, finishCallFlag) {
-		let { status, queue, resume } = this;
+	jump (index, percent) {
+		let { status, queue, resume,i } = this;
+
+		// 先暂停，跳转后再开始
+		// this.pause();
 
 		if (!queue[index]) return;
-		if (status.paused) (resume.bind(this))();
+		// if (status.paused) (resume.bind(this))();
 
-		executor.call(this, finishCallFlag ? index - 2 : index - 1);
+		// if(i === queue.length - 1){
+		// 	index = index - 1;
+		// }
+
+		executor.call(this, index - 1, percent);
+
+		console.log(status);
 
 	}
 	prev () {
-		let { status, queue, i, resume } = this;
+		let { queue, i } = this;
 		if (!queue[i - 1]) return;
-
-		if (status.paused) (resume.bind(this))();
 
 		this.i--;
 		executor.call(this);
 	}
 	next () {
-		let { status, queue, i, resume } = this;
+		let { queue, i } = this;
+		// // eslint-disable-next-line no-debugger
+		// debugger;
 		if (!queue[i + 1]) return;
-
-		if (status.paused) (resume.bind(this))();
 
 		this.i++;
 		executor.call(this);
