@@ -40,7 +40,7 @@
                     top: 100,
                     left: 100,
                     rotate: 0
-                }
+                },
             },
             {
                 // delay: 1000,
@@ -48,24 +48,32 @@
                     top: 200,
                     left: 700,
                     rotate: 359
-                }
+                },
+                easeType: 'quinticInOut',
+                // step:10
+
             },
             {
                 props: {
                     top: 400,
                     left: 300,
                     rotate: 45
-                }
+                },
+                easeType: 'elasticInOut',
+                duration: 4000
             },
             {
                 props: {
                     top: 100,
                     left: 100,
                     rotate: 0
-                }
+                },
+                easeType: 'step',
+                step:20,
+                duration:1000
             },
         ], {
-            easeType: 'elasticInOut'
+            easeType: 'linear'
         })
         ani.addEventListener('animate', function (e) {
             el.style.top = obj.top + 'px';
