@@ -79,9 +79,6 @@ class Anikyu extends EventDoer {
 	jump (index, percent) {
 		let { status, queue, resume,i } = this;
 
-		// 先暂停，跳转后再开始
-		// this.pause();
-
 		if (!queue[index]) return;
 		// if (status.paused) (resume.bind(this))();
 
@@ -89,7 +86,10 @@ class Anikyu extends EventDoer {
 		// 	index = index - 1;
 		// }
 
-		executor.call(this, index - 1, percent);
+		// 跳转时需要先请求跳转后的第一帧
+		executor.call(this, index - 1, percent,{
+			ifGetNextOneFrame: true
+		});
 
 		console.log(status);
 

@@ -9,7 +9,7 @@ function getAddedValue (from, to, percent, easeFn, step) {
 }
 
 // 动画执行器，用于在前后一对补间动画阶段之间进行补间
-export default function executor (index, percent = 0 ) {
+export default function executor (index, percent = 0, {ifGetNextOneFrame}={} ) {
 	console.log(this,'zzz');
 
 	let {queue} = this;
@@ -78,7 +78,13 @@ export default function executor (index, percent = 0 ) {
 
 	let getNextFrame = (percent) => {
 
-		let perviousStatus = queue[this.i].props, finalStatus = queue[this.i + 1].props;
+		let {i} = this
+
+		if (!queue[i] || !queue[i + 1]) {
+			return;
+		}
+
+		let perviousStatus = queue[i].props, finalStatus = queue[i + 1].props;
 		
 		let currentProgress = percent;// ? percent : clamp((currentTime - status.startTime) / duration, 0, 1);
 		console.log(currentProgress);
@@ -137,11 +143,18 @@ export default function executor (index, percent = 0 ) {
 		
 	};
 
+	if( ifGetNextOneFrame ){
+		let passedTime = percent * duration;
+		status.startTime = now() - passedTime + delay;
+		getNextFrame(percent)
+	}
+
 	let loop = () => {
 		if (!status.paused) {
 			// let endTime = status.startTime + duration;
 			let currentTime = now();
 			let currentProgress = percent ? percent : clamp((currentTime - status.startTime) / duration, 0, 1);
+			percent = undefined;
 			getNextFrame(currentProgress);
 		}
 		this.reqAniHandler = requestAnimationFrame(loop);
