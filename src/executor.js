@@ -9,7 +9,7 @@ function getAddedValue (from, to, percent, easeFn, step) {
 }
 
 // 动画执行器，用于在前后一对补间动画阶段之间进行补间
-export default function executor (index, percent = 0, {ifGetNextOneFrame}={} ) {
+export default function executor (index, percent = 0, { ifGetNextOneFrame } = {} ) {
 	console.log(this,'zzz');
 
 	let {queue} = this;
@@ -24,7 +24,7 @@ export default function executor (index, percent = 0, {ifGetNextOneFrame}={} ) {
 	let { el, i, status, config, reqAniHandler } = this;
 
 	cancelAnimationFrame(reqAniHandler);
-	this.reqAniHandler = 0;
+	this.reqAniHandler = undefined;
 
 	if (!queue[i] || !queue[i + 1]) {
 		return;
@@ -32,7 +32,7 @@ export default function executor (index, percent = 0, {ifGetNextOneFrame}={} ) {
 	let perviousStatus = queue[i].props, finalStatus = queue[i + 1].props;
 
 	let delay = queue[i + 1].delay !== undefined ? queue[i + 1].delay : 0;
-	let currentStageIndex = this.i + 1;
+	let currentStageIndex = i + 1;
 
 	// 确保每一次的初始状态都和前一对象中的属性相等
 	// 修复重播当前、跳转到、上一个、下一个函数不正常工作的问题
@@ -40,17 +40,7 @@ export default function executor (index, percent = 0, {ifGetNextOneFrame}={} ) {
 		el[key] = perviousStatus[key];
 	}
 
-	let easeType = queue[i + 1].easeType ? queue[i + 1].easeType : config.easeType;
-	let duration = queue[i + 1].duration ? queue[i + 1].duration : config.duration;
 
-	let step = queue[i + 1].step ? queue[i + 1].step : undefined;
-
-
-	// 考虑一下如何把传入的percent给算进来
-	// // eslint-disable-next-line no-debugger
-	// debugger;
-	let passedTime = percent * duration;
-	status.startTime = now() - passedTime + delay;
 
 	// let totalDelta = {};
 
@@ -78,13 +68,17 @@ export default function executor (index, percent = 0, {ifGetNextOneFrame}={} ) {
 
 	let getNextFrame = (percent) => {
 
-		let {i} = this
+		let { i } = this;
 
 		if (!queue[i] || !queue[i + 1]) {
 			return;
 		}
 
 		let perviousStatus = queue[i].props, finalStatus = queue[i + 1].props;
+
+		let easeType = queue[i + 1].easeType ? queue[i + 1].easeType : config.easeType;
+	
+		let step = queue[i + 1].step ? queue[i + 1].step : undefined;
 		
 		let currentProgress = percent;// ? percent : clamp((currentTime - status.startTime) / duration, 0, 1);
 		console.log(currentProgress);
@@ -104,7 +98,7 @@ export default function executor (index, percent = 0, {ifGetNextOneFrame}={} ) {
 
 		Object.assign(el, newValue);
 		trigger(this, 'animate', el, {
-			stageIndex: this.i,
+			stageIndex: i,
 			name: queue[currentStageIndex].name ? queue[currentStageIndex].name : '',
 			progress: currentProgress,
 			// target:el,
@@ -134,7 +128,8 @@ export default function executor (index, percent = 0, {ifGetNextOneFrame}={} ) {
 			if (!config.manualNext) {
 				// debugger
 				// next.call(this);
-				executor.call(this,this.i += 1);
+				loop = ()=> void 0;
+				executor.call(this, this.i += 1);
 			}
 			// }, delay);
 			// debugger
@@ -143,10 +138,14 @@ export default function executor (index, percent = 0, {ifGetNextOneFrame}={} ) {
 		
 	};
 
+	let duration = queue[i + 1].duration ? queue[i + 1].duration : config.duration;
+	// 考虑一下如何把传入的percent给算进来
+
+	let passedTime = percent * duration;
+	status.startTime = now() - passedTime + delay;
+
 	if( ifGetNextOneFrame ){
-		let passedTime = percent * duration;
-		status.startTime = now() - passedTime + delay;
-		getNextFrame(percent)
+		getNextFrame(percent);
 	}
 
 	let loop = () => {

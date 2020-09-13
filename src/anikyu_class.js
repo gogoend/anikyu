@@ -76,8 +76,14 @@ class Anikyu extends EventDoer {
 	}
 
 	// 跳转到、上一个、下一个
-	jump (index, percent) {
+	jump (index,percent) {
 		let { status, queue, resume,i } = this;
+
+		if(isNaN(Number(percent))){
+			percent = index - Math.floor(index)
+		}
+
+		index = Math.floor(index);
 
 		if (!queue[index]) return;
 		// if (status.paused) (resume.bind(this))();
