@@ -240,37 +240,32 @@ function getAddedValue (from, to, percent, easeFn, step) {
 }
 
 // 动画执行器，用于在前后一对补间动画阶段之间进行补间
-function executor (index) {
+function executor (index, { getNextOneFrame, ignoreDelay = false } = {} ) {
 
-	if (!isNaN(parseInt(index))) {
+	let percent = index - Math.floor(index);
+	index = Math.floor(index);
+
+	let {queue} = this;
+	if (!isNaN(index)) {
 		this.i = index;
 	}
 
-	let { el, i, queue, next, status, config, reqAniHandler } = this;
+	percent = isNaN(percent) ? 0 : percent;
+	let { el, i, status, config, reqAniHandler } = this;
 
 	cancelAnimationFrame(reqAniHandler);
+	this.reqAniHandler = undefined;
 
 	if (!queue[i] || !queue[i + 1]) {
 		return;
 	}
-	let perviousStatus = queue[i].props,
-		finalStatus = queue[i + 1].props;
-
-	let delay = queue[i + 1].delay !== undefined ? queue[i + 1].delay : 0;
-	let currentStageIndex = this.i + 1;
+	let perviousStatus = queue[i].props, finalStatus = queue[i + 1].props;
 
 	// 确保每一次的初始状态都和前一对象中的属性相等
 	// 修复重播当前、跳转到、上一个、下一个函数不正常工作的问题
 	for (let key in perviousStatus) {
 		el[key] = perviousStatus[key];
 	}
-
-	let easeType = queue[i + 1].easeType ? queue[i + 1].easeType : config.easeType;
-	let duration = queue[i + 1].duration ? queue[i + 1].duration : config.duration;
-
-	let step = queue[i + 1].step ? queue[i + 1].step : undefined;
-
-	status.startTime = now() + delay;
 
 	// let totalDelta = {};
 
@@ -294,77 +289,96 @@ function executor (index) {
 			}
 
 		}
-		// totalDelta[key] = finalStatus[key] - parseFloat(perviousStatus[key]);
+	}
 
-		// console.table ? 
-		// 	console.table({'final':finalStatus[key],'pervious':perviousStatus[key],'delta':totalDelta[key]})
-		// 	:
-		// 	console.log({'final':finalStatus[key],'pervious':perviousStatus[key],'delta':totalDelta[key]})
-		// ;
+	let getAnimationFrame = (percent) => {
 
+		let { i } = this;
+		let currentIndex = i + 1;
+
+		if (!queue[i] || !queue[currentIndex]) {
+			return;
+		}
+
+		// 防止当前时间早于开始时间（进度小于 0 ）时请求帧 —— animationStage 包含 delay 时会发生这种情况
+		if(now() < status.startTime) return;
+
+		let perviousStatus = queue[i].props, finalStatus = queue[currentIndex].props;
+
+		let easeType = queue[currentIndex].easeType ? queue[currentIndex].easeType : config.easeType;
+	
+		let step = queue[currentIndex].step ? queue[currentIndex].step : undefined;
+
+		let currentProgress = percent;
+		console.log(currentProgress);
+
+		let newValue = {}, stageDelta = {}, frameDelta = {};
+		for (let key in perviousStatus) {
+
+			let perviousVal = parseFloat(perviousStatus[key]);
+			let finalVal = parseFloat(finalStatus[key]);
+
+			newValue[key] = perviousVal + getAddedValue(perviousVal, finalVal, currentProgress, ease[easeType], step);
+
+			stageDelta[key] = (newValue[key] === undefined ? 0 : newValue[key]) - (perviousVal === undefined ? 0 : perviousVal);
+
+			frameDelta[key] = (newValue[key] === undefined ? 0 : newValue[key]) - (el[key] === undefined ? 0 : parseFloat(el[key]));
+		}
+
+		Object.assign(el, newValue);
+		trigger(this, 'animate', el, {
+			stageIndex: currentIndex,
+			name: queue[currentIndex].name ? queue[currentIndex].name : '',
+			progress: currentProgress,
+			// target:el,
+			value: newValue,
+			stageDelta,
+			frameDelta
+		});
+		if (currentProgress == 1) {
+			// 如何进入下一阶段
+			for (let key in finalStatus) {
+				el[key] = finalStatus[key];
+			}
+			trigger(this, 'finish', el, {
+				stageIndex: currentIndex,
+				name: queue[currentIndex].name ? queue[currentIndex].name : ''
+			});
+			if (!config.manualNext) {
+				loop = ()=> void 0;
+				executor.call(this, this.i += 1);
+			}
+			return;
+		}
+		
+	};
+
+	let duration = queue[i + 1].duration ? queue[i + 1].duration : config.duration;
+	let delay = queue[i + 1].delay !== undefined ? queue[i + 1].delay : 0;
+
+	if( ignoreDelay ){
+		delay = 0;
+	}
+	
+	// 把传入的percent带入计算
+	let passedTime = percent * duration;
+	status.startTime = now() - passedTime + delay;
+	
+	if( getNextOneFrame ){
+		getAnimationFrame(percent);
 	}
 
 	let loop = () => {
-
 		if (!status.paused) {
-			// let endTime = status.startTime + duration;
-			let currentTime = now();
-			let currentProgress = clamp((currentTime - status.startTime) / duration, 0, 1);
-
-			let newValue = {}, stageDelta = {}, frameDelta = {};
-			for (let key in perviousStatus) {
-
-				let perviousVal = parseFloat(perviousStatus[key]);
-				let finalVal = parseFloat(finalStatus[key]);
-
-				newValue[key] = perviousVal + getAddedValue(perviousVal, finalVal, currentProgress, ease[easeType], step); // totalDelta[key] * ease[easeType].call(this, currentProgress, step);
-
-				stageDelta[key] = (newValue[key] === undefined ? 0 : newValue[key]) - (perviousVal === undefined ? 0 : perviousVal);
-
-				frameDelta[key] = (newValue[key] === undefined ? 0 : newValue[key]) - (el[key] === undefined ? 0 : parseFloat(el[key]));
-			}
-
-			Object.assign(el, newValue);
-			trigger(this, 'animate', el, {
-				stageIndex: this.i,
-				name: queue[currentStageIndex].name ? queue[currentStageIndex].name : '',
-				progress: currentProgress,
-				// target:el,
-				value: newValue,
-				stageDelta,
-				frameDelta
-			});
-			// if (queue[i + 1].onAnimating instanceof Function) {
-			// 	queue[i + 1].onAnimating(this);
-			// }
-			if (currentProgress == 1) {
-			// clearInterval(timer)
-			// cancelAnimationFrame(this.reqAniHandler);
-			// 如何执行下一步？
-
-				setTimeout(() => {
-				// if (queue[i + 1].onFinished instanceof Function) {
-				// 	queue[i + 1].onFinished(this);
-				// }
-					for (let key in finalStatus) {
-						el[key] = finalStatus[key];
-					}
-					trigger(this, 'finish', el, {
-						stageIndex: currentStageIndex,
-						name: queue[currentStageIndex].name ? queue[currentStageIndex].name : ''
-					});
-					if (!config.manualNext) {
-						next.call(this);
-					}
-				}, delay);
-				// debugger
-				return;
-			}
+			let currentProgress = percent ? percent : clamp((now() - status.startTime) / duration, 0, 1);
+			percent = undefined;
+			getAnimationFrame(currentProgress);
 		}
 		this.reqAniHandler = requestAnimationFrame(loop);
 	};
-	setTimeout(loop, delay);
-	// loop();
+	if(!this.reqAniHandler){
+		loop();
+	}
 }
 
 function mixEaseFn (obj){
@@ -400,19 +414,15 @@ class Anikyu extends EventDoer {
 			executor.call(this);
 		}
 
-		// this.executor = this.executor.bind(this);
-
 		this.reqAniHandler = null;
-
 	}
 
 	// 动画流程控制
 	// 暂停、继续、重播当前
 	pause () {
 		let { status } = this;
-
+		
 		if (status.paused) return;
-
 		let pausedTime = now();
 		status.passedTime = pausedTime - status.startTime;
 		status.paused = true;
@@ -421,48 +431,54 @@ class Anikyu extends EventDoer {
 		let { status } = this;
 
 		if (!status.paused) return;
-
 		let startTime = now();
 		status.startTime = startTime - status.passedTime;
 		status.paused = false;
 	}
 
-	replay () {
-		let { status, queue, i, resume } = this;
+	replay (ignoreDelay = true) {
+		let { queue, i } = this;
 
 		if (!queue[i]) return;
-		if (status.paused) (resume.bind(this))();
 
-		executor.call(this, i);
+		if(i === queue.length - 1){
+			i = i - 1;
+		}
+		executor.call(this, i,{
+			ignoreDelay
+		});
 	}
 
 	// 跳转到、上一个、下一个
-	jump (index, finishCallFlag) {
-		let { status, queue, resume } = this;
+	jump (index,ignoreDelay = true) {
+		let { queue } = this;
 
-		if (!queue[index]) return;
-		if (status.paused) (resume.bind(this))();
+		if (!queue[Math.floor(index)]) return;
 
-		executor.call(this, finishCallFlag ? index - 2 : index - 1);
-
+		// 跳转时需要先请求跳转后的第一帧
+		executor.call(this, index - 1, {
+			getNextOneFrame: true,
+			ignoreDelay
+		});
 	}
-	prev () {
-		let { status, queue, i, resume } = this;
+	prev ( ignoreDelay = true ) {
+		let { queue, i } = this;
 		if (!queue[i - 1]) return;
 
-		if (status.paused) (resume.bind(this))();
-
 		this.i--;
-		executor.call(this);
+		executor.call(this,undefined,{
+			ignoreDelay
+		});
 	}
-	next () {
-		let { status, queue, i, resume } = this;
+	next ( ignoreDelay = true ) {
+		let { queue, i } = this;
+
 		if (!queue[i + 1]) return;
 
-		if (status.paused) (resume.bind(this))();
-
 		this.i++;
-		executor.call(this);
+		executor.call(this,undefined,{
+			ignoreDelay
+		});
 	}
 
 	// 废弃
@@ -507,5 +523,17 @@ Object.assign(Anikyu, {
 		clearTimeout(id);
 	};
 }(typeof window === 'undefined' ? global : window));
+
+// import { version } from '../package.json';
+
+// Object.assign(Anikyu, {
+// 	VERSION: version
+// });
+
+console.log(
+	'%c Anikyu ', `
+    font-size:5em;background-color:rgb(252,107,150);color:#fff;`,
+	`\nVersion:${Anikyu.VERSION}`
+);
 
 export default Anikyu;
