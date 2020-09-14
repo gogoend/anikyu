@@ -9,18 +9,17 @@ function getAddedValue (from, to, percent, easeFn, step) {
 }
 
 // 动画执行器，用于在前后一对补间动画阶段之间进行补间
-export default function executor (index, percent = 0, { ifGetNextOneFrame } = {} ) {
-	console.log(this,'zzz');
+export default function executor (index, { getNextOneFrame, ignoreDelay = false } = {} ) {
+
+	let percent = index - Math.floor(index);
+	index = Math.floor(index);
 
 	let {queue} = this;
-	if (!isNaN(parseInt(index))) {
+	if (!isNaN(index)) {
 		this.i = index;
 	}
 
-	if(percent >= 1){
-		this.i = clamp(this.i + 1,0,queue.length);
-		percent = 0;
-	}
+	percent = isNaN(percent) ? 0 : percent;
 	let { el, i, status, config, reqAniHandler } = this;
 
 	cancelAnimationFrame(reqAniHandler);
@@ -31,16 +30,11 @@ export default function executor (index, percent = 0, { ifGetNextOneFrame } = {}
 	}
 	let perviousStatus = queue[i].props, finalStatus = queue[i + 1].props;
 
-	let delay = queue[i + 1].delay !== undefined ? queue[i + 1].delay : 0;
-	let currentStageIndex = i + 1;
-
 	// 确保每一次的初始状态都和前一对象中的属性相等
 	// 修复重播当前、跳转到、上一个、下一个函数不正常工作的问题
 	for (let key in perviousStatus) {
 		el[key] = perviousStatus[key];
 	}
-
-
 
 	// let totalDelta = {};
 
@@ -66,20 +60,24 @@ export default function executor (index, percent = 0, { ifGetNextOneFrame } = {}
 		}
 	}
 
-	let getNextFrame = (percent) => {
+	let getAnimationFrame = (percent) => {
 
 		let { i } = this;
+		let currentIndex = i + 1;
 
-		if (!queue[i] || !queue[i + 1]) {
+		if (!queue[i] || !queue[currentIndex]) {
 			return;
 		}
 
-		let perviousStatus = queue[i].props, finalStatus = queue[i + 1].props;
+		// 防止当前时间早于开始时间（进度小于 0 ）时请求帧 —— animationStage 包含 delay 时会发生这种情况
+		if(now() < status.startTime) return;
 
-		let easeType = queue[i + 1].easeType ? queue[i + 1].easeType : config.easeType;
+		let perviousStatus = queue[i].props, finalStatus = queue[currentIndex].props;
+
+		let easeType = queue[currentIndex].easeType ? queue[currentIndex].easeType : config.easeType;
 	
-		let step = queue[i + 1].step ? queue[i + 1].step : undefined;
-		
+		let step = queue[currentIndex].step ? queue[currentIndex].step : undefined;
+
 		let currentProgress = percent;// ? percent : clamp((currentTime - status.startTime) / duration, 0, 1);
 		console.log(currentProgress);
 
@@ -98,16 +96,16 @@ export default function executor (index, percent = 0, { ifGetNextOneFrame } = {}
 
 		Object.assign(el, newValue);
 		trigger(this, 'animate', el, {
-			stageIndex: i,
-			name: queue[currentStageIndex].name ? queue[currentStageIndex].name : '',
+			stageIndex: currentIndex,
+			name: queue[currentIndex].name ? queue[currentIndex].name : '',
 			progress: currentProgress,
 			// target:el,
 			value: newValue,
 			stageDelta,
 			frameDelta
 		});
-		// if (queue[i + 1].onAnimating instanceof Function) {
-		// 	queue[i + 1].onAnimating(this);
+		// if (queue[currentIndex].onAnimating instanceof Function) {
+		// 	queue[currentIndex].onAnimating(this);
 		// }
 		if (currentProgress == 1) {
 			// clearInterval(timer)
@@ -115,15 +113,15 @@ export default function executor (index, percent = 0, { ifGetNextOneFrame } = {}
 			// 如何执行下一步？
 
 			// setTimeout(() => {
-			// if (queue[i + 1].onFinished instanceof Function) {
-			// 	queue[i + 1].onFinished(this);
+			// if (queue[currentIndex].onFinished instanceof Function) {
+			// 	queue[currentIndex].onFinished(this);
 			// }
 			for (let key in finalStatus) {
 				el[key] = finalStatus[key];
 			}
 			trigger(this, 'finish', el, {
-				stageIndex: currentStageIndex,
-				name: queue[currentStageIndex].name ? queue[currentStageIndex].name : ''
+				stageIndex: currentIndex,
+				name: queue[currentIndex].name ? queue[currentIndex].name : ''
 			});
 			if (!config.manualNext) {
 				// debugger
@@ -139,22 +137,27 @@ export default function executor (index, percent = 0, { ifGetNextOneFrame } = {}
 	};
 
 	let duration = queue[i + 1].duration ? queue[i + 1].duration : config.duration;
-	// 考虑一下如何把传入的percent给算进来
+	let delay = queue[i + 1].delay !== undefined ? queue[i + 1].delay : 0;
 
+	if( ignoreDelay ){
+		delay = 0;
+	}
+	
+	// 考虑一下如何把传入的percent给算进来
 	let passedTime = percent * duration;
 	status.startTime = now() - passedTime + delay;
-
-	if( ifGetNextOneFrame ){
-		getNextFrame(percent);
+	
+	if( getNextOneFrame ){
+		getAnimationFrame(percent);
 	}
 
 	let loop = () => {
 		if (!status.paused) {
 			// let endTime = status.startTime + duration;
-			let currentTime = now();
-			let currentProgress = percent ? percent : clamp((currentTime - status.startTime) / duration, 0, 1);
+			// debugger
+			let currentProgress = percent ? percent : clamp((now() - status.startTime) / duration, 0, 1);
 			percent = undefined;
-			getNextFrame(currentProgress);
+			getAnimationFrame(currentProgress);
 		}
 		this.reqAniHandler = requestAnimationFrame(loop);
 	};

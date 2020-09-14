@@ -64,7 +64,7 @@ class Anikyu extends EventDoer {
 		// });
 	}
 
-	replay () {
+	replay (ignoreDelay = true) {
 		let { status, queue, i, resume } = this;
 
 		if (!queue[i]) return;
@@ -72,49 +72,49 @@ class Anikyu extends EventDoer {
 		if(i === queue.length - 1){
 			i = i - 1;
 		}
-		executor.call(this, i);
+		executor.call(this, i,{
+			ignoreDelay
+		});
 	}
 
 	// 跳转到、上一个、下一个
-	jump (index,percent) {
+	jump (index,ignoreDelay = true) {
 		let { status, queue, resume,i } = this;
 
-		if(isNaN(Number(percent))){
-			percent = index - Math.floor(index)
-		}
-
-		index = Math.floor(index);
-
-		if (!queue[index]) return;
+		if (!queue[Math.floor(index)]) return;
 		// if (status.paused) (resume.bind(this))();
 
 		// if(i === queue.length - 1){
 		// 	index = index - 1;
 		// }
 
+		// debugger
 		// 跳转时需要先请求跳转后的第一帧
-		executor.call(this, index - 1, percent,{
-			ifGetNextOneFrame: true
+
+		executor.call(this, index - 1, {
+			getNextOneFrame: true,
+			ignoreDelay
 		});
-
-		console.log(status);
-
 	}
-	prev () {
+	prev ( ignoreDelay = true ) {
 		let { queue, i } = this;
 		if (!queue[i - 1]) return;
 
 		this.i--;
-		executor.call(this);
+		executor.call(this,undefined,{
+			ignoreDelay
+		});
 	}
-	next () {
+	next ( ignoreDelay = true ) {
 		let { queue, i } = this;
 		// // eslint-disable-next-line no-debugger
 		// debugger;
 		if (!queue[i + 1]) return;
 
 		this.i++;
-		executor.call(this);
+		executor.call(this,undefined,{
+			ignoreDelay
+		});
 	}
 
 	// 废弃
