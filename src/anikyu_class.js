@@ -35,10 +35,7 @@ class Anikyu extends EventDoer {
 			executor.call(this);
 		}
 
-		// this.executor = this.executor.bind(this);
-
 		this.reqAniHandler = null;
-
 	}
 
 	// 动画流程控制
@@ -46,29 +43,25 @@ class Anikyu extends EventDoer {
 	pause () {
 		let { status } = this;
 		
-		// setTimeout(()=>{
 		if (status.paused) return;
 		let pausedTime = now();
 		status.passedTime = pausedTime - status.startTime;
 		status.paused = true;
-		// });
 	}
 	resume () {
 		let { status } = this;
 
-		// setTimeout(()=>{
 		if (!status.paused) return;
 		let startTime = now();
 		status.startTime = startTime - status.passedTime;
 		status.paused = false;
-		// });
 	}
 
 	replay (ignoreDelay = true) {
-		let { status, queue, i, resume } = this;
+		let { queue, i } = this;
 
 		if (!queue[i]) return;
-		// if (status.paused) (resume.bind(this))();
+
 		if(i === queue.length - 1){
 			i = i - 1;
 		}
@@ -79,18 +72,11 @@ class Anikyu extends EventDoer {
 
 	// 跳转到、上一个、下一个
 	jump (index,ignoreDelay = true) {
-		let { status, queue, resume,i } = this;
+		let { queue } = this;
 
 		if (!queue[Math.floor(index)]) return;
-		// if (status.paused) (resume.bind(this))();
 
-		// if(i === queue.length - 1){
-		// 	index = index - 1;
-		// }
-
-		// debugger
 		// 跳转时需要先请求跳转后的第一帧
-
 		executor.call(this, index - 1, {
 			getNextOneFrame: true,
 			ignoreDelay
@@ -107,8 +93,7 @@ class Anikyu extends EventDoer {
 	}
 	next ( ignoreDelay = true ) {
 		let { queue, i } = this;
-		// // eslint-disable-next-line no-debugger
-		// debugger;
+
 		if (!queue[i + 1]) return;
 
 		this.i++;

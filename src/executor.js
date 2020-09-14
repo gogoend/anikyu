@@ -78,7 +78,7 @@ export default function executor (index, { getNextOneFrame, ignoreDelay = false 
 	
 		let step = queue[currentIndex].step ? queue[currentIndex].step : undefined;
 
-		let currentProgress = percent;// ? percent : clamp((currentTime - status.startTime) / duration, 0, 1);
+		let currentProgress = percent;
 		console.log(currentProgress);
 
 		let newValue = {}, stageDelta = {}, frameDelta = {};
@@ -87,7 +87,7 @@ export default function executor (index, { getNextOneFrame, ignoreDelay = false 
 			let perviousVal = parseFloat(perviousStatus[key]);
 			let finalVal = parseFloat(finalStatus[key]);
 
-			newValue[key] = perviousVal + getAddedValue(perviousVal, finalVal, currentProgress, ease[easeType], step); // totalDelta[key] * ease[easeType].call(this, currentProgress, step);
+			newValue[key] = perviousVal + getAddedValue(perviousVal, finalVal, currentProgress, ease[easeType], step);
 
 			stageDelta[key] = (newValue[key] === undefined ? 0 : newValue[key]) - (perviousVal === undefined ? 0 : perviousVal);
 
@@ -104,18 +104,8 @@ export default function executor (index, { getNextOneFrame, ignoreDelay = false 
 			stageDelta,
 			frameDelta
 		});
-		// if (queue[currentIndex].onAnimating instanceof Function) {
-		// 	queue[currentIndex].onAnimating(this);
-		// }
 		if (currentProgress == 1) {
-			// clearInterval(timer)
-			// cancelAnimationFrame(this.reqAniHandler);
-			// 如何执行下一步？
-
-			// setTimeout(() => {
-			// if (queue[currentIndex].onFinished instanceof Function) {
-			// 	queue[currentIndex].onFinished(this);
-			// }
+			// 如何进入下一阶段
 			for (let key in finalStatus) {
 				el[key] = finalStatus[key];
 			}
@@ -124,13 +114,9 @@ export default function executor (index, { getNextOneFrame, ignoreDelay = false 
 				name: queue[currentIndex].name ? queue[currentIndex].name : ''
 			});
 			if (!config.manualNext) {
-				// debugger
-				// next.call(this);
 				loop = ()=> void 0;
 				executor.call(this, this.i += 1);
 			}
-			// }, delay);
-			// debugger
 			return;
 		}
 		
@@ -143,7 +129,7 @@ export default function executor (index, { getNextOneFrame, ignoreDelay = false 
 		delay = 0;
 	}
 	
-	// 考虑一下如何把传入的percent给算进来
+	// 把传入的percent带入计算
 	let passedTime = percent * duration;
 	status.startTime = now() - passedTime + delay;
 	
@@ -153,8 +139,6 @@ export default function executor (index, { getNextOneFrame, ignoreDelay = false 
 
 	let loop = () => {
 		if (!status.paused) {
-			// let endTime = status.startTime + duration;
-			// debugger
 			let currentProgress = percent ? percent : clamp((now() - status.startTime) / duration, 0, 1);
 			percent = undefined;
 			getAnimationFrame(currentProgress);
@@ -164,6 +148,4 @@ export default function executor (index, { getNextOneFrame, ignoreDelay = false 
 	if(!this.reqAniHandler){
 		loop();
 	}
-	// setTimeout(loop, delay);
-	// loop();
 }
