@@ -3,6 +3,10 @@ import babel from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import { terser } from "rollup-plugin-terser";
 
+import visualizer from 'rollup-plugin-visualizer';
+import serve from 'rollup-plugin-serve';
+import livereload from 'rollup-plugin-livereload';
+
 export default {
   input: './src/anikyu.js',
   output: [{
@@ -41,6 +45,17 @@ export default {
     babel({
       exclude: 'node_modules/**',
       babelHelpers: 'runtime'
+    }),
+
+    visualizer(),
+
+    livereload(),
+    // 本地服务器
+    serve({
+      open: true, // 自动打开页面
+      port: 8000, 
+      openPage: '/demo/tweenjs_hello_world.html', // 打开的页面
+      contentBase: ''
     })
   ]
 };
