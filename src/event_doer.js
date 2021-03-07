@@ -12,6 +12,10 @@ EventDoer.prototype = Object.assign({},{
 	},
 	removeEventListener (type, callback){
 		if(!(type in this.listeners)) return;
+		if(!callback){
+			delete this.listeners[type];
+			return;
+		}
 		let typeHandlers = this.listeners[type];
 		for(let i = 0;i < typeHandlers.length;i++){
 			if(typeHandlers[i] === callback){
@@ -29,6 +33,13 @@ EventDoer.prototype = Object.assign({},{
 		for(let i = 0;i < typeHandlers.length;i++){
 			typeHandlers[i].call(this,detail);
 		}
+	},
+	once (type, callback){
+		let wrappedCb = (detail) => {
+			callback(detail);
+			this.removeEventListener(type, wrappedCb);
+		};
+		this.addEventListener(type, wrappedCb);
 	},
 	getListeners (name){
 		if(name){
