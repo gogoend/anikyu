@@ -4,6 +4,10 @@ import resolve from '@rollup/plugin-node-resolve';
 import { terser } from "rollup-plugin-terser";
 import json from '@rollup/plugin-json';
 
+// import visualizer from 'rollup-plugin-visualizer';
+// import serve from 'rollup-plugin-serve';
+// import livereload from 'rollup-plugin-livereload';
+
 let publicPlugins = [
   json()
 ]
@@ -22,35 +26,20 @@ let babelPlugins = [
   })
 ]
 
-export default [
-  {
-    input: './src/anikyu.js',
-    output: {
+
+export default {
+  input: './src/anikyu.js',
+  output: [
+    {
       file: `./dist/anikyu.js`,
       name: `Anikyu`,
       format: 'umd',
     },
-    plugins: [
-      ...publicPlugins,
-      ...babelPlugins
-    ]
-  },
-  {
-    input: './src/anikyu.js',
-    output: {
+    {
       file: `./dist/anikyu.min.js`,
       name: `Anikyu`,
       format: 'umd',
-    },
-    plugins: [
-      ...publicPlugins,
-      ...babelPlugins,
-      terser()
-    ]
-  },
-  {
-    input: './src/anikyu.js',
-    output: [{
+    },{
       file: `./dist/anikyu.esm.js`,
       format: 'es',
     }, {
@@ -59,9 +48,21 @@ export default [
       plugins: [
         terser()
       ]
-    }],
-    plugins:[
-      ...publicPlugins
-    ]
-  }
-]
+    }
+  ],
+  plugins: [
+    ...publicPlugins,
+    ...babelPlugins,
+    // visualizer(),
+
+    // livereload(),
+    // // 本地服务器
+    // serve({
+    //   open: true, // 自动打开页面
+    //   port: 8000, 
+    //   openPage: '/stats.html', // 打开的页面
+    //   contentBase: ''
+    // })
+  ]
+
+}
