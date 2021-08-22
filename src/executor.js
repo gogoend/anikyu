@@ -1,7 +1,7 @@
 import { clamp, trigger, now } from './util.js';
 import { easingFuncs } from './easing_funcs.js';
 
-export let ease = Object.assign(easingFuncs)
+export let ease = Object.assign(easingFuncs);
 
 // 获得动画在当前进度时的变化增量
 function getAddedValue (from, to, percent, easeFn, step) {
