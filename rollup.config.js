@@ -4,6 +4,10 @@ import resolve from '@rollup/plugin-node-resolve';
 import { terser } from "rollup-plugin-terser";
 import json from '@rollup/plugin-json';
 
+// import visualizer from 'rollup-plugin-visualizer';
+// import serve from 'rollup-plugin-serve';
+// import livereload from 'rollup-plugin-livereload';
+
 let publicPlugins = [
   json()
 ]
@@ -18,7 +22,8 @@ let babelPlugins = [
     browser: true
   }),
   babel({
-    exclude: 'node_modules/**'
+    exclude: 'node_modules/**',
+    babelHelpers: 'runtime'
   })
 ]
 
