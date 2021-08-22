@@ -34,7 +34,7 @@ module.exports = {
 		'space-infix-ops': 1,
 		'spaced-comment': 1
 	},
-	"parser": "babel-eslint",
+	"parser": "@babel/eslint-parser",
 	"parserOptions": {
 		"sourceType": "module",
 		"allowImportExportEverywhere": false,
