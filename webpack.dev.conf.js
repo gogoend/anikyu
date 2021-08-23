@@ -1,6 +1,6 @@
 const path = require('path');
 // const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const EsmWebpackPlugin = require('@purtuga/esm-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
 	entry: './src/anikyu.js',
@@ -31,4 +31,22 @@ module.exports = {
 			},
 		],
 	},
+	devServer: {
+		compress: true,
+		port: 9000,
+		client: {
+			logging: 'warn',
+			overlay: true,
+			progress: true,
+		},
+
+	},
+	plugins: [
+		// https://github.com/ampedandwired/html-webpack-plugin
+		new HtmlWebpackPlugin({
+			filename: 'src/public/index.template.html',
+			template: 'src/public/index.template.html',
+			inject: true
+		}),
+	]
 }
