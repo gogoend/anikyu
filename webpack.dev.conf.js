@@ -44,8 +44,8 @@ module.exports = {
 	plugins: [
 		// https://github.com/ampedandwired/html-webpack-plugin
 		new HtmlWebpackPlugin({
-			filename: 'src/public/index.template.html',
-			template: 'src/public/index.template.html',
+			filename: './index.html',
+			template: './src/public/index.template.html',
 			inject: true
 		}),
 	]
