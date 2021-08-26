@@ -1,9 +1,13 @@
 const path = require('path');
 // const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const webpack = require('webpack');
 
 module.exports = {
-	entry: './src/index.js',
+	entry: [
+		'./src/index.js',
+		'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
+	],
 	output: {
 		path: path.resolve(__dirname, 'dist'),
 		filename: 'index.js',
@@ -35,5 +39,6 @@ module.exports = {
 			template: './src/public/index.template.html',
 			inject: true
 		}),
+		new webpack.HotModuleReplacementPlugin()
 	]
 }

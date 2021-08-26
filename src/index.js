@@ -1,5 +1,10 @@
 import Anikyu from './lib/anikyu.js';
 
+// 接收热更新输出，只有accept才能被更新
+if (module.hot) {
+	module.hot.accept();
+}
+
 var el = document.querySelector('.target');
 
 var obj = {};
