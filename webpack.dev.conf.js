@@ -6,7 +6,8 @@ module.exports = {
 	entry: './src/index.js',
 	output: {
 		path: path.resolve(__dirname, 'dist'),
-		filename: 'index.js'
+		filename: 'index.js',
+		publicPath: '/'
 	},
 	mode: 'development',
 	optimization:{
@@ -26,16 +27,6 @@ module.exports = {
 				loader: 'babel-loader',
 			},
 		],
-	},
-	devServer: {
-		compress: true,
-		port: 9000,
-		client: {
-			logging: 'warn',
-			overlay: true,
-			progress: true,
-		},
-
 	},
 	plugins: [
 		// https://github.com/ampedandwired/html-webpack-plugin

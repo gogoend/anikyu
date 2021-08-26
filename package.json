@@ -8,7 +8,8 @@
     "dev": "webpack --config webpack.dev.conf.js --watch",
     "test": "echo \"Error: no test specified\" && exit 0",
     "lint": "eslint src --ext js --fix",
-    "build": "webpack --config webpack.prod.conf.js"
+    "build": "webpack --config webpack.prod.conf.js",
+    "serve": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -42,9 +43,11 @@
     "cross-env": "^7.0.3",
     "eslint": "^6.8.0",
     "eslint-loader": "^4.0.2",
+    "express": "^4.17.1",
     "html-webpack-plugin": "^4.5.2",
     "webpack": "^4.41.5",
     "webpack-cli": "^4.3.0",
+    "webpack-dev-middleware": "^5.0.0",
     "webpack-dev-server": "^4.0.0"
   }
 }
