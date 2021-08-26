@@ -3,14 +3,10 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-	entry: './src/anikyu.js',
+	entry: './src/index.js',
 	output: {
 		path: path.resolve(__dirname, 'dist'),
-		filename: 'anikyu.js',
-		library: 'Anikyu',
-		libraryTarget: 'umd',
-		libraryExport: 'default',
-		globalObject: 'this'
+		filename: 'index.js'
 	},
 	mode: 'development',
 	optimization:{
