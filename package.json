@@ -5,7 +5,7 @@
   "main": "dist/anikyu.js",
   "module": "dist/anikyu.esm.js",
   "scripts": {
-    "dev": "webpack serve --config webpack.dev.conf.js",
+    "dev": "webpack --config webpack.dev.conf.js --watch",
     "test": "echo \"Error: no test specified\" && exit 0",
     "lint": "eslint src --ext js --fix",
     "build": "webpack --config webpack.prod.conf.js"
