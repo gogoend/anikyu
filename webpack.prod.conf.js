@@ -10,6 +10,7 @@ module.exports = [{
 	output: {
 		path: path.resolve(__dirname, 'dist'),
 		filename: '[name].bundle.js',
+		chunkFilename: '[name].chunk.js' // 指定非入口js文件的名称
 	},
 	mode: 'production',
 	optimization:{
@@ -32,9 +33,9 @@ module.exports = [{
 			inject: true
 		})
 	],
-	optimization: {
-		splitChunks: {
-			chunks: 'all'
-		}
-	}
+	// optimization: {
+	// 	splitChunks: {
+	// 		chunks: 'all'
+	// 	}
+	// }
 }];
