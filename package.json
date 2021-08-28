@@ -50,5 +50,8 @@
     "webpack-dev-middleware": "^5.0.0",
     "webpack-dev-server": "^4.0.0",
     "webpack-hot-middleware": "^2.25.0"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
   }
 }
