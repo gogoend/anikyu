@@ -31,5 +31,10 @@ module.exports = [{
 			template: './src/public/index.template.html',
 			inject: true
 		})
-	]
+	],
+	optimization: {
+		splitChunks: {
+			chunks: 'all'
+		}
+	}
 }];

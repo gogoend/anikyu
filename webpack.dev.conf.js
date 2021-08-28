@@ -40,5 +40,10 @@ module.exports = {
 			inject: true
 		}),
 		new webpack.HotModuleReplacementPlugin()
-	]
+	],
+	optimization: {
+		splitChunks: {
+			chunks: 'all'
+		}
+	}
 }
