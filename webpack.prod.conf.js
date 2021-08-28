@@ -1,16 +1,15 @@
 const path = require('path');
 // const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const EsmWebpackPlugin = require('@purtuga/esm-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = [{
-	entry: './src/anikyu.js',
+	entry: {
+		index: './src/index.js',
+		another: './src/another.js'
+	},
 	output: {
 		path: path.resolve(__dirname, 'dist'),
-		filename: 'anikyu.js',
-		library: 'Anikyu',
-		libraryTarget: 'umd',
-		libraryExport: 'default',
-		globalObject: 'this'
+		filename: '[name].bundle.js',
 	},
 	mode: 'production',
 	optimization:{
@@ -25,51 +24,12 @@ module.exports = [{
 			},
 		],
 	},
-},{
-	entry: './src/anikyu.js',
-	output: {
-		path: path.resolve(__dirname, 'dist'),
-		filename: 'anikyu.min.js',
-		library: 'Anikyu',
-		libraryTarget: 'umd',
-		libraryExport: 'default',
-		globalObject: 'this'
-	},
-	mode: 'production',
-	module: {
-		rules: [
-			{
-				test: /\.js$/,
-				exclude: /node_modules/,
-				loader: 'babel-loader',
-			},
-		],
-	},
-},{
-	entry: './src/anikyu.js',
-	plugins:[
-		new EsmWebpackPlugin()
-	],
-	output: {
-		path: path.resolve(__dirname, 'dist'),
-		filename: 'anikyu.esm.js',
-		library: 'Anikyu',
-		libraryTarget: 'var',
-	},
-	mode: 'production',
-	optimization:{
-		minimize: false
-	}
-},{
-	entry: './src/anikyu.js',
-	plugins:[
-		new EsmWebpackPlugin()
-	],
-	output: {
-		path: path.resolve(__dirname, 'dist'),
-		filename: 'anikyu.esm.min.js',
-		library: 'Anikyu',
-		libraryTarget: 'var',
-	},
-	mode: 'production'
+	plugins: [
+		// https://github.com/ampedandwired/html-webpack-plugin
+		new HtmlWebpackPlugin({
+			filename: './index.html',
+			template: './src/public/index.template.html',
+			inject: true
+		})
+	]
 }];

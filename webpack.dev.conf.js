@@ -4,14 +4,14 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const webpack = require('webpack');
 
 module.exports = {
-	entry: [
-		'./src/index.js',
-		'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
-	],
+	entry: {
+		index: './src/index.js',
+		another: './src/another.js',
+		hmr: 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000'
+	},
 	output: {
 		path: path.resolve(__dirname, 'dist'),
-		filename: 'index.js',
-		publicPath: '/'
+		filename: '[name].bundle.js',
 	},
 	mode: 'development',
 	optimization:{

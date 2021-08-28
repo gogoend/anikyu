@@ -1,10 +1,6 @@
-import './js/animation';
-
-import './js/button-event';
-
 import _ from 'lodash';
 
-console.log(_);
+console.log(_.cloneDeep);
 
 // 接收热更新输出，只有accept才能被更新
 if (module.hot) {
