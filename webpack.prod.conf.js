@@ -1,6 +1,7 @@
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = [{
 	entry: {
@@ -38,7 +39,8 @@ module.exports = [{
 			filename: './index.html',
 			template: './src/public/index.template.html',
 			inject: true
-		})
+		}),
+		new BundleAnalyzerPlugin()
 	],
 	optimization: {
 		splitChunks: {
