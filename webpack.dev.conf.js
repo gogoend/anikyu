@@ -1,12 +1,10 @@
 const path = require('path');
 // const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const webpack = require('webpack');
 
 module.exports = {
 	entry: [
-		'./src/index.js',
-		'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
+		'./src/index.js'
 	],
 	output: {
 		path: path.resolve(__dirname, 'dist'),
@@ -32,13 +30,21 @@ module.exports = {
 			},
 		],
 	},
+	devServer: {
+		compress: true,
+		port: 9000,
+		client: {
+			logging: 'warn',
+			overlay: true,
+			progress: true,
+		}
+	},
 	plugins: [
 		// https://github.com/ampedandwired/html-webpack-plugin
 		new HtmlWebpackPlugin({
 			filename: './index.html',
 			template: './src/public/index.template.html',
 			inject: true
-		}),
-		new webpack.HotModuleReplacementPlugin()
+		})
 	]
 }
