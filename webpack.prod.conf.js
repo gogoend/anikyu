@@ -14,7 +14,7 @@ module.exports = [{
 	},
 	mode: 'production',
 	optimization: {
-		minimize: false
+		minimize: true
 	},
 	module: {
 		rules: [
@@ -40,10 +40,10 @@ module.exports = [{
 			inject: true
 		})
 	],
-	// optimization: {
-	// 	splitChunks: {
-	// 		chunks: 'all'
-	// 	}
-	// }
+	optimization: {
+		splitChunks: {
+			chunks: 'all'
+		}
+	}
 }]
 

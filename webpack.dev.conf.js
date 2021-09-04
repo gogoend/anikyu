@@ -1,6 +1,7 @@
 const path = require('path');
 // const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const webpack = require('webpack')
 
 module.exports = {
 	entry: [
@@ -48,9 +49,9 @@ module.exports = {
 		}),
 		new webpack.HotModuleReplacementPlugin()
 	],
-	// optimization: {
-	// 	splitChunks: {
-	// 		chunks: 'all'
-	// 	}
-	// }
+	optimization: {
+		splitChunks: {
+			chunks: 'all'
+		}
+	}
 }
