@@ -2,14 +2,15 @@ const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
-module.exports = {
-	entry: [
-		'./src/index.js'
-	],
+module.exports = [{
+	entry: {
+		index: './src/index.js',
+		another: './src/another.js'
+	},
 	output: {
 		path: path.resolve(__dirname, 'dist'),
-		filename: 'index.js',
-		publicPath: '/'
+		filename: '[name].bundle.js',
+		chunkFilename: '[name].chunk.js' // 指定非入口js文件的名称
 	},
 	mode: 'production',
 	optimization: {
@@ -38,5 +39,11 @@ module.exports = {
 			template: './src/public/index.template.html',
 			inject: true
 		})
-	]
-}
+	],
+	// optimization: {
+	// 	splitChunks: {
+	// 		chunks: 'all'
+	// 	}
+	// }
+}]
+

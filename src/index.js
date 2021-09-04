@@ -8,3 +8,7 @@ if (module.hot) {
 }
 
 console.log(11211);
+
+import('lodash').then((_) => {
+	console.log(_);
+});

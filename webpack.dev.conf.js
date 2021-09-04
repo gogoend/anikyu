@@ -8,8 +8,8 @@ module.exports = {
 	],
 	output: {
 		path: path.resolve(__dirname, 'dist'),
-		filename: 'index.js',
-		publicPath: '/'
+		filename: '[name].bundle.js',
+		chunkFilename: '[name].chunk.js' // 指定非入口js文件的名称
 	},
 	mode: 'development',
 	optimization:{
@@ -45,6 +45,12 @@ module.exports = {
 			filename: './index.html',
 			template: './src/public/index.template.html',
 			inject: true
-		})
-	]
+		}),
+		new webpack.HotModuleReplacementPlugin()
+	],
+	// optimization: {
+	// 	splitChunks: {
+	// 		chunks: 'all'
+	// 	}
+	// }
 }
